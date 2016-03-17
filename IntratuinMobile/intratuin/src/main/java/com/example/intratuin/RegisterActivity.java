@@ -1,16 +1,17 @@
 package com.example.intratuin;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import com.example.intratuin.handlers.DatePickerFragment;
 
-public class RegisterActivity extends Activity implements OnClickListener {
+public class RegisterActivity extends ActionBarActivity implements OnClickListener {
 
     TextView tvFN;
     TextView tvLN;
@@ -27,7 +28,6 @@ public class RegisterActivity extends Activity implements OnClickListener {
     RadioButton rbFemale;
     Button bSignUp;
     Button bBirthday;
-    DatePicker Birthday;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,8 @@ public class RegisterActivity extends Activity implements OnClickListener {
                 break;
 
             case R.id.bBirthday:
-
+                DialogFragment dateDialog = new DatePickerFragment();
+                dateDialog.show(getSupportFragmentManager(), "Intratuin");
                 break;
         }
     }

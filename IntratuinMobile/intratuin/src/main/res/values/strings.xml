@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Intratuin</string>
     <string name="facebook_app_id">Facebook</string>
+    <string name="choose_date">Select date</string>
+    <string name="ready">Ok</string>
 </resources>
