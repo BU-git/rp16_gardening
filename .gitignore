@@ -1,2 +1,7 @@
 .idea
 *.iml
+.gradle
+/IntratuinMobile/local.properties
+.DS_Store
+/IntratuinMobile/build
+/IntratuinMobile/captures
