@@ -1,14 +1,14 @@
 package com.example.intratuin;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends ActionBarActivity implements OnClickListener {
 
     Button bLoginMain;
     TextView tvRegisterLinkMain;

@@ -1,8 +1,8 @@
 package com.example.intratuin;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -13,7 +13,7 @@ import android.widget.TextView;
 //import com.facebook.FacebookSdk;
 //import com.facebook.login.widget.LoginButton;
 
-public class LoginActivity extends Activity implements OnClickListener {
+public class LoginActivity extends ActionBarActivity implements OnClickListener {
 
     TextView tvEmailAddress;
     TextView tvPassword;
