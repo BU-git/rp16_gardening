@@ -19,7 +19,9 @@ public class LoginActivity extends Activity implements OnClickListener {
     TextView tvPassword;
     TextView tvRegisterLink;
     EditText etEmailAddress;
+    TextView tvEmailError;
     EditText etPassword;
+    TextView tvPasswordError;
     Button bLogin;
     //Button bLoginTwitter;
     //LoginButton bLoginFacebook;
@@ -35,7 +37,9 @@ public class LoginActivity extends Activity implements OnClickListener {
         tvEmailAddress = (TextView)findViewById(R.id.tvEmailAddress);
         tvPassword = (TextView)findViewById(R.id.tvPassword);
         etEmailAddress = (EditText)findViewById(R.id.etEmailAddress);
+        tvEmailError = (TextView)findViewById(R.id.tvEmailError);
         etPassword = (EditText)findViewById(R.id.etPassword);
+        tvPasswordError = (TextView)findViewById(R.id.tvPasswordError);
         //bLoginTwitter = (Button)findViewById(R.id.bLoginTwitter);
         //bLoginFacebook = (LoginButton)findViewById(R.id.bLoginFacebook);
         bLogin = (Button)findViewById(R.id.bLogin);
@@ -51,7 +55,10 @@ public class LoginActivity extends Activity implements OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bLogin:
-
+                boolean formatCorrect=formatErrorManaging();
+                if(formatCorrect){
+                    
+                }
                 break;
 
             case R.id.tvRegisterLink:
@@ -67,6 +74,58 @@ public class LoginActivity extends Activity implements OnClickListener {
 
             //    break;
         }
+    }
+
+    private boolean formatErrorManaging(){
+        //Checks formats, return true if everything is correct. Shows error and returns false if not
+        String emailErrorText=emailFormatError();
+
+        if(emailErrorText!=""){
+            tvEmailError.setVisibility(View.VISIBLE);
+            tvEmailError.setText(emailErrorText);
+        }
+        else{
+            tvEmailError.setVisibility(View.GONE);
+            tvEmailError.setText("");
+        }
+
+        String passwordErrorText=passwordFormatError();
+
+        if(passwordErrorText!=""){
+            tvPasswordError.setVisibility(View.VISIBLE);
+            tvPasswordError.setText(passwordErrorText);
+        }
+        else{
+            tvPasswordError.setVisibility(View.GONE);
+            tvPasswordError.setText("");
+        }
+
+        if(emailErrorText=="" && passwordErrorText=="")
+            return true;
+        return false;
+    }
+    private String emailFormatError(){
+        String emailErrorText="";
+        if(etEmailAddress.getText().length()==0)
+            emailErrorText="You have to enter email!";
+        else if(etEmailAddress.getText().toString().indexOf("@")<1 ||
+                etEmailAddress.getText().toString().indexOf("@")==etEmailAddress.getText()
+                        .length()-1)
+            emailErrorText="Wrong email format!";
+        return emailErrorText;
+    }
+    private String passwordFormatError(){
+        String passwordErrorText="";
+        if(etEmailAddress.getText().length()==0)
+            passwordErrorText="You have to enter password!";
+        if(etPassword.getText().length()<6 || etPassword.getText().length()>15)
+            passwordErrorText="Password must be from 6 to 15 characters!";
+        if(!etPassword.getText().toString().matches("d") ||
+                !etPassword.getText().toString().matches("[a-z]") ||
+                !etPassword.getText().toString().matches("[A-Z]]"))
+            passwordErrorText="Password must contain digit, small and big letters!";
+
+        return passwordErrorText;
     }
 }
 
