@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.Button;
+import android.widget.TextView;
+
 import com.example.intratuin.R;
 
 import java.util.Calendar;
@@ -40,5 +42,7 @@ public class DatePickerFragment extends DialogFragment
     @Override
     public void onDateSet(android.widget.DatePicker datePicker, int year,
                           int month, int day) {
+        TextView tvBirthDate = (TextView) getActivity().findViewById(R.id.tvBirthDate);
+        tvBirthDate.setText(month + "/" + day + "/" + year);
     }
 }
