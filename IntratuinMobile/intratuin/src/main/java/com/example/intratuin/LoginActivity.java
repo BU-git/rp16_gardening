@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.CheckBox;
 
 //import com.facebook.CallbackManager;
 //import com.facebook.FacebookSdk;
@@ -21,9 +22,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
     EditText etEmailAddress;
     EditText etPassword;
     Button bLogin;
-    //Button bLoginTwitter;
-    //LoginButton bLoginFacebook;
-   // CallbackManager callbackManager;
+    CheckBox cbRemember;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +31,16 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
         //FacebookSdk.sdkInitialize(getApplicationContext());
         //callbackManager = CallbackManager.Factory.create();
 
-        tvEmailAddress = (TextView)findViewById(R.id.tvEmailAddress);
-        tvPassword = (TextView)findViewById(R.id.tvPassword);
-        etEmailAddress = (EditText)findViewById(R.id.etEmailAddress);
-        etPassword = (EditText)findViewById(R.id.etPassword);
+        tvEmailAddress = (TextView) findViewById(R.id.tvEmailAddress);
+        tvPassword = (TextView) findViewById(R.id.tvPassword);
+        etEmailAddress = (EditText) findViewById(R.id.etEmailAddress);
+        etPassword = (EditText) findViewById(R.id.etPassword);
         //bLoginTwitter = (Button)findViewById(R.id.bLoginTwitter);
         //bLoginFacebook = (LoginButton)findViewById(R.id.bLoginFacebook);
-        bLogin = (Button)findViewById(R.id.bLogin);
-        tvRegisterLink = (TextView)findViewById(R.id.tvRegisterLink);
-
-       // bLoginTwitter.setOnClickListener(this);
+        bLogin = (Button) findViewById(R.id.bLogin);
+        tvRegisterLink = (TextView) findViewById(R.id.tvRegisterLink);
+        cbRemember = (CheckBox) findViewById(R.id.cbRemember);
+        // bLoginTwitter.setOnClickListener(this);
         //bLoginFacebook.setOnClickListener(this);
         bLogin.setOnClickListener(this);
         tvRegisterLink.setOnClickListener(this);
@@ -66,6 +65,10 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
             //case R.id.bLoginFacebook:
 
             //    break;
+
+            case R.id.cbRemember:
+
+                break;
         }
     }
 }
