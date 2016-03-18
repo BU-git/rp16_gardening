@@ -40,10 +40,9 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public String login(@RequestBody Credentials credentials) {
+    public @ResponseBody  String login(@RequestBody Credentials credentials) {
         String emailToLogin = credentials.getEmail();
         Integer foundCustomerId = service.findByEmail(emailToLogin);
-
         if (foundCustomerId != null) {
             Customer customerToLogin = service.findById(foundCustomerId);
             return (customerToLogin.getPassword().equals(credentials.getPassword()))

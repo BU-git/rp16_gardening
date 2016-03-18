@@ -79,8 +79,8 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
                 boolean formatCorrect=formatErrorManaging();
                 if(formatCorrect){
                     Credentials crd=new Credentials();
-                    crd.setEmail(tvEmailAddress.getText().toString());
-                    crd.setPassword(tvPassword.getText().toString());
+                    crd.setEmail(etEmailAddress.getText().toString());
+                    crd.setPassword(etPassword.getText().toString());
 
                     new RequestResponse().execute(crd);
                 }
@@ -183,9 +183,9 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
 
                     return response;
                 }
-                return "";
+                return "HTTP connection not OK";
             } catch (IOException e) {
-                return "";
+                return "IO Exception";
             }
         }
         @Override
