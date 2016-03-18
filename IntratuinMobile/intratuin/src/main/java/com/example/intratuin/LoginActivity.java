@@ -1,6 +1,7 @@
 package com.example.intratuin;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -8,6 +9,16 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.CheckBox;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 //import com.facebook.CallbackManager;
 //import com.facebook.FacebookSdk;
@@ -23,9 +34,9 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
     EditText etPassword;
     TextView tvPasswordError;
     Button bLogin;
-    //Button bLoginTwitter;
-    //LoginButton bLoginFacebook;
-   // CallbackManager callbackManager;
+    CheckBox cbRemember;
+
+    URL login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +53,19 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
         tvPasswordError = (TextView)findViewById(R.id.tvPasswordError);
         //bLoginTwitter = (Button)findViewById(R.id.bLoginTwitter);
         //bLoginFacebook = (LoginButton)findViewById(R.id.bLoginFacebook);
-        bLogin = (Button)findViewById(R.id.bLogin);
-        tvRegisterLink = (TextView)findViewById(R.id.tvRegisterLink);
-
-       // bLoginTwitter.setOnClickListener(this);
+        bLogin = (Button) findViewById(R.id.bLogin);
+        tvRegisterLink = (TextView) findViewById(R.id.tvRegisterLink);
+        cbRemember = (CheckBox) findViewById(R.id.cbRemember);
+        // bLoginTwitter.setOnClickListener(this);
         //bLoginFacebook.setOnClickListener(this);
         bLogin.setOnClickListener(this);
         tvRegisterLink.setOnClickListener(this);
+
+        try {
+            login = new URL("some.server.url/login");
+        } catch (MalformedURLException e){
+            //WRONG URL!
+        }
     }
 
     @Override
@@ -57,7 +74,11 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
             case R.id.bLogin:
                 boolean formatCorrect=formatErrorManaging();
                 if(formatCorrect){
-                    
+                    Credentials crd=new Credentials();
+                    crd.setEmail(tvEmailAddress.getText().toString());
+                    crd.setPassword(tvPassword.getText().toString());
+
+                    new RequestResponse().execute(crd);
                 }
                 break;
 
@@ -73,6 +94,10 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
             //case R.id.bLoginFacebook:
 
             //    break;
+
+            case R.id.cbRemember:
+
+                break;
         }
     }
 
@@ -126,6 +151,43 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
             passwordErrorText="Password must contain digit, small and big letters!";
 
         return passwordErrorText;
+    }
+
+    class RequestResponse extends AsyncTask<Credentials, Void, String>{
+        @Override
+        protected String doInBackground(Credentials... credentials) {
+            try {
+                HttpURLConnection con = (HttpURLConnection) login.openConnection();
+                con.setRequestMethod("POST");
+                con.setConnectTimeout(1000);
+                con.setReadTimeout(1000);
+                con.setDoOutput(true);
+                con.setDoInput(true);
+                con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                con.setRequestProperty("Accept", "text/plain");
+
+                JSONObject json = credentials[0].toJSON();
+                OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                wr.write(json.toString());
+                wr.flush();
+
+                int HttpResult = con.getResponseCode();
+                if (HttpResult == HttpURLConnection.HTTP_OK) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+                    String response = br.readLine();
+                    br.close();
+
+                    return response;
+                }
+                return "";
+            } catch (IOException e) {
+                return "";
+            }
+        }
+        @Override
+        protected void onPostExecute(String res){
+            //RESULT PROCESSING
+        }
     }
 }
 
