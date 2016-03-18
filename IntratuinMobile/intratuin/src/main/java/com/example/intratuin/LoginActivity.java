@@ -66,6 +66,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
         } catch (MalformedURLException e){
             //WRONG URL!
         }
+        cbRemember.setOnClickListener(this);
     }
 
     @Override
