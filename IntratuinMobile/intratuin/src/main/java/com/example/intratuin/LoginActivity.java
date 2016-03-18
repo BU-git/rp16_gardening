@@ -44,6 +44,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
         //bLoginFacebook.setOnClickListener(this);
         bLogin.setOnClickListener(this);
         tvRegisterLink.setOnClickListener(this);
+        cbRemember.setOnClickListener(this);
     }
 
     @Override
