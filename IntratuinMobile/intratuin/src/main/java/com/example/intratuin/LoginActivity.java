@@ -35,6 +35,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
     TextView tvPasswordError;
     Button bLogin;
     CheckBox cbRemember;
+    TextView tvResult;
 
     URL login;
 
@@ -56,15 +57,17 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
         bLogin = (Button) findViewById(R.id.bLogin);
         tvRegisterLink = (TextView) findViewById(R.id.tvRegisterLink);
         cbRemember = (CheckBox) findViewById(R.id.cbRemember);
+        tvResult = (TextView)findViewById(R.id.tvResult);
         // bLoginTwitter.setOnClickListener(this);
         //bLoginFacebook.setOnClickListener(this);
         bLogin.setOnClickListener(this);
         tvRegisterLink.setOnClickListener(this);
 
         try {
-            login = new URL("some.server.url/login");
+            //login = new URL("http://192.168.1.23:8080/customer/login");
+            login = new URL("http","192.168.1.23",8080,"/customer/login");
         } catch (MalformedURLException e){
-            //WRONG URL!
+            tvResult.setText("Wrong URL format!");
         }
         cbRemember.setOnClickListener(this);
     }
@@ -142,14 +145,14 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
     }
     private String passwordFormatError(){
         String passwordErrorText="";
-        if(etEmailAddress.getText().length()==0)
+        if(etPassword.getText().length()==0)
             passwordErrorText="You have to enter password!";
-        if(etPassword.getText().length()<6 || etPassword.getText().length()>15)
+        else if(etPassword.getText().length()<6 || etPassword.getText().length()>15)
             passwordErrorText="Password must be from 6 to 15 characters!";
-        if(!etPassword.getText().toString().matches("d") ||
-                !etPassword.getText().toString().matches("[a-z]") ||
-                !etPassword.getText().toString().matches("[A-Z]]"))
-            passwordErrorText="Password must contain digit, small and big letters!";
+        //else if(!etPassword.getText().toString().matches("d") ||
+        //        !etPassword.getText().toString().matches("[a-z]") ||
+        //        !etPassword.getText().toString().matches("[A-Z]]"))
+        //    passwordErrorText="Password must contain digit, small and big letters!";
 
         return passwordErrorText;
     }
@@ -187,7 +190,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
         }
         @Override
         protected void onPostExecute(String res){
-            //RESULT PROCESSING
+            tvResult.setText(res);
         }
     }
 }

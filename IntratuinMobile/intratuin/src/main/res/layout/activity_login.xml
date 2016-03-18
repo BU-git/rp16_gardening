@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_marginTop="-15dp"
+        android:layout_marginTop="-10dp"
         android:visibility="gone"
         android:textColor="#d22828"
         android:textAlignment="center"
@@ -50,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_marginTop="-15dp"
+        android:layout_marginTop="-10dp"
         android:visibility="gone"
         android:textColor="#d22828"
         android:textAlignment="center"
@@ -83,6 +83,15 @@
         android:layout_gravity="center_horizontal"
         android:text="Register here"
         android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#000000"
+        android:textSize="25dp"
+        android:textAlignment="center" />
 
 </LinearLayout>
 
