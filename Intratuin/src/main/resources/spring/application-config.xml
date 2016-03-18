@@ -19,11 +19,20 @@
 
     <context:component-scan base-package="com.intratuin.testmarket"/>
 
+  <!--
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://localhost:3306/mydbhome"/>
+        <property name="url" value="jdbc:mysql://127.10.50.130:3306/backend"/>
+        <property name="username" value="admineGJ4GsE"/>
+        <property name="password" value="uaBupAXpuxG2"/>
+    </bean>
+    -->
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/ttrr"/>
         <property name="username" value="root"/>
-        <property name="password" value="macik_23"/>
+        <property name="password" value="123qwe"/>
     </bean>
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
