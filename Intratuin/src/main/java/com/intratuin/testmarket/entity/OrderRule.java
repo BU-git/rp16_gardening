@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class OrderRule {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ORDER_RULE_ID")
     Integer orderRuleId;
 

@@ -8,7 +8,7 @@ import java.sql.Date;
 public class Retail {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "RETAIL_ID")
     Integer retailId;
 

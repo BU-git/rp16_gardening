@@ -10,8 +10,13 @@ public class RetailCustomer {
     @Column(name = "RC_ID")
     private int id;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+
+
     @Column(name = "RETAIL_ID")//TODO: connections between tables
-    Integer retailId;//TODO: id or entity(id prefered)
+    Integer retailId;
 
     @Column(name = "CUSTOMER_ID")
     Integer customerId;
