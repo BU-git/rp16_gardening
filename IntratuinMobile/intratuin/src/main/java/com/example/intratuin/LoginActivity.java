@@ -64,7 +64,6 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
         tvRegisterLink.setOnClickListener(this);
 
         try {
-            //login = new URL("http://192.168.1.23:8080/customer/login");
             login = new URL("http","192.168.1.23",8080,"/customer/login");
         } catch (MalformedURLException e){
             tvResult.setText("Wrong URL format!");
@@ -183,7 +182,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
 
                     return response;
                 }
-                return "HTTP connection not OK";
+                return "HttpError "+HttpResult;
             } catch (IOException e) {
                 return "IO Exception";
             }

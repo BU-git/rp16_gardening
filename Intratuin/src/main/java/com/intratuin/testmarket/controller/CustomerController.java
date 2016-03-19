@@ -26,7 +26,7 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String add(@RequestBody Customer newCustomer) {
+    public @ResponseBody String add(@RequestBody Customer newCustomer) {
         //Check whether is email already registered or not
         String emailToRegister = newCustomer.getEmail();
         Integer existedCustomerId = service.findByEmail(emailToRegister);
@@ -40,7 +40,7 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public @ResponseBody  String login(@RequestBody Credentials credentials) {
+    public @ResponseBody String login(@RequestBody Credentials credentials) {
         String emailToLogin = credentials.getEmail();
         Integer foundCustomerId = service.findByEmail(emailToLogin);
         if (foundCustomerId != null) {
