@@ -13,13 +13,20 @@ public class Order {
     Integer orderId;
 
     @Column(name = "CUSTOMER_ID")
-    Integer customerId;
+    @ManyToOne
+    @JoinColumn(name = "customerId")
+    Customer customer;
 
     @Column(name = "ORDER_RULE_ID")
-    Integer orderRuleId;
+    @ManyToOne
+    @JoinColumn(name = "orderRuleId")
+    OrderRule orderRule;
 
     @Column(name = "ORDER_DATE")
     Date orderDate;
+
+    public Order() {
+    }
 
     public Integer getOrderId() {
         return orderId;
@@ -29,20 +36,20 @@ public class Order {
         this.orderId = orderId;
     }
 
-    public Integer getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
-    public Integer getOrderRuleId() {
-        return orderRuleId;
+    public OrderRule getOrderRule() {
+        return orderRule;
     }
 
-    public void setOrderRuleId(Integer orderRuleId) {
-        this.orderRuleId = orderRuleId;
+    public void setOrderRule(OrderRule orderRule) {
+        this.orderRule = orderRule;
     }
 
     public Date getOrderDate() {

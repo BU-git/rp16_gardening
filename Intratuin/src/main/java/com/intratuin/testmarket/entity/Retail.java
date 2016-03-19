@@ -2,6 +2,9 @@ package com.intratuin.testmarket.entity;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "RETAIL")
@@ -23,6 +26,12 @@ public class Retail {
 
     @Column(name = "DATE_OF_EMPLOYMENT")
     Date dateOfEmployment;
+
+    @OneToOne(mappedBy = "retail")//TODO:one to one?
+    private RetailCustomer retailCustomer;
+
+    public Retail() {
+    }
 
     public Integer getRetailId() {
         return retailId;
@@ -62,5 +71,13 @@ public class Retail {
 
     public void setDateOfEmployment(Date dateOfEmployment) {
         this.dateOfEmployment = dateOfEmployment;
+    }
+
+    public RetailCustomer getRetailCustomer() {
+        return retailCustomer;
+    }
+
+    public void setRetailCustomer(RetailCustomer retailCustomer) {
+        this.retailCustomer = retailCustomer;
     }
 }

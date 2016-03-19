@@ -1,11 +1,9 @@
 package com.intratuin.testmarket.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.DateSerializer;
-
 import javax.persistence.*;
-import java.io.Serializable;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "CUSTOMER")
@@ -13,7 +11,7 @@ public class Customer{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CUSTOMER_ID")
-    private int id;
+    private int customerId;
 
     @Column(name = "CUSTOMER_NAME")
     private String firstName;
@@ -45,6 +43,12 @@ public class Customer{
     @Column(name = "AREA_CODE")
     private String postalCode;
 
+    @OneToOne(mappedBy = "retail")
+    private RetailCustomer retailCustomer;
+
+    @OneToMany(mappedBy = "customer")
+    private Set<Order> orders = new HashSet<>();
+
     //TODO:unique field
     //TODO:null or not null(maybe in construxtor)
     //TODO:gender
@@ -52,12 +56,20 @@ public class Customer{
     public Customer() {
     }
 
-    public int getId() {
-        return id;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
     }
 
     public String getFirstName() {
@@ -138,5 +150,13 @@ public class Customer{
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public RetailCustomer getRetailCustomer() {
+        return retailCustomer;
+    }
+
+    public void setRetailCustomer(RetailCustomer retailCustomer) {
+        this.retailCustomer = retailCustomer;
     }
 }

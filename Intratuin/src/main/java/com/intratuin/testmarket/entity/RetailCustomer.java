@@ -10,16 +10,18 @@ public class RetailCustomer {
     @Column(name = "RC_ID")
     private int id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @OneToOne
+    @JoinColumn(name = "retailId")
+    @Column(name = "RETAIL_ID")
+    Retail retail;
 
-
-
-    @Column(name = "RETAIL_ID")//TODO: connections between tables
-    Integer retailId;
-
+    @OneToOne
+    @JoinColumn(name = "customerId")
     @Column(name = "CUSTOMER_ID")
-    Integer customerId;
+    Customer customer;
+
+    public RetailCustomer() {
+    }
 
     public int getId() {
         return id;
@@ -29,19 +31,19 @@ public class RetailCustomer {
         this.id = id;
     }
 
-    public Integer getRetailId() {
-        return retailId;
+    public Retail getRetail() {
+        return retail;
     }
 
-    public void setRetailId(Integer retailId) {
-        this.retailId = retailId;
+    public void setRetail(Retail retail) {
+        this.retail = retail;
     }
 
-    public Integer getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

@@ -1,6 +1,8 @@
 package com.intratuin.testmarket.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "ORDER_RULE")
@@ -19,6 +21,32 @@ public class OrderRule {
 
     @Column(name = "TOTAL")
     Integer total;
+
+    @OneToMany(mappedBy = "orderRule")
+    private Set<Order> orders = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "productId")
+    private Product product;
+
+    public OrderRule() {
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
+    }
 
     public Integer getOrderRuleId() {
         return orderRuleId;
