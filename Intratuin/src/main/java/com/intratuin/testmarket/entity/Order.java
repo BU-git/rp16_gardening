@@ -12,14 +12,14 @@ public class Order {
     @Column(name = "ORDER_ID")
     Integer orderId;
 
-    @Column(name = "CUSTOMER_ID")
-    @ManyToOne
-    @JoinColumn(name = "customerId")
+//    @Column(name = "CUSTOMER_ID")
+//    @ManyToOne
+//    @JoinColumn(name = "customerId")
     Customer customer;
 
-    @Column(name = "ORDER_RULE_ID")
-    @ManyToOne
-    @JoinColumn(name = "orderRuleId")
+//    @Column(name = "ORDER_RULE_ID")
+//    @ManyToOne
+//    @JoinColumn(name = "orderRuleId")
     OrderRule orderRule;
 
     @Column(name = "ORDER_DATE")

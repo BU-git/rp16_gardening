@@ -19,7 +19,7 @@ public class Product {
     @Column(name = "PRODUCT_PRICE")//TODO:BigDecimal
     Double productPrice;
 
-    @OneToMany(mappedBy = "product")
+//    @OneToMany(mappedBy = "product")
     private Set<OrderRule> orderRules = new HashSet<>();
 
     public Product() {

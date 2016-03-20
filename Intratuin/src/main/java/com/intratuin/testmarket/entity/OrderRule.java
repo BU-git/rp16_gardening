@@ -22,11 +22,11 @@ public class OrderRule {
     @Column(name = "TOTAL")
     Integer total;
 
-    @OneToMany(mappedBy = "orderRule")
+//    @OneToMany(mappedBy = "orderRule")
     private Set<Order> orders = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "productId")
+//    @ManyToOne
+//    @JoinColumn(name = "productId")
     private Product product;
 
     public OrderRule() {

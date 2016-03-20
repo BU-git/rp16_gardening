@@ -10,14 +10,14 @@ public class RetailCustomer {
     @Column(name = "RC_ID")
     private int id;
 
-    @OneToOne
-    @JoinColumn(name = "retailId")
-    @Column(name = "RETAIL_ID")
+//    @OneToOne
+//    @JoinColumn(name = "retailId")
+//    @Column(name = "RETAIL_ID")
     Retail retail;
 
-    @OneToOne
-    @JoinColumn(name = "customerId")
-    @Column(name = "CUSTOMER_ID")
+//    @OneToOne
+//    @JoinColumn(name = "customerId")
+//    @Column(name = "CUSTOMER_ID")
     Customer customer;
 
     public RetailCustomer() {

@@ -43,7 +43,7 @@ public class Customer{
     @Column(name = "AREA_CODE")
     private String postalCode;
 
-    @OneToOne(mappedBy = "retail")
+//    @OneToOne(mappedBy = "customer")
     private RetailCustomer retailCustomer;
 
     @OneToMany(mappedBy = "customer")

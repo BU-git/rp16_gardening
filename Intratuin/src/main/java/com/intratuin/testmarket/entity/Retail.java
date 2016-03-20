@@ -27,7 +27,7 @@ public class Retail {
     @Column(name = "DATE_OF_EMPLOYMENT")
     Date dateOfEmployment;
 
-    @OneToOne(mappedBy = "retail")//TODO:one to one?
+//    @OneToOne(mappedBy = "retail")//TODO:one to one?
     private RetailCustomer retailCustomer;
 
     public Retail() {
