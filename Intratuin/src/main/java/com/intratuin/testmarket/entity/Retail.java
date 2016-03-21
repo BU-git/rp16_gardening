@@ -28,7 +28,7 @@ public class Retail {
     Date dateOfEmployment;
 
 //    @OneToOne(mappedBy = "retail")//TODO:one to one?
-    private RetailCustomer retailCustomer;
+    //private RetailCustomer retailCustomer;
 
     public Retail() {
     }
@@ -73,11 +73,11 @@ public class Retail {
         this.dateOfEmployment = dateOfEmployment;
     }
 
-    public RetailCustomer getRetailCustomer() {
+    /*public RetailCustomer getRetailCustomer() {
         return retailCustomer;
     }
 
     public void setRetailCustomer(RetailCustomer retailCustomer) {
         this.retailCustomer = retailCustomer;
-    }
+    }*/
 }

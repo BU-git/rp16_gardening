@@ -21,9 +21,13 @@
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://127.10.50.130:3306/backend"/>
+        <!--<property name="url" value="jdbc:mysql://127.10.50.130:3306/backend"/>
         <property name="username" value="admineGJ4GsE"/>
-        <property name="password" value="uaBupAXpuxG2"/>
+        <property name="password" value="uaBupAXpuxG2"/>-->
+
+        <property name="url" value="jdbc:mysql://localhost:3306/bionic"/>
+        <property name="username" value="root"/>
+        <property name="password" value="1234"/>
     </bean>
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">

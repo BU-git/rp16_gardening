@@ -22,6 +22,7 @@ public class OrderRule {
     @Column(name = "TOTAL")
     Integer total;
 
+    /*
 //    @OneToMany(mappedBy = "orderRule")
     private Set<Order> orders = new HashSet<>();
 
@@ -46,7 +47,7 @@ public class OrderRule {
 
     public void setOrders(Set<Order> orders) {
         this.orders = orders;
-    }
+    }*/
 
     public Integer getOrderRuleId() {
         return orderRuleId;

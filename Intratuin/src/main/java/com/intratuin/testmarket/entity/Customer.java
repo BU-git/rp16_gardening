@@ -11,7 +11,7 @@ public class Customer{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CUSTOMER_ID")
-    private int customerId;
+    private int id;
 
     @Column(name = "CUSTOMER_NAME")
     private String firstName;
@@ -43,11 +43,11 @@ public class Customer{
     @Column(name = "AREA_CODE")
     private String postalCode;
 
-//    @OneToOne(mappedBy = "customer")
-    private RetailCustomer retailCustomer;
+    //@OneToOne(mappedBy = "customer")
+    //private RetailCustomer retailCustomer;
 
-    @OneToMany(mappedBy = "customer")
-    private Set<Order> orders = new HashSet<>();
+    //@OneToMany(mappedBy = "customer")
+    //private Set<Order> orders = new HashSet<>();
 
     //TODO:unique field
     //TODO:null or not null(maybe in construxtor)
@@ -56,21 +56,21 @@ public class Customer{
     public Customer() {
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public int getId() {
+        return id;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setId(int customerId) {
+        this.id = customerId;
     }
 
-    public Set<Order> getOrders() {
+    /*public Set<Order> getOrders() {
         return orders;
     }
 
     public void setOrders(Set<Order> orders) {
         this.orders = orders;
-    }
+    }*/
 
     public String getFirstName() {
         return firstName;
@@ -152,11 +152,11 @@ public class Customer{
         this.postalCode = postalCode;
     }
 
-    public RetailCustomer getRetailCustomer() {
+    /*public RetailCustomer getRetailCustomer() {
         return retailCustomer;
     }
 
     public void setRetailCustomer(RetailCustomer retailCustomer) {
         this.retailCustomer = retailCustomer;
-    }
+    }*/
 }

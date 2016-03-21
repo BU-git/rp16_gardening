@@ -12,13 +12,13 @@ public class RetailCustomer {
 
 //    @OneToOne
 //    @JoinColumn(name = "retailId")
-//    @Column(name = "RETAIL_ID")
-    Retail retail;
+    @Column(name = "RETAIL_ID")
+    int retailId;
 
 //    @OneToOne
 //    @JoinColumn(name = "customerId")
-//    @Column(name = "CUSTOMER_ID")
-    Customer customer;
+    @Column(name = "CUSTOMER_ID")
+    int customerId;
 
     public RetailCustomer() {
     }
@@ -31,19 +31,19 @@ public class RetailCustomer {
         this.id = id;
     }
 
-    public Retail getRetail() {
-        return retail;
+    public int getRetailId() {
+        return retailId;
     }
 
-    public void setRetail(Retail retail) {
-        this.retail = retail;
+    public void setRetailId(int retail) {
+        this.retailId = retail;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setCustomerId(int customer) {
+        this.customerId = customer;
     }
 }

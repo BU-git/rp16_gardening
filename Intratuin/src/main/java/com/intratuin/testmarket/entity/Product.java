@@ -19,6 +19,7 @@ public class Product {
     @Column(name = "PRODUCT_PRICE")//TODO:BigDecimal
     Double productPrice;
 
+    /*
 //    @OneToMany(mappedBy = "product")
     private Set<OrderRule> orderRules = new HashSet<>();
 
@@ -31,7 +32,7 @@ public class Product {
 
     public void setOrderRules(Set<OrderRule> orderRules) {
         this.orderRules = orderRules;
-    }
+    }*/
 
     public Integer getProductId() {
         return productId;
