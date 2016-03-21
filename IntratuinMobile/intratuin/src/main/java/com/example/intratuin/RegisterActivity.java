@@ -10,18 +10,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import com.example.intratuin.dto.Message;
 import com.example.intratuin.handlers.DatePickerFragment;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Date;
+import com.example.intratuin.dto.Customer;
+import com.example.intratuin.settings.Settings;
+
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 public class RegisterActivity extends ActionBarActivity implements OnClickListener {
 
@@ -43,7 +45,7 @@ public class RegisterActivity extends ActionBarActivity implements OnClickListen
     TextView tvError;
     TextView tvResult;
 
-    URL register;
+    URI register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +76,11 @@ public class RegisterActivity extends ActionBarActivity implements OnClickListen
         bBirthday.setOnClickListener(this);
 
         try {
-            register = new URL("http","192.168.1.23",8080,"/customer/add");
+            register = new URL("http", Settings.getHost(),8080,"/customer/add").toURI();
         } catch (MalformedURLException e){
             tvResult.setText("Wrong URL format!");
+        } catch (URISyntaxException e){
+            tvResult.setText("Wrong URI format!");
         }
     }
 
@@ -101,7 +105,7 @@ public class RegisterActivity extends ActionBarActivity implements OnClickListen
                     cust.setLastName(etLastName.getText().toString());
                     cust.setEmail(etMailAddress.getText().toString());
                     cust.setPassword(etPassword.getText().toString());
-                    cust.setBirthday(new Date(2000, 1, 1));//Pick correct date!
+                    cust.setBirthday(parseDate(tvBirthday.getText().toString()));
 
                     new RequestResponse().execute(cust);
                 }
@@ -185,41 +189,26 @@ public class RegisterActivity extends ActionBarActivity implements OnClickListen
             return "";
         return "You have to select sex!";
     }
+    private Date parseDate(String str){
+        String[] s=str.split("/");
+        return new Date(Integer.parseInt(s[2]),Integer.parseInt(s[0]),Integer.parseInt(s[1]));
+    }
 
-    class RequestResponse extends AsyncTask<Customer, Void, String> {
+    class RequestResponse extends AsyncTask<Customer, Void, Message> {
         @Override
-        protected String doInBackground(Customer... customer) {
+        protected Message doInBackground(Customer... customer) {
             try {
-                HttpURLConnection con = (HttpURLConnection) register.openConnection();
-                con.setRequestMethod("POST");
-                con.setConnectTimeout(1000);
-                con.setReadTimeout(1000);
-                con.setDoOutput(true);
-                con.setDoInput(true);
-                con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                con.setRequestProperty("Accept", "text/plain");
-
-                JSONObject json = customer[0].toJSON();
-                OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-                wr.write(json.toString());
-                wr.flush();
-
-                int HttpResult = con.getResponseCode();
-                if (HttpResult == HttpURLConnection.HTTP_OK) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
-                    String response = br.readLine();
-                    br.close();
-
-                    return response;
-                }
-                return "HttpError "+HttpResult;
-            } catch (IOException e) {
-                return "IO Exception";
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                Message jsonObject = restTemplate.postForObject(register, customer[0], Message.class);
+                return jsonObject;
+            } catch (Exception e) {
+                return null;
             }
         }
         @Override
-        protected void onPostExecute(String res){
-            tvResult.setText(res);
+        protected void onPostExecute(Message msg){
+            tvResult.setText(msg==null?"Request error!":msg.getMessage());
         }
     }
 }

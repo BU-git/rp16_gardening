@@ -11,6 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.CheckBox;
 import org.json.JSONObject;
+import com.example.intratuin.dto.Credentials;
+import com.example.intratuin.dto.Message;
+import com.example.intratuin.settings.Settings;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +21,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 //import com.facebook.CallbackManager;
 //import com.facebook.FacebookSdk;
@@ -37,7 +45,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
     CheckBox cbRemember;
     TextView tvResult;
 
-    URL login;
+    URI login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +72,11 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
         tvRegisterLink.setOnClickListener(this);
 
         try {
-            login = new URL("http","192.168.1.23",8080,"/customer/login");
+            login = new URL("http", Settings.getHost(),8080,"/customer/login").toURI();
         } catch (MalformedURLException e){
             tvResult.setText("Wrong URL format!");
+        } catch (URISyntaxException e){
+            tvResult.setText("Wrong URI format!");
         }
         cbRemember.setOnClickListener(this);
     }
@@ -156,40 +166,21 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
         return passwordErrorText;
     }
 
-    class RequestResponse extends AsyncTask<Credentials, Void, String>{
+    class RequestResponse extends AsyncTask<Credentials, Void, Message>{
         @Override
-        protected String doInBackground(Credentials... credentials) {
+        protected Message doInBackground(Credentials... credentials) {
             try {
-                HttpURLConnection con = (HttpURLConnection) login.openConnection();
-                con.setRequestMethod("POST");
-                con.setConnectTimeout(1000);
-                con.setReadTimeout(1000);
-                con.setDoOutput(true);
-                con.setDoInput(true);
-                con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                con.setRequestProperty("Accept", "text/plain");
-
-                JSONObject json = credentials[0].toJSON();
-                OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-                wr.write(json.toString());
-                wr.flush();
-
-                int HttpResult = con.getResponseCode();
-                if (HttpResult == HttpURLConnection.HTTP_OK) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
-                    String response = br.readLine();
-                    br.close();
-
-                    return response;
-                }
-                return "HttpError "+HttpResult;
-            } catch (IOException e) {
-                return "IO Exception";
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                Message jsonObject = restTemplate.postForObject(login, credentials[0], Message.class);
+                return jsonObject;
+            } catch (Exception e) {
+                return null;
             }
         }
         @Override
-        protected void onPostExecute(String res){
-            tvResult.setText(res);
+        protected void onPostExecute(Message msg){
+            tvResult.setText(msg==null?"Request error!":msg.getMessage());
         }
     }
 }

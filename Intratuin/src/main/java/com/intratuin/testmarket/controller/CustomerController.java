@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/customer/")
 public class CustomerController {
+
     @Inject
     CustomerService service;
 
@@ -26,30 +27,30 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public @ResponseBody String add(@RequestBody Customer newCustomer) {
+    public @ResponseBody Message add(@RequestBody Customer newCustomer) {
         //Check whether is email already registered or not
         String emailToRegister = newCustomer.getEmail();
         Integer existedCustomerId = service.findByEmail(emailToRegister);
 
         if (existedCustomerId != null) {
-            return Message.ERROR_REGISTRATION.getMessage();
+            return new Message("Sorry, this email address is already registered, choose another.");
         } else {
             service.save(newCustomer);
-            return Message.SUCCESS_REGISTRATION.getMessage();
+            return new Message("Registration is successful");
         }
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public @ResponseBody String login(@RequestBody Credentials credentials) {
+    public @ResponseBody Message login(@RequestBody Credentials credentials) {
         String emailToLogin = credentials.getEmail();
         Integer foundCustomerId = service.findByEmail(emailToLogin);
         if (foundCustomerId != null) {
             Customer customerToLogin = service.findById(foundCustomerId);
             return (customerToLogin.getPassword().equals(credentials.getPassword()))
-                    ? Message.SUCCESS_LOGIN.getMessage()
-                    : Message.ERROR_LOGIN.getMessage();
+                    ? new Message("Login is successful")
+                    : new Message("Sorry, your username and password are incorrect - please try again.");
         } else {
-            return Message.ERROR_LOGIN.getMessage();
+            return new Message("Sorry, your username and password are incorrect - please try again.");
         }
     }
 }
