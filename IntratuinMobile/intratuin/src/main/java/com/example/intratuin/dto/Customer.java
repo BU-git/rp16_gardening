@@ -13,6 +13,8 @@ public class Customer {
 
     private String firstName;
 
+    private String tussen;
+
     private String lastName;
 
     private String email;
@@ -27,9 +29,11 @@ public class Customer {
 
     private String streetName;
 
-    private int houseNumber;
+    private String houseNumber;
 
     private String postalCode;
+
+    private int gender;
 
     public int getId() {
         return id;
@@ -103,27 +107,32 @@ public class Customer {
         this.streetName = streetName;
     }
 
-    public int getHouseNumber() {
+    public String getHouseNumber() {
         return houseNumber;
     }
 
-    public void setHouseNumber(int houseNumber) {
-        this.houseNumber = houseNumber;
-    }
+    public void setHouseNumber(String houseNumber) { this.houseNumber = houseNumber; }
 
     public String getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
+    public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
+
+    public String getTussen() { return tussen; }
+
+    public void setTussen(String tussen) { this.tussen = tussen; }
+
+    public int getGender() { return gender; }
+
+    public void setGender(int gender) { this.gender = gender; }
 
     public JSONObject toJSON(){
         JSONObject json=new JSONObject();
         try{
             json.put("id",id);
             json.put("firstName",firstName);
+            json.put("tussen",tussen);
             json.put("lastName",lastName);
             json.put("email",email);
             json.put("password",password);
@@ -133,6 +142,7 @@ public class Customer {
             json.put("streetName",streetName);
             json.put("houseNumber",houseNumber);
             json.put("postalCode",postalCode);
+            json.put("gender",gender);
             return json;
         }
         catch(JSONException e){
