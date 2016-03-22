@@ -3,7 +3,7 @@ package com.example.intratuin;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -25,7 +25,7 @@ import com.example.intratuin.settings.Settings;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-public class RegisterActivity extends ActionBarActivity implements OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements OnClickListener {
 
     TextView tvFN;
     TextView tvLN;
@@ -44,8 +44,9 @@ public class RegisterActivity extends ActionBarActivity implements OnClickListen
     Button bBirthday;
     TextView tvError;
     TextView tvResult;
+    TextView tvBirthDate;
 
-    URI register;
+    URI register=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,7 @@ public class RegisterActivity extends ActionBarActivity implements OnClickListen
         bBirthday = (Button)findViewById(R.id.bBirthday);
         tvError = (TextView)findViewById(R.id.tvError);
         tvResult = (TextView)findViewById(R.id.tvResult);
+        tvBirthDate = (TextView)findViewById(R.id.tvBirthDate);
 
         rbMale.setOnClickListener(this);
         rbFemale.setOnClickListener(this);
@@ -97,15 +99,16 @@ public class RegisterActivity extends ActionBarActivity implements OnClickListen
                 break;
 
             case R.id.bSignUp:
+                tvResult.setText("");
                 boolean formatCorrect=formatErrorManaging();
-                if(formatCorrect){
+                if(formatCorrect && register!=null){
                     Customer cust=new Customer();
                     cust.setId(0);
                     cust.setFirstName(etFirstName.getText().toString());
                     cust.setLastName(etLastName.getText().toString());
                     cust.setEmail(etMailAddress.getText().toString());
                     cust.setPassword(etPassword.getText().toString());
-                    cust.setBirthday(parseDate(tvBirthday.getText().toString()));
+                    cust.setBirthday(parseDate(tvBirthDate.getText().toString()));
 
                     new RequestResponse().execute(cust);
                 }
@@ -151,6 +154,8 @@ public class RegisterActivity extends ActionBarActivity implements OnClickListen
             return "You have to enter first name!";
         if(etLastName.getText().length()==0)
             return "You have to enter last name!";
+        if(tvBirthDate.getText().length()==0)
+            return "You have to enter birth date!";
         return "";
     }
     private String emailFormatError(){
@@ -160,6 +165,9 @@ public class RegisterActivity extends ActionBarActivity implements OnClickListen
         else if(etMailAddress.getText().toString().indexOf("@")<1 ||
                 etMailAddress.getText().toString().indexOf("@")==etMailAddress.getText()
                         .length()-1)
+            emailErrorText="Wrong email format!";
+        else if(etMailAddress.getText().toString().indexOf("@")!=
+                etMailAddress.getText().toString().lastIndexOf("@"))
             emailErrorText="Wrong email format!";
         return emailErrorText;
     }

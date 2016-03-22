@@ -3,23 +3,17 @@ package com.example.intratuin;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.CheckBox;
-import org.json.JSONObject;
 import com.example.intratuin.dto.Credentials;
 import com.example.intratuin.dto.Message;
 import com.example.intratuin.settings.Settings;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -32,7 +26,7 @@ import org.springframework.web.client.RestTemplate;
 //import com.facebook.FacebookSdk;
 //import com.facebook.login.widget.LoginButton;
 
-public class LoginActivity extends ActionBarActivity implements OnClickListener {
+public class LoginActivity extends AppCompatActivity implements OnClickListener {
 
     TextView tvEmailAddress;
     TextView tvPassword;
@@ -45,7 +39,7 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
     CheckBox cbRemember;
     TextView tvResult;
 
-    URI login;
+    URI login=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +79,9 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bLogin:
+                tvResult.setText("");
                 boolean formatCorrect=formatErrorManaging();
-                if(formatCorrect){
+                if(formatCorrect && login!=null){
                     Credentials crd=new Credentials();
                     crd.setEmail(etEmailAddress.getText().toString());
                     crd.setPassword(etPassword.getText().toString());
