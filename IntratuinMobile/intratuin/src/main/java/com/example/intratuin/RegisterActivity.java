@@ -22,6 +22,7 @@ import java.sql.Date;
 import com.example.intratuin.dto.Customer;
 import com.example.intratuin.settings.Settings;
 
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -127,6 +128,11 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
             tvError.setText(errorText);
             return false;
         }
+        errorText=longFieldError();
+        if(errorText!=""){
+            tvError.setText(errorText);
+            return false;
+        }
         errorText=emailFormatError();
         if(errorText!=""){
             tvError.setText(errorText);
@@ -156,6 +162,13 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
             return "You have to enter last name!";
         if(tvBirthDate.getText().length()==0)
             return "You have to enter birth date!";
+        return "";
+    }
+    private String longFieldError(){
+        if(etFirstName.getText().length()>100)
+            return "First name is too long!";
+        if(etLastName.getText().length()>100)
+            return "Last name is too long!";
         return "";
     }
     private String emailFormatError(){
@@ -208,6 +221,10 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
             try {
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                HttpComponentsClientHttpRequestFactory rf =
+                        (HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory();
+                rf.setReadTimeout(2000);
+                rf.setConnectTimeout(2000);
                 Message jsonObject = restTemplate.postForObject(register, customer[0], Message.class);
                 return jsonObject;
             } catch (Exception e) {

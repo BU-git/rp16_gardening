@@ -19,6 +19,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -167,6 +168,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             try {
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                HttpComponentsClientHttpRequestFactory rf =
+                        (HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory();
+                rf.setReadTimeout(2000);
+                rf.setConnectTimeout(2000);
                 Message jsonObject = restTemplate.postForObject(login, credentials[0], Message.class);
                 return jsonObject;
             } catch (Exception e) {
