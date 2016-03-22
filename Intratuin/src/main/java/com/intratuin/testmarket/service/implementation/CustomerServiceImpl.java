@@ -24,10 +24,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     public void save(Customer customer) {
+        customer.setEmail(customer.getEmail().toLowerCase());
         customerDao.save(customer);
     }
 
     public Integer findByEmail(String email) {
-        return customerDao.findByEmail(email);
+        return customerDao.findByEmail(email.toLowerCase());
     }
 }

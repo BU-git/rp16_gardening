@@ -16,6 +16,9 @@ public class Customer{
     @Column(name = "CUSTOMER_NAME")
     private String firstName;
 
+    @Column(name = "CUSTOMER_TUSSEN")
+    private String tussen;
+
     @Column(name = "CUSTOMER_SURNAME")
     private String lastName;
 
@@ -38,10 +41,13 @@ public class Customer{
     private String streetName;
 
     @Column(name = "HOUSE_NUMBER")
-    private int houseNumber;
+    private String houseNumber;
 
     @Column(name = "AREA_CODE")
     private String postalCode;
+
+    @Column(name = "GENDER")
+    private int gender;
 
     //@OneToOne(mappedBy = "customer")
     //private RetailCustomer retailCustomer;
@@ -136,11 +142,11 @@ public class Customer{
         this.streetName = streetName;
     }
 
-    public int getHouseNumber() {
+    public String getHouseNumber() {
         return houseNumber;
     }
 
-    public void setHouseNumber(int houseNumber) {
+    public void setHouseNumber(String houseNumber) {
         this.houseNumber = houseNumber;
     }
 
@@ -152,6 +158,22 @@ public class Customer{
         this.postalCode = postalCode;
     }
 
+    public String getTussen() {
+        return tussen;
+    }
+
+    public void setTussen(String tussen) {
+        this.tussen = tussen;
+    }
+
+    public int getGender() {
+        return gender;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
+    }
+/**/
     /*public RetailCustomer getRetailCustomer() {
         return retailCustomer;
     }

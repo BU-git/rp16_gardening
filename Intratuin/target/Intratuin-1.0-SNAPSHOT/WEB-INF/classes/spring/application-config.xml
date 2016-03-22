@@ -24,7 +24,6 @@
         <!--<property name="url" value="jdbc:mysql://127.10.50.130:3306/backend"/>
         <property name="username" value="admineGJ4GsE"/>
         <property name="password" value="uaBupAXpuxG2"/>-->
-
         <property name="url" value="jdbc:mysql://localhost:3306/bionic"/>
         <property name="username" value="root"/>
         <property name="password" value="1234"/>

@@ -17,7 +17,7 @@ public class Product {
     String productName;
 
     @Column(name = "PRODUCT_PRICE")//TODO:BigDecimal
-    Double productPrice;
+    int productPrice;
 
     /*
 //    @OneToMany(mappedBy = "product")
@@ -50,11 +50,11 @@ public class Product {
         this.productName = productName;
     }
 
-    public Double getProductPrice() {
+    public int getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(Double productPrice) {
+    public void setProductPrice(int productPrice) {
         this.productPrice = productPrice;
     }
 }
