@@ -6,7 +6,7 @@
     android:background="@drawable/gradient"
     android:gravity="left"
     android:orientation="vertical"
-    tools:context="com.example.intratuin.RegisterActivity">
+    tools:context="nl.intratuin.RegisterActivity">
 
 
     <EditText
