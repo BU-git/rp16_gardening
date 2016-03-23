@@ -7,5 +7,4 @@ public class Settings {
     private static String host="192.168.1.23";
 
     public static String getHost(){ return host;}
-    public static void setHost(String Host){ host=Host;}
 }

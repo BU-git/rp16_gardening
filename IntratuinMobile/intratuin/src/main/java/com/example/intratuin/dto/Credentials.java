@@ -28,16 +28,4 @@ public class Credentials {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public JSONObject toJSON(){
-        JSONObject json=new JSONObject();
-        try{
-            json.put("email",email);
-            json.put("password",password);
-            return json;
-        }
-        catch(JSONException e){
-            return null;
-        }
-    }
 }

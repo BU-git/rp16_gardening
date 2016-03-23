@@ -20,7 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -144,7 +144,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             return true;
         return false;
     }*/
-    private String emailFormatError(){
+    /*private String emailFormatError(){
         String emailErrorText="";
         if(etEmailAddress.getText().length()==0)
             emailErrorText="You have to enter email!";
@@ -153,8 +153,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         .length()-1)
             emailErrorText="Wrong email format!";
         return emailErrorText;
-    }
-    private String passwordFormatError(){
+    }*/
+    /*private String passwordFormatError(){
         String passwordErrorText="";
         if(etPassword.getText().length()==0)
             passwordErrorText="You have to enter password!";
@@ -166,7 +166,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         //    passwordErrorText="Password must contain digit, small and big letters!";//Those regexp not tested yet
 
         return passwordErrorText;
-    }
+    }*/
 
     class RequestResponse extends AsyncTask<Credentials, Void, Message>{
         @Override
@@ -174,8 +174,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             try {
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                HttpComponentsClientHttpRequestFactory rf =
-                        (HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory();
+                SimpleClientHttpRequestFactory rf =
+                        (SimpleClientHttpRequestFactory) restTemplate.getRequestFactory();
                 rf.setReadTimeout(2000);
                 rf.setConnectTimeout(2000);
                 Message jsonObject = restTemplate.postForObject(login, credentials[0], Message.class);

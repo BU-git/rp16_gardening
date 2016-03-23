@@ -29,7 +29,7 @@ public class CustomerController {
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public @ResponseBody Message add(@RequestBody Customer newCustomer) {
         //Check whether is email already registered or not
-        String emailToRegister = newCustomer.getEmail();
+        String emailToRegister = newCustomer.getEmail().toLowerCase();
         Integer existedCustomerId = service.findByEmail(emailToRegister);
 
         if (existedCustomerId != null) {

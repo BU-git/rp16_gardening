@@ -42,7 +42,7 @@ public class DatePickerFragment extends DialogFragment
     @Override
     public void onDateSet(android.widget.DatePicker datePicker, int year,
                           int month, int day) {
-        TextView tvBirthDate = (TextView) getActivity().findViewById(R.id.tvBirthDate);
+        TextView tvBirthDate = (TextView) getActivity().findViewById(R.id.tvBirthday);
         tvBirthDate.setText((month + 1) + "/" + day + "/" + year);
     }
 }

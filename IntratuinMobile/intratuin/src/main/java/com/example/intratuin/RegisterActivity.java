@@ -1,51 +1,56 @@
 package com.example.intratuin;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.example.intratuin.dto.Customer;
 import com.example.intratuin.dto.Message;
 import com.example.intratuin.handlers.DatePickerFragment;
+import com.example.intratuin.settings.Settings;
+
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Date;
-import com.example.intratuin.dto.Customer;
-import com.example.intratuin.settings.Settings;
-
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 
 public class RegisterActivity extends AppCompatActivity implements OnClickListener {
 
-    TextView tvFN;
-    TextView tvLN;
-    TextView tvMailAddress;
-    TextView tvPassword;
-    TextView tvRePassword;
-    TextView tvBirthday;
     EditText etFirstName;
+    EditText etTussen;
     EditText etLastName;
-    EditText etMailAddress;
+    EditText etEmail;
+    EditText etCity;
+    EditText etStreet;
+    EditText etHouse;
+    EditText etPostcode;
+    TextView tvBirthday;
+    Button bBirthday;
     EditText etPassword;
+    CheckBox cbShowPassword;
     EditText etRePassword;
+    CheckBox cbShowRePassword;
+    EditText etPhone;
     RadioButton rbMale;
     RadioButton rbFemale;
+    Button bCancel;
     Button bSignUp;
-    Button bBirthday;
-    TextView tvError;
     TextView tvResult;
-    TextView tvBirthDate;
 
     URI register=null;
 
@@ -54,29 +59,32 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        tvFN = (TextView)findViewById(R.id.tvFN);
-        tvLN = (TextView)findViewById(R.id.tvLN);
-        tvMailAddress = (TextView)findViewById(R.id.tvMailAddress);
-        tvPassword = (TextView)findViewById(R.id.tvPassword);
-        tvRePassword = (TextView)findViewById(R.id.tvRePassword);
-        tvBirthday = (TextView)findViewById(R.id.tvBirthday);
         etFirstName = (EditText)findViewById(R.id.etFirstName);
+        etTussen = (EditText)findViewById(R.id.etTussen);
         etLastName = (EditText)findViewById(R.id.etLastName);
-        etMailAddress = (EditText)findViewById(R.id.etMailAddress);
+        etEmail = (EditText)findViewById(R.id.etEmail);
+        etCity = (EditText)findViewById(R.id.etCity);
+        etStreet = (EditText)findViewById(R.id.etStreet);
+        etHouse = (EditText)findViewById(R.id.etHouse);
+        etPostcode = (EditText)findViewById(R.id.etPostcode);
+        tvBirthday = (TextView)findViewById(R.id.tvBirthday);
+        bBirthday = (Button)findViewById(R.id.bBirthday);
         etPassword = (EditText)findViewById(R.id.etPassword);
+        cbShowPassword = (CheckBox) findViewById(R.id.cbShowPassword);
         etRePassword = (EditText)findViewById(R.id.etRePassword);
+        cbShowRePassword = (CheckBox) findViewById(R.id.cbShowRePassword);
+        etPhone = (EditText)findViewById(R.id.etPhone);
         rbMale = (RadioButton)findViewById(R.id.rbMale);
         rbFemale = (RadioButton)findViewById(R.id.rbFemale);
+        bCancel = (Button)findViewById(R.id.bCancel);
         bSignUp = (Button)findViewById(R.id.bSignUp);
-        bBirthday = (Button)findViewById(R.id.bBirthday);
-        tvError = (TextView)findViewById(R.id.tvError);
         tvResult = (TextView)findViewById(R.id.tvResult);
-        tvBirthDate = (TextView)findViewById(R.id.tvBirthDate);
 
-        rbMale.setOnClickListener(this);
-        rbFemale.setOnClickListener(this);
-        bSignUp.setOnClickListener(this);
         bBirthday.setOnClickListener(this);
+        cbShowPassword.setOnClickListener(this);
+        cbShowRePassword.setOnClickListener(this);
+        bCancel.setOnClickListener(this);
+        bSignUp.setOnClickListener(this);
 
         try {
             register = new URL("http", Settings.getHost(),8080,"/customer/add").toURI();
@@ -91,37 +99,57 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
 
-            case R.id.rbMale:
-
-                break;
-
-            case R.id.rbFemale:
-
-                break;
-
-            case R.id.bSignUp:
-                tvResult.setText("");
-                boolean formatCorrect=formatErrorManaging();
-                if(formatCorrect && register!=null){
-                    Customer cust=new Customer();
-                    cust.setId(0);
-                    cust.setFirstName(etFirstName.getText().toString());
-                    cust.setLastName(etLastName.getText().toString());
-                    cust.setEmail(etMailAddress.getText().toString());
-                    cust.setPassword(etPassword.getText().toString());
-                    cust.setBirthday(parseDate(tvBirthDate.getText().toString()));
-
-                    new RequestResponse().execute(cust);
-                }
-                break;
-
             case R.id.bBirthday:
                 DialogFragment dateDialog = new DatePickerFragment();
                 dateDialog.show(getSupportFragmentManager(), "Intratuin");
                 break;
+            case R.id.cbShowPassword:
+                if(cbShowPassword.isChecked())
+                    etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                else etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                etPassword.setSelection(etPassword.length());
+                break;
+
+            case R.id.cbShowRePassword:
+                if(cbShowRePassword.isChecked())
+                    etRePassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                else etRePassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                etRePassword.setSelection(etRePassword.length());
+                break;
+
+            case R.id.bCancel:
+                Intent loginIntent = new Intent(this, LoginActivity.class);
+                startActivity(loginIntent);
+                break;
+
+            case R.id.bSignUp:
+                tvResult.setText("");
+                //DATA VALIDATION MUST BE HERE!
+                //boolean formatCorrect=formatErrorManaging();
+                if(register!=null){//&& Data validation passed
+                    Customer cust=new Customer();
+                    cust.setId(0);
+                    cust.setFirstName(etFirstName.getText().toString());
+                    cust.setTussen(etTussen.getText().toString());
+                    cust.setLastName(etLastName.getText().toString());
+                    cust.setEmail(etEmail.getText().toString());
+                    cust.setCity(etCity.getText().toString());
+                    cust.setStreetName(etStreet.getText().toString());
+                    cust.setHouseNumber(etHouse.getText().toString());
+                    cust.setPostalCode(etPostcode.getText().toString());
+                    cust.setBirthday(parseDate(tvBirthday.getText().toString()));
+                    cust.setPassword(etPassword.getText().toString());
+                    cust.setPhoneNumber(etPhone.getText().toString());
+                    if(rbMale.isChecked())
+                        cust.setGender(1);
+                    else cust.setGender(0);
+
+                    new RequestResponse().execute(cust);
+                }
+                break;
         }
     }
-    private boolean formatErrorManaging(){
+    /*private boolean formatErrorManaging(){
         tvError.setText("");
         String errorText=emptyFieldError();
         if(errorText!=""){
@@ -154,24 +182,24 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
             return false;
         }
         return true;
-    }
-    private String emptyFieldError(){
+    }*/
+    /*private String emptyFieldError(){
         if(etFirstName.getText().length()==0)
             return "You have to enter first name!";
         if(etLastName.getText().length()==0)
             return "You have to enter last name!";
-        if(tvBirthDate.getText().length()==0)
+        if(tvBirthday.getText().length()==0)
             return "You have to enter birth date!";
         return "";
-    }
-    private String longFieldError(){
+    }*/
+    /*private String longFieldError(){
         if(etFirstName.getText().length()>100)
             return "First name is too long!";
         if(etLastName.getText().length()>100)
             return "Last name is too long!";
         return "";
-    }
-    private String emailFormatError(){
+    }*/
+    /*private String emailFormatError(){
         String emailErrorText="";
         if(etMailAddress.getText().length()==0)
             emailErrorText="You have to enter email!";
@@ -183,36 +211,36 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                 etMailAddress.getText().toString().lastIndexOf("@"))
             emailErrorText="Wrong email format!";
         return emailErrorText;
-    }
-    private String passwordFormatError(){
+    }*/
+    /*private String passwordFormatError(){
         String passwordErrorText="";
         if(etPassword.getText().length()==0)
             passwordErrorText="You have to enter password!";
         else if(etPassword.getText().length()<6 || etPassword.getText().length()>15)
             passwordErrorText="Password must be from 6 to 15 characters!";
-        //else if(!etPassword.getText().toString().matches("d") ||
-        //        !etPassword.getText().toString().matches("[a-z]") ||
-        //        !etPassword.getText().toString().matches("[A-Z]]"))
-        //    passwordErrorText="Password must contain digit, small and big letters!";
+        //else if(!etPassword.getText().toString().matches("d") ||       //Contains digit
+        //        !etPassword.getText().toString().matches("[a-z]") ||   //Contains small letter
+        //        !etPassword.getText().toString().matches("[A-Z]]"))    //Contains cap letter
+        //    passwordErrorText="Password must contain digit, small and big letters!";//Those regexp not tested yet
 
         return passwordErrorText;
-    }
-    private String rePasswordFormatError() {
+    }*/
+    /*private String rePasswordFormatError() {
         String passwordErrorText="";
         if(etRePassword.getText().length()==0)
             passwordErrorText="You have to re-enter password!";
         else if(!etPassword.getText().toString().equals(etRePassword.getText().toString()))
             passwordErrorText="Passwords in two fields does not match!";
         return passwordErrorText;
-    }
-    private String sexError() {
+    }*/
+    /*private String sexError() {
         if(rbFemale.isChecked()||rbMale.isChecked())
             return "";
         return "You have to select sex!";
-    }
+    }*/
     private Date parseDate(String str){
         String[] s=str.split("/");
-        return new Date(Integer.parseInt(s[2]),Integer.parseInt(s[0]),Integer.parseInt(s[1]));
+        return new Date(Integer.parseInt(s[2])-1900,Integer.parseInt(s[0])-1,Integer.parseInt(s[1]));
     }
 
     class RequestResponse extends AsyncTask<Customer, Void, Message> {
@@ -221,8 +249,8 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
             try {
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                HttpComponentsClientHttpRequestFactory rf =
-                        (HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory();
+                SimpleClientHttpRequestFactory rf =
+                        (SimpleClientHttpRequestFactory) restTemplate.getRequestFactory();
                 rf.setReadTimeout(2000);
                 rf.setConnectTimeout(2000);
                 Message jsonObject = restTemplate.postForObject(register, customer[0], Message.class);

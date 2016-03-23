@@ -126,27 +126,4 @@ public class Customer {
     public int getGender() { return gender; }
 
     public void setGender(int gender) { this.gender = gender; }
-
-    public JSONObject toJSON(){
-        JSONObject json=new JSONObject();
-        try{
-            json.put("id",id);
-            json.put("firstName",firstName);
-            json.put("tussen",tussen);
-            json.put("lastName",lastName);
-            json.put("email",email);
-            json.put("password",password);
-            json.put("phoneNumber",phoneNumber);
-            json.put("birthday",birthday);
-            json.put("city",city);
-            json.put("streetName",streetName);
-            json.put("houseNumber",houseNumber);
-            json.put("postalCode",postalCode);
-            json.put("gender",gender);
-            return json;
-        }
-        catch(JSONException e){
-            return null;
-        }
-    }
 }
