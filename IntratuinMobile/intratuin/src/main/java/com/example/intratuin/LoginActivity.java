@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -29,15 +30,20 @@ import org.springframework.web.client.RestTemplate;
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
 
-    TextView tvEmailAddress;
-    TextView tvPassword;
-    TextView tvRegisterLink;
+    Button bFacebook;
+    Button bTwitter;
+    //TextView tvEmailAddress;
+    //TextView tvPassword;
+    //TextView tvRegisterLink;
     EditText etEmailAddress;
-    TextView tvEmailError;
+    //TextView tvEmailError;
     EditText etPassword;
-    TextView tvPasswordError;
+    //TextView tvPasswordError;
     Button bLogin;
+    Button bRegister;
+    Button bForgot;
     CheckBox cbRemember;
+    CheckBox cbShow;
     TextView tvResult;
 
     URI login=null;
@@ -49,22 +55,23 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         //FacebookSdk.sdkInitialize(getApplicationContext());
         //callbackManager = CallbackManager.Factory.create();
 
-        tvEmailAddress = (TextView)findViewById(R.id.tvEmailAddress);
-        tvPassword = (TextView)findViewById(R.id.tvPassword);
+        bFacebook = (Button) findViewById(R.id.bFacebook);
+        bTwitter = (Button) findViewById(R.id.bTwitter);
         etEmailAddress = (EditText)findViewById(R.id.etEmailAddress);
-        tvEmailError = (TextView)findViewById(R.id.tvEmailError);
         etPassword = (EditText)findViewById(R.id.etPassword);
-        tvPasswordError = (TextView)findViewById(R.id.tvPasswordError);
-        //bLoginTwitter = (Button)findViewById(R.id.bLoginTwitter);
-        //bLoginFacebook = (LoginButton)findViewById(R.id.bLoginFacebook);
         bLogin = (Button) findViewById(R.id.bLogin);
-        tvRegisterLink = (TextView) findViewById(R.id.tvRegisterLink);
+        bRegister = (Button) findViewById(R.id.bRegister);
+        bForgot = (Button) findViewById(R.id.bForgot);
         cbRemember = (CheckBox) findViewById(R.id.cbRemember);
+        cbShow = (CheckBox) findViewById(R.id.cbShow);
         tvResult = (TextView)findViewById(R.id.tvResult);
-        // bLoginTwitter.setOnClickListener(this);
-        //bLoginFacebook.setOnClickListener(this);
+
+        bFacebook.setOnClickListener(this);
+        bTwitter.setOnClickListener(this);
         bLogin.setOnClickListener(this);
-        tvRegisterLink.setOnClickListener(this);
+        bRegister.setOnClickListener(this);
+        bForgot.setOnClickListener(this);
+        cbShow.setOnClickListener(this);
 
         try {
             login = new URL("http", Settings.getHost(),8080,"/customer/login").toURI();
@@ -73,16 +80,20 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         } catch (URISyntaxException e){
             tvResult.setText("Wrong URI format!");
         }
-        cbRemember.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.bFacebook:
+                break;
+            case R.id.bTwitter:
+                break;
             case R.id.bLogin:
                 tvResult.setText("");
-                boolean formatCorrect=formatErrorManaging();
-                if(formatCorrect && login!=null){
+                //DATA VALIDATION MUST BE HERE!
+                //boolean formatCorrect=formatErrorManaging();
+                if(login!=null){//&& Data validation passed
                     Credentials crd=new Credentials();
                     crd.setEmail(etEmailAddress.getText().toString());
                     crd.setPassword(etPassword.getText().toString());
@@ -90,27 +101,22 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     new RequestResponse().execute(crd);
                 }
                 break;
-
-            case R.id.tvRegisterLink:
+            case R.id.bRegister:
                 Intent registerIntent = new Intent(this, RegisterActivity.class);
                 startActivity(registerIntent);
                 break;
-
-            //case R.id.bLoginTwitter:
-
-            //    break;
-
-            //case R.id.bLoginFacebook:
-
-            //    break;
-
-            case R.id.cbRemember:
-
+            case R.id.bForgot:
+                break;
+            case R.id.cbShow:
+                if(cbShow.isChecked())
+                    etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                else etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                etPassword.setSelection(etPassword.length());
                 break;
         }
     }
 
-    private boolean formatErrorManaging(){
+    /*private boolean formatErrorManaging(){
         //Checks formats, return true if everything is correct. Shows error and returns false if not
         String emailErrorText=emailFormatError();
 
@@ -137,7 +143,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         if(emailErrorText=="" && passwordErrorText=="")
             return true;
         return false;
-    }
+    }*/
     private String emailFormatError(){
         String emailErrorText="";
         if(etEmailAddress.getText().length()==0)
@@ -152,12 +158,12 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         String passwordErrorText="";
         if(etPassword.getText().length()==0)
             passwordErrorText="You have to enter password!";
-        else if(etPassword.getText().length()<6 || etPassword.getText().length()>15)
+        else if(etPassword.getText().length()<6)
             passwordErrorText="Password must be from 6 to 15 characters!";
-        //else if(!etPassword.getText().toString().matches("d") ||
-        //        !etPassword.getText().toString().matches("[a-z]") ||
-        //        !etPassword.getText().toString().matches("[A-Z]]"))
-        //    passwordErrorText="Password must contain digit, small and big letters!";
+        //else if(!etPassword.getText().toString().matches("d") ||       //Contains digit
+        //        !etPassword.getText().toString().matches("[a-z]") ||   //Contains small letter
+        //        !etPassword.getText().toString().matches("[A-Z]]"))    //Contains cap letter
+        //    passwordErrorText="Password must contain digit, small and big letters!";//Those regexp not tested yet
 
         return passwordErrorText;
     }
