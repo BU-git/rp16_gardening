@@ -87,7 +87,9 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         bSignUp.setOnClickListener(this);
 
         try {
-            register = new URL("http", Settings.getHost(),8080,"/customer/add").toURI();
+            String localUrl=Settings.usingDeployed()?"/Intratuin/customer/add":"/customer/add";
+            int port=Settings.usingDeployed()?8888:8080;
+            register = new URL("http", Settings.getHost(),port,localUrl).toURI();
         } catch (MalformedURLException e){
             tvResult.setText("Wrong URL format!");
         } catch (URISyntaxException e){
