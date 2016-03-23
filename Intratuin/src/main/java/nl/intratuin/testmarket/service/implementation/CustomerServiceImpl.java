@@ -1,5 +1,7 @@
 package nl.intratuin.testmarket.service.implementation;
 
+import nl.intratuin.testmarket.Credentials;
+import nl.intratuin.testmarket.Message;
 import nl.intratuin.testmarket.dao.contract.CustomerDao;
 import nl.intratuin.testmarket.service.contract.CustomerService;
 import nl.intratuin.testmarket.entity.Customer;
@@ -30,5 +32,32 @@ public class CustomerServiceImpl implements CustomerService {
 
     public Integer findByEmail(String email) {
         return customerDao.findByEmail(email.toLowerCase());
+    }
+
+    public Message addCustomer(Customer customer) {
+        //Check whether is email already registered or not
+        String emailToRegister = customer.getEmail().toLowerCase();
+        Integer existedCustomerId = customerDao.findByEmail(emailToRegister);
+
+        if (existedCustomerId != null) {
+            return new Message("Sorry, this email address is already registered, choose another.");
+        } else {
+            customerDao.save(customer);
+            return new Message("Registration is successful");
+        }
+    }
+
+    @Override
+    public Message login(Credentials credentials) {
+        String emailToLogin = credentials.getEmail();
+        Integer foundCustomerId = customerDao.findByEmail(emailToLogin);
+        if (foundCustomerId != null) {
+            Customer customerToLogin = customerDao.findById(foundCustomerId);
+            return (customerToLogin.getPassword().equals(credentials.getPassword()))
+                    ? new Message("Login is successful")
+                    : new Message("Sorry, your username and password are incorrect - please try again.");
+        } else {
+            return new Message("Sorry, your username and password are incorrect - please try again.");
+        }
     }
 }
