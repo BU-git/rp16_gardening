@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true">
+
+<RelativeLayout
+    android:id="@+id/rlRegister"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@drawable/gradient"
-    android:gravity="left"
     android:orientation="vertical"
     tools:context="nl.intratuin.RegisterActivity">
 
 
     <EditText
         android:id="@+id/etFirstName"
-        android:layout_width="156dp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:inputType="textCapWords|textPersonName"
         android:hint="First name"
         android:maxLength="100"
@@ -24,8 +31,10 @@
 
     <EditText
         android:id="@+id/etTussen"
-        android:layout_width="156dp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:hint="Tussenvoegsel"
         android:layout_below="@+id/etFirstName"
         android:layout_alignParentRight="true"
@@ -37,8 +46,10 @@
 
     <EditText
         android:id="@+id/etLastName"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:ems="10"
         android:hint="Last name"
         android:layout_below="@+id/etTussen"
@@ -52,18 +63,25 @@
         android:id="@+id/bSignUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/button"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:text="Sign-up"
         android:layout_toRightOf="@+id/tvResult"
-        android:layout_above="@+id/tvResult"
+        android:layout_below="@+id/rgGender"
         android:layout_alignRight="@+id/cbShowRePassword"
         android:layout_alignEnd="@+id/cbShowRePassword" />
 
     <Button
         android:id="@+id/bBirthday"
+        android:background="@drawable/button"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Day of birth"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:text="  Day of birth  "
         android:layout_below="@+id/etPostcode"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
@@ -73,8 +91,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:text="Sex"
-        android:layout_above="@+id/bSignUp"
+        android:layout_below="@+id/etPhone"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
@@ -112,6 +132,8 @@
         android:id="@+id/etEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:ems="10"
         android:inputType="textEmailAddress"
         android:hint="Email"
@@ -120,8 +142,10 @@
 
     <EditText
         android:id="@+id/etCity"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:ems="10"
         android:hint="City"
         android:layout_below="@+id/etEmail"
@@ -132,8 +156,10 @@
 
     <EditText
         android:id="@+id/etStreet"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
         android:ems="10"
         android:hint="Street"
         android:layout_below="@+id/etCity"
@@ -144,8 +170,10 @@
 
     <EditText
         android:id="@+id/etHouse"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
         android:ems="10"
         android:hint="House"
         android:layout_below="@+id/etCity"
@@ -156,8 +184,10 @@
 
     <EditText
         android:id="@+id/etPostcode"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:ems="10"
         android:hint="Postcode"
         android:layout_below="@+id/etHouse"
@@ -169,6 +199,8 @@
         android:id="@+id/tvBirthday"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
         android:ems="10"
         android:inputType="none"
         android:enabled="false"
@@ -182,6 +214,8 @@
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
         android:ems="10"
         android:hint="Password"
         android:layout_below="@+id/bBirthday"
@@ -194,6 +228,8 @@
         android:id="@+id/etRePassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
         android:ems="10"
         android:hint="Re-enter password"
         android:layout_below="@+id/etPassword"
@@ -207,6 +243,9 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:text="Show  "
         android:id="@+id/cbShowPassword"
         android:layout_below="@+id/bBirthday"
@@ -216,6 +255,9 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:text="Show  "
         android:id="@+id/cbShowRePassword"
         android:layout_below="@+id/etPassword"
@@ -224,8 +266,12 @@
 
     <Button
         android:id="@+id/bCancel"
+        android:background="@drawable/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
         android:text="Cancel"
         android:layout_below="@+id/rgGender"
         android:layout_toLeftOf="@+id/bSignUp"
@@ -236,6 +282,8 @@
         android:id="@+id/etPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:ems="10"
         android:inputType="number|text"
         android:hint="Cellphone number"
@@ -246,3 +294,4 @@
 
 
 </RelativeLayout>
+</ScrollView>
