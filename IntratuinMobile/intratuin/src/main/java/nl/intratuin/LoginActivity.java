@@ -69,9 +69,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         cbShow.setOnClickListener(this);
 
         try {
-            String localUrl=Settings.usingDeployed()?"/Intratuin/customer/login":"/customer/login";
-            int port=Settings.usingDeployed()?8888:8080;
-            login = new URL("http", Settings.getHost(),port,localUrl).toURI();
+            login = new URL("http", Settings.getHost(),8080,"/customer/login").toURI();
         } catch (MalformedURLException e){
             tvResult.setText("Wrong URL format!");
         } catch (URISyntaxException e){
