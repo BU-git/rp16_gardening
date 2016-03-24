@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
     android:background="@drawable/gradient"
     android:orientation="vertical"
     tools:context="nl.intratuin.LoginActivity">
@@ -15,7 +14,9 @@
         android:layout_alignParentTop="true"
         android:background="#FFF8DC"
         android:layout_marginTop="10dp"
-        android:src="@drawable/logo"/>
+        android:src="@drawable/logo"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,6 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:hint="Email"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_below="@id/bTwitter"
         android:background="#FFF8DC"
         android:password="false" />
@@ -56,25 +59,29 @@
         android:layout_marginBottom="20dp"
         android:layout_height="wrap_content"
         android:hint="Password"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="#FFF8DC"
         android:layout_below="@id/etEmailAddress"
         android:maxLength="15" />
 
     <CheckBox
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="Remember me"
-        android:background="#FFF8DC"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/button"
         android:layout_below="@id/etPassword"
         android:id="@+id/cbRemember" />
 
     <CheckBox
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="Show password"
         android:layout_marginBottom="10dp"
         android:id="@+id/cbShow"
-        android:background="#FFF8DC"
+        android:background="@drawable/button"
+        android:layout_marginRight="10dp"
         android:layout_gravity="right"
         android:layout_alignTop="@+id/cbRemember"
         android:layout_alignRight="@+id/bLogin"
@@ -82,13 +89,15 @@
 
     <Button
         android:id="@+id/bLogin"
+        android:background="@drawable/button"
         android:layout_width="match_parent"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_height="wrap_content"
         android:text="Sign-in"
         android:layout_below="@id/cbRemember"
-        android:background="#FFF8DC"
         android:clickable="false" />
 
 <!--
@@ -100,32 +109,33 @@
 
     <Button
         android:id="@+id/bRegister"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+        android:layout_width="250dp"
+        android:layout_height="35dp"
         android:text="Register"
-        android:background="#FFF8DC"
+        android:background="@drawable/button"
         android:clickable="false"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:layout_below="@+id/bLogin"
         android:layout_centerHorizontal="true" />
 
     <Button
         android:id="@+id/bForgot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="10sp"
+        android:layout_width="200dp"
+        android:layout_height="25dp"
+        android:textSize="12sp"
         android:text="Forgot password"
-        android:background="#FFF8DC"
+        android:background="@drawable/button"
         android:clickable="false"
         android:layout_gravity="right"
-        android:maxLength="60"
+        android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/tvResult"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
         android:textColor="#000000"
         android:textSize="25dp"
