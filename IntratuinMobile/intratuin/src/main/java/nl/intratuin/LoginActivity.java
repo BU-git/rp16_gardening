@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.CheckBox;
+
 import nl.intratuin.dto.Credentials;
 import nl.intratuin.dto.Message;
 import nl.intratuin.settings.Settings;
