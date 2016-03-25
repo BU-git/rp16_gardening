@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:backgroundTint="#000000">
 
     <RelativeLayout
         android:id="@+id/rlRecover"
@@ -18,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:background="#FFF8DC"
+            android:background="@drawable/image_stroke"
             android:layout_marginTop="10dp"
             android:src="@drawable/logo"
             android:layout_marginLeft="10dp"
@@ -39,7 +40,7 @@
 
         <Button
             android:id="@+id/bRecover"
-            android:background="@drawable/button"
+            android:background="@drawable/button_action"
             android:layout_width="match_parent"
             android:layout_marginTop="30dp"
             android:layout_marginLeft="10dp"
@@ -55,7 +56,7 @@
             android:layout_height="30dp"
             android:text="@string/register"
             android:textSize="10sp"
-            android:background="@drawable/button"
+            android:background="@drawable/button_action"
             android:layout_below="@+id/bRecover"
             android:layout_marginTop="70dp"
             android:layout_marginBottom="10dp"

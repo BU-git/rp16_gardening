@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="#FFF8DC"
+        android:background="@drawable/image_stroke"
         android:layout_marginTop="10dp"
         android:src="@drawable/logo"
         android:layout_marginLeft="10dp"
@@ -93,7 +93,7 @@
 
     <Button
         android:id="@+id/bLogin"
-        android:background="@drawable/button"
+        android:background="@drawable/button_action"
         android:layout_width="match_parent"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="20dp"
@@ -113,28 +113,29 @@
 
     <Button
         android:id="@+id/bRegister"
-        android:layout_width="210dp"
+        android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:text="@string/register"
+        android:layout_marginLeft="10dp"
         android:textSize="10sp"
-        android:background="@drawable/button"
+        android:background="@drawable/button_action"
         android:clickable="false"
-        android:layout_marginTop="40dp"
         android:layout_below="@+id/bLogin"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
     <Button
         android:id="@+id/bForgot"
-        android:layout_width="140dp"
-        android:layout_height="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
         android:textSize="10sp"
+        android:layout_marginRight="10dp"
         android:text="@string/forgotpass"
-        android:layout_below="@+id/bRegister"
-        android:background="@drawable/button"
+        android:background="@drawable/button_action"
         android:clickable="false"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/bLogin"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
    <TextView
         android:id="@+id/tvResult"
@@ -144,6 +145,7 @@
         android:textSize="10sp"
         android:background="#FFF8DC"
        android:textAlignment="center"
+       android:layout_marginTop="10dp"
        android:layout_below="@+id/bForgot"
        android:layout_alignLeft="@+id/bLogin"
        android:layout_alignStart="@+id/bLogin"

@@ -1,6 +1,7 @@
 package nl.intratuin;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -11,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -51,6 +53,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     Button bCancel;
     Button bSignUp;
     TextView tvResult;
+    ImageView ivIntratuin;
 
     URI register=null;
 
@@ -79,12 +82,14 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         bCancel = (Button)findViewById(R.id.bCancel);
         bSignUp = (Button)findViewById(R.id.bSignUp);
         tvResult = (TextView)findViewById(R.id.tvResult);
+        ivIntratuin = (ImageView) findViewById(R.id.ivIntratuin);
 
         bBirthday.setOnClickListener(this);
         cbShowPassword.setOnClickListener(this);
         cbShowRePassword.setOnClickListener(this);
         bCancel.setOnClickListener(this);
         bSignUp.setOnClickListener(this);
+        ivIntratuin.setOnClickListener(this);
 
         try {
             register = new URL("http", Settings.getHost(),8080,"/customer/add").toURI();
@@ -148,6 +153,11 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
 
                     new RequestResponse().execute(cust);
                 }
+                break;
+
+            case R.id.ivIntratuin:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.intratuin.nl/"));
+                startActivity(browserIntent);
                 break;
         }
     }

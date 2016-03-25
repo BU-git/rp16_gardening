@@ -1,6 +1,7 @@
 package nl.intratuin;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.CheckBox;
 import nl.intratuin.dto.Credentials;
@@ -40,7 +42,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     CheckBox cbRemember;
     CheckBox cbShow;
     TextView tvResult;
-
+    ImageView ivIntratuin;
     URI login=null;
 
     @Override
@@ -60,6 +62,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         cbRemember = (CheckBox) findViewById(R.id.cbRemember);
         cbShow = (CheckBox) findViewById(R.id.cbShow);
         tvResult = (TextView)findViewById(R.id.tvResult);
+        ivIntratuin = (ImageView) findViewById(R.id.ivIntratuin);
 
         bFacebook.setOnClickListener(this);
         bTwitter.setOnClickListener(this);
@@ -67,6 +70,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         bRegister.setOnClickListener(this);
         bForgot.setOnClickListener(this);
         cbShow.setOnClickListener(this);
+        ivIntratuin.setOnClickListener(this);
 
         try {
             login = new URL("http", Settings.getHost(),8080,"/customer/login").toURI();
@@ -114,6 +118,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 else etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     etPassword.setSelection(etPassword.length());
+                break;
+
+            case R.id.ivIntratuin:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.intratuin.nl/"));
+                startActivity(browserIntent);
                 break;
         }
     }
