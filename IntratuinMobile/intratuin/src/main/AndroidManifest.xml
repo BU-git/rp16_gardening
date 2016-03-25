@@ -23,6 +23,10 @@
             android:name=".RegisterActivity"
             android:label="@string/register"
             android:screenOrientation="portrait" />
+        <activity android:name=".RecoverActivity"
+            android:label="@string/recover"
+            android:screenOrientation="portrait">
+        </activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -34,11 +38,9 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
-        <activity android:name=".RecoverActivity"
-            android:label="@string/recover"
-            android:screenOrientation="portrait">
-        </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="54232ea986b4a1d538079a1a020243c78d572f7d" />
     </application>
 
 </manifest>

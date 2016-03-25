@@ -6,25 +6,30 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.CheckBox;
-import nl.intratuin.dto.Credentials;
-import nl.intratuin.dto.Message;
-import nl.intratuin.settings.Settings;
 
-import java.net.MalformedURLException;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
+import io.fabric.sdk.android.Fabric;
+import nl.intratuin.dto.Credentials;
+import nl.intratuin.dto.TwitterLogin;
+import nl.intratuin.net.*;
+import nl.intratuin.settings.Settings;
 
 //import com.facebook.CallbackManager;
 //import com.facebook.FacebookSdk;
@@ -33,7 +38,7 @@ import org.springframework.web.client.RestTemplate;
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
 
     Button bFacebook;
-    Button bTwitter;
+    TwitterLoginButton bTwitter;
     EditText etEmailAddress;
     EditText etPassword;
     Button bLogin;
@@ -42,18 +47,26 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     CheckBox cbRemember;
     CheckBox cbShow;
     TextView tvResult;
+
     ImageView ivIntratuin;
     URI login=null;
+
+
+    URI loginUri=null;
+    URI twitterLoginUri=null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TwitterAuthConfig authConfig = Settings.getTwitterConfig();
+        Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_login);
         //FacebookSdk.sdkInitialize(getApplicationContext());
         //callbackManager = CallbackManager.Factory.create();
 
         bFacebook = (Button) findViewById(R.id.bFacebook);
-        bTwitter = (Button) findViewById(R.id.bTwitter);
+        bTwitter = (TwitterLoginButton) findViewById(R.id.bTwitter);
         etEmailAddress = (EditText)findViewById(R.id.etEmailAddress);
         etPassword = (EditText)findViewById(R.id.etPassword);
         bLogin = (Button) findViewById(R.id.bLogin);
@@ -72,34 +85,52 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         cbShow.setOnClickListener(this);
         ivIntratuin.setOnClickListener(this);
 
-        try {
-            login = new URL("http", Settings.getHost(),8080,"/customer/login").toURI();
-        } catch (MalformedURLException e){
-            tvResult.setText("Wrong URL format!");
-        } catch (URISyntaxException e){
-            tvResult.setText("Wrong URI format!");
-        }
+        bTwitter.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                TwitterSession session = result.data;
+                twitterLoginUri=new UriConstructor(tvResult).makeFullURI("/customer/loginTwitter");
+                if(twitterLoginUri!=null){
+                    TwitterLogin twitterLogin=new TwitterLogin();
+                    twitterLogin.setEmail("alice1@com");//TODO: get email from Twitter API when app will be whitelisted
+                    twitterLogin.setKey(Settings.getTwitterKey());
+
+                    new RequestResponse<TwitterLogin>(twitterLoginUri, 3, tvResult).execute(twitterLogin);
+                }
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                Log.d("TwitterKit", "Login with Twitter failure", exception);
+            }
+        });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Make sure that the loginButton hears the result from any
+        // Activity that it triggered.
+        bTwitter.onActivityResult(requestCode, resultCode, data);
+    }
+
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bFacebook:
                 break;
-
-            case R.id.bTwitter:
-                break;
-
             case R.id.bLogin:
                 tvResult.setText("");
+                loginUri=new UriConstructor(tvResult).makeFullURI("/customer/login");
                 //DATA VALIDATION MUST BE HERE!
                 //boolean formatCorrect=formatErrorManaging();
-                if(login!=null){//&& Data validation passed
+                if(loginUri!=null){//&& Data validation passed
                     Credentials crd=new Credentials();
                     crd.setEmail(etEmailAddress.getText().toString());
                     crd.setPassword(etPassword.getText().toString());
 
-                    new RequestResponse().execute(crd);
+                    new RequestResponse<Credentials>(loginUri, 3, tvResult).execute(crd);
                 }
                 break;
 
@@ -178,27 +209,5 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         return passwordErrorText;
     }*/
-
-    class RequestResponse extends AsyncTask<Credentials, Void, Message>{
-        @Override
-        protected Message doInBackground(Credentials... credentials) {
-            try {
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                SimpleClientHttpRequestFactory rf =
-                        (SimpleClientHttpRequestFactory) restTemplate.getRequestFactory();
-                rf.setReadTimeout(2000);
-                rf.setConnectTimeout(2000);
-                Message jsonObject = restTemplate.postForObject(login, credentials[0], Message.class);
-                return jsonObject;
-            } catch (Exception e) {
-                return null;
-            }
-        }
-        @Override
-        protected void onPostExecute(Message msg){
-            tvResult.setText(msg==null?"Request error!":msg.getMessage());
-        }
-    }
 }
 

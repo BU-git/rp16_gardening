@@ -1,6 +1,8 @@
 package nl.intratuin.testmarket.controller;
 
 import nl.intratuin.testmarket.Credentials;
+import nl.intratuin.testmarket.Settings;
+import nl.intratuin.testmarket.TwitterLogin;
 import nl.intratuin.testmarket.service.contract.CustomerService;
 import nl.intratuin.testmarket.Message;
 import nl.intratuin.testmarket.entity.Customer;
@@ -51,6 +53,23 @@ public class CustomerController {
                     : new Message("Sorry, your username and password are incorrect - please try again.");
         } else {
             return new Message("Sorry, your username and password are incorrect - please try again.");
+        }
+    }
+
+    @RequestMapping(value = "loginTwitter", method = RequestMethod.POST)
+    public @ResponseBody Message loginTwitter(@RequestBody TwitterLogin twitterLogin) {
+        String twitterKey = twitterLogin.getKey();
+        if(!twitterKey.equals(Settings.getTwitterKey()))
+            return new Message("Wrong Twitter key.");
+        String emailToLogin = twitterLogin.getEmail();
+        Integer foundCustomerId = service.findByEmail(emailToLogin);
+        if (foundCustomerId != null) {
+            return new Message("Login is successful");
+        } else {
+            Customer newCustomer = new Customer();
+            newCustomer.setEmail(emailToLogin);
+            service.save(newCustomer);
+            return new Message("Registration and login is successful.");
         }
     }
 }

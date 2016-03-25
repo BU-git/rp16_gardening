@@ -1,8 +1,11 @@
 package nl.intratuin;
 
 import android.content.Intent;
+<<<<<<< HEAD
 import android.net.Uri;
 import android.os.AsyncTask;
+=======
+>>>>>>> 1e13fc7146dcf72ff6fa55f463f522e5bac3e3d9
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -16,20 +19,12 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import nl.intratuin.dto.Customer;
-import nl.intratuin.dto.Message;
-import nl.intratuin.handlers.DatePickerFragment;
-import nl.intratuin.settings.Settings;
-
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.Date;
+
+import nl.intratuin.dto.Customer;
+import nl.intratuin.handlers.DatePickerFragment;
+import nl.intratuin.net.*;
 
 public class RegisterActivity extends AppCompatActivity implements OnClickListener {
 
@@ -55,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     TextView tvResult;
     ImageView ivIntratuin;
 
-    URI register=null;
+    URI registerUri=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +86,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         bSignUp.setOnClickListener(this);
         ivIntratuin.setOnClickListener(this);
 
-        try {
-            register = new URL("http", Settings.getHost(),8080,"/customer/add").toURI();
-        } catch (MalformedURLException e){
-            tvResult.setText("Wrong URL format!");
-        } catch (URISyntaxException e){
-            tvResult.setText("Wrong URI format!");
-        }
+        registerUri=new UriConstructor(tvResult).makeFullURI("/customer/add");
     }
 
     @Override
@@ -132,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                 tvResult.setText("");
                 //DATA VALIDATION MUST BE HERE!
                 //boolean formatCorrect=formatErrorManaging();
-                if(register!=null){//&& Data validation passed
+                if(registerUri!=null){//&& Data validation passed
                     Customer cust=new Customer();
                     cust.setId(0);
                     cust.setFirstName(etFirstName.getText().toString());
@@ -151,7 +140,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                     else
                         cust.setGender(0);
 
-                    new RequestResponse().execute(cust);
+                    new RequestResponse<Customer>(registerUri, 3, tvResult).execute(cust);
                 }
                 break;
 
@@ -254,28 +243,5 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     private Date parseDate(String str){
         String[] s=str.split("/");
         return new Date(Integer.parseInt(s[2])-1900,Integer.parseInt(s[0])-1,Integer.parseInt(s[1]));
-    }
-
-    class RequestResponse extends AsyncTask<Customer, Void, Message> {
-        @Override
-        protected Message doInBackground(Customer... customer) {
-            try {
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                SimpleClientHttpRequestFactory rf =
-                        (SimpleClientHttpRequestFactory) restTemplate.getRequestFactory();
-                rf.setReadTimeout(2000);
-                rf.setConnectTimeout(2000);
-                Message jsonObject = restTemplate.postForObject(register, customer[0], Message.class);
-                return jsonObject;
-            } catch (Exception e) {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Message msg){
-            tvResult.setText(msg==null?"Request error!":msg.getMessage());
-        }
     }
 }
