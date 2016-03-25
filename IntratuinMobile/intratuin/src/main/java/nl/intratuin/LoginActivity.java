@@ -82,8 +82,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         switch (view.getId()) {
             case R.id.bFacebook:
                 break;
+
             case R.id.bTwitter:
                 break;
+
             case R.id.bLogin:
                 tvResult.setText("");
                 //DATA VALIDATION MUST BE HERE!
@@ -96,17 +98,22 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     new RequestResponse().execute(crd);
                 }
                 break;
+
             case R.id.bRegister:
                 Intent registerIntent = new Intent(this, RegisterActivity.class);
                 startActivity(registerIntent);
                 break;
+
             case R.id.bForgot:
+                Intent recoverIntent = new Intent(this, RecoverActivity.class);
+                startActivity(recoverIntent);
                 break;
+
             case R.id.cbShow:
                 if(cbShow.isChecked())
                     etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 else etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                etPassword.setSelection(etPassword.length());
+                    etPassword.setSelection(etPassword.length());
                 break;
         }
     }
