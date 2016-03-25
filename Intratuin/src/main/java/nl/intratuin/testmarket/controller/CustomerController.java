@@ -59,9 +59,9 @@ public class CustomerController {
     @RequestMapping(value = "loginTwitter", method = RequestMethod.POST)
     public @ResponseBody Message loginTwitter(@RequestBody TwitterLogin twitterLogin) {
         String twitterKey = twitterLogin.getKey();
-        if(!twitterKey.equals(Settings.getTwitterKey()))
-            return new Message("Wrong Twitter key.");
         String emailToLogin = twitterLogin.getEmail();
+        if(!twitterKey.equals(Settings.getEncryptedTwitterKey(emailToLogin)))
+            return new Message("Wrong Twitter key.");
         Integer foundCustomerId = service.findByEmail(emailToLogin);
         if (foundCustomerId != null) {
             return new Message("Login is successful");

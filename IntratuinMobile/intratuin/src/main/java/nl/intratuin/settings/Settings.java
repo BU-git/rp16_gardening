@@ -20,7 +20,11 @@ public class Settings {
     public static TwitterAuthConfig getTwitterConfig() {
         return new TwitterAuthConfig(twitter_par1,twitter_par2);
     }
-    public static String getTwitterKey(){
-        return twitter_par1+twitter_par2;
+    public static String getEncryptedTwitterKey(String key){
+        String value=twitter_par1+twitter_par2;
+        String encrypted="";
+        for(int i=0; i<value.length(); i++)
+            encrypted=encrypted+(value.charAt(i)^key.charAt(i%key.length()));
+        return encrypted;
     }
 }

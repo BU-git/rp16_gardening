@@ -41,7 +41,6 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     RadioButton rbFemale;
     Button bCancel;
     Button bSignUp;
-    TextView tvResult;
 
     URI registerUri=null;
 
@@ -69,7 +68,6 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         rbFemale = (RadioButton)findViewById(R.id.rbFemale);
         bCancel = (Button)findViewById(R.id.bCancel);
         bSignUp = (Button)findViewById(R.id.bSignUp);
-        tvResult = (TextView)findViewById(R.id.tvResult);
 
         bBirthday.setOnClickListener(this);
         cbShowPassword.setOnClickListener(this);
@@ -77,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         bCancel.setOnClickListener(this);
         bSignUp.setOnClickListener(this);
 
-        registerUri=new UriConstructor(tvResult).makeFullURI("/customer/add");
+        registerUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/add");
     }
 
     @Override
@@ -109,7 +107,6 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                 break;
 
             case R.id.bSignUp:
-                tvResult.setText("");
                 //DATA VALIDATION MUST BE HERE!
                 //boolean formatCorrect=formatErrorManaging();
                 if(registerUri!=null){//&& Data validation passed
@@ -131,7 +128,8 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                     else
                         cust.setGender(0);
 
-                    new RequestResponse<Customer>(registerUri, 3, tvResult).execute(cust);
+                    new RequestResponse<Customer>(registerUri, 3,
+                            getSupportFragmentManager()).execute(cust);
                 }
                 break;
         }

@@ -43,7 +43,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     Button bForgot;
     CheckBox cbRemember;
     CheckBox cbShow;
-    TextView tvResult;
 
     URI loginUri=null;
     URI twitterLoginUri=null;
@@ -66,7 +65,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         bForgot = (Button) findViewById(R.id.bForgot);
         cbRemember = (CheckBox) findViewById(R.id.cbRemember);
         cbShow = (CheckBox) findViewById(R.id.cbShow);
-        tvResult = (TextView)findViewById(R.id.tvResult);
 
         bFacebook.setOnClickListener(this);
         bTwitter.setOnClickListener(this);
@@ -79,13 +77,15 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             @Override
             public void success(Result<TwitterSession> result) {
                 TwitterSession session = result.data;
-                twitterLoginUri=new UriConstructor(tvResult).makeFullURI("/customer/loginTwitter");
+                twitterLoginUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/loginTwitter");
                 if(twitterLoginUri!=null){
                     TwitterLogin twitterLogin=new TwitterLogin();
-                    twitterLogin.setEmail("alice1@com");//TODO: get email from Twitter API when app will be whitelisted
-                    twitterLogin.setKey(Settings.getTwitterKey());
+                    String email="bob@com";//TODO: get email from Twitter API when app will be whitelisted
+                    twitterLogin.setEmail(email);
+                    twitterLogin.setKey(Settings.getEncryptedTwitterKey(email));
 
-                    new RequestResponse<TwitterLogin>(twitterLoginUri, 3, tvResult).execute(twitterLogin);
+                    new RequestResponse<TwitterLogin>(twitterLoginUri, 3,
+                            getSupportFragmentManager()).execute(twitterLogin);
                 }
             }
 
@@ -111,8 +111,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             case R.id.bFacebook:
                 break;
             case R.id.bLogin:
-                tvResult.setText("");
-                loginUri=new UriConstructor(tvResult).makeFullURI("/customer/login");
+                loginUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/login");
                 //DATA VALIDATION MUST BE HERE!
                 //boolean formatCorrect=formatErrorManaging();
                 if(loginUri!=null){//&& Data validation passed
@@ -120,7 +119,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     crd.setEmail(etEmailAddress.getText().toString());
                     crd.setPassword(etPassword.getText().toString());
 
-                    new RequestResponse<Credentials>(loginUri, 3, tvResult).execute(crd);
+                    new RequestResponse<Credentials>(loginUri, 3,
+                            getSupportFragmentManager()).execute(crd);
                 }
                 break;
 
