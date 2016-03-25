@@ -1,6 +1,7 @@
 package nl.intratuin;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -41,6 +43,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     RadioButton rbFemale;
     Button bCancel;
     Button bSignUp;
+    ImageView ivIntratuin;
 
     URI registerUri=null;
 
@@ -68,12 +71,14 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         rbFemale = (RadioButton)findViewById(R.id.rbFemale);
         bCancel = (Button)findViewById(R.id.bCancel);
         bSignUp = (Button)findViewById(R.id.bSignUp);
+        ivIntratuin = (ImageView) findViewById(R.id.ivIntratuin);
 
         bBirthday.setOnClickListener(this);
         cbShowPassword.setOnClickListener(this);
         cbShowRePassword.setOnClickListener(this);
         bCancel.setOnClickListener(this);
         bSignUp.setOnClickListener(this);
+        ivIntratuin.setOnClickListener(this);
 
         registerUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/add");
     }
@@ -132,7 +137,17 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                             getSupportFragmentManager()).execute(cust);
                 }
                 break;
+
+            case R.id.ivIntratuin:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.intratuin.nl/"));
+                startActivity(browserIntent);
+                break;
         }
+    }
+
+    private Date parseDate(String str){
+        String[] s=str.split("/");
+        return new Date(Integer.parseInt(s[2])-1900,Integer.parseInt(s[0])-1,Integer.parseInt(s[1]));
     }
     /*private boolean formatErrorManaging(){
         tvError.setText("");
@@ -223,9 +238,4 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
             return "";
         return "You have to select sex!";
     }*/
-
-    private Date parseDate(String str){
-        String[] s=str.split("/");
-        return new Date(Integer.parseInt(s[2])-1900,Integer.parseInt(s[0])-1,Integer.parseInt(s[1]));
-    }
 }
