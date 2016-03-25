@@ -88,18 +88,19 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                 DialogFragment dateDialog = new DatePickerFragment();
                 dateDialog.show(getSupportFragmentManager(), "Intratuin");
                 break;
+
             case R.id.cbShowPassword:
                 if(cbShowPassword.isChecked())
                     etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 else etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                etPassword.setSelection(etPassword.length());
+                    etPassword.setSelection(etPassword.length());
                 break;
 
             case R.id.cbShowRePassword:
                 if(cbShowRePassword.isChecked())
                     etRePassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 else etRePassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                etRePassword.setSelection(etRePassword.length());
+                    etRePassword.setSelection(etRePassword.length());
                 break;
 
             case R.id.bCancel:
@@ -127,7 +128,8 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                     cust.setPhoneNumber(etPhone.getText().toString());
                     if(rbMale.isChecked())
                         cust.setGender(1);
-                    else cust.setGender(0);
+                    else
+                        cust.setGender(0);
 
                     new RequestResponse<Customer>(registerUri, 3, tvResult).execute(cust);
                 }
@@ -223,6 +225,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
             return "";
         return "You have to select sex!";
     }*/
+
     private Date parseDate(String str){
         String[] s=str.split("/");
         return new Date(Integer.parseInt(s[2])-1900,Integer.parseInt(s[0])-1,Integer.parseInt(s[1]));
