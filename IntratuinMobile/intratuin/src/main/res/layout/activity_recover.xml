@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:backgroundTint="#000000">
+
+    <RelativeLayout
+        android:id="@+id/rlRecover"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/gradient"
+        android:orientation="vertical"
+        tools:context="nl.intratuin.RecoverActivity">
+
+        <ImageView
+            android:id="@+id/ivIntratuin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/image_stroke"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/logo"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+        <EditText
+            android:id="@+id/etEmailAddress"
+            android:layout_width="match_parent"
+            android:inputType="textEmailAddress"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="100dp"
+            android:layout_below="@+id/ivIntratuin"
+            android:background="@drawable/textedit"
+            android:password="false" />
+
+        <Button
+            android:id="@+id/bRecover"
+            android:background="@drawable/button_action"
+            android:layout_width="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etEmailAddress"
+            android:text="@string/recoverbut"
+            android:clickable="false" />
+
+        <Button
+            android:id="@+id/bRegister"
+            android:layout_width="210dp"
+            android:layout_height="30dp"
+            android:text="@string/register"
+            android:textSize="10sp"
+            android:background="@drawable/button_action"
+            android:layout_below="@+id/bRecover"
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="false"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+</ScrollView>

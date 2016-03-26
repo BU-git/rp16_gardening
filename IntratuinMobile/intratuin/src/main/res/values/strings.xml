@@ -1,6 +1,30 @@
 <resources>
     <string name="app_name">Intratuin</string>
+    <string name="recover">Recover password</string>
+    <string name="register">Register</string>
     <string name="facebook_app_id">Facebook</string>
     <string name="choose_date">Select date</string>
     <string name="ready">Ok</string>
+    <string name="email">Email</string>
+    <string name="pass">Password</string>
+    <string name="remember">Remember me  </string>
+    <string name="showpass">Show password  </string>
+    <string name="logbut">Sign-in</string>
+    <string name="forgotpass">Forgot password</string>
+    <string name="firstname">First name</string>
+    <string name="lastname">Last name</string>
+    <string name="tuss">Tussenvoegsel</string>
+    <string name="signup">Sign-up</string>
+    <string name="birthbut">  Day of birth  </string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="city">City</string>
+    <string name="street">Street</string>
+    <string name="house">House</string>
+    <string name="post">Postcode</string>
+    <string name="repass">Re-enter password</string>
+    <string name="show">Show  </string>
+    <string name="cancel">Cancel</string>
+    <string name="phone">Cellphone number</string>
+    <string name="recoverbut">Recover password</string>
 </resources>

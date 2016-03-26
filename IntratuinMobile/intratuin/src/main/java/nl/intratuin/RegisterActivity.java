@@ -1,7 +1,7 @@
 package nl.intratuin;
 
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -11,23 +11,16 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import nl.intratuin.dto.Customer;
-import nl.intratuin.dto.Message;
-import nl.intratuin.handlers.DatePickerFragment;
-import nl.intratuin.settings.Settings;
-
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.Date;
+
+import nl.intratuin.dto.Customer;
+import nl.intratuin.handlers.DatePickerFragment;
+import nl.intratuin.net.*;
 
 public class RegisterActivity extends AppCompatActivity implements OnClickListener {
 
@@ -50,9 +43,9 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     RadioButton rbFemale;
     Button bCancel;
     Button bSignUp;
-    TextView tvResult;
+    ImageView ivIntratuin;
 
-    URI register=null;
+    URI registerUri=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,21 +71,16 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         rbFemale = (RadioButton)findViewById(R.id.rbFemale);
         bCancel = (Button)findViewById(R.id.bCancel);
         bSignUp = (Button)findViewById(R.id.bSignUp);
-        tvResult = (TextView)findViewById(R.id.tvResult);
+        ivIntratuin = (ImageView) findViewById(R.id.ivIntratuin);
 
         bBirthday.setOnClickListener(this);
         cbShowPassword.setOnClickListener(this);
         cbShowRePassword.setOnClickListener(this);
         bCancel.setOnClickListener(this);
         bSignUp.setOnClickListener(this);
+        ivIntratuin.setOnClickListener(this);
 
-        try {
-            register = new URL("http", Settings.getHost(),8080,"/customer/add").toURI();
-        } catch (MalformedURLException e){
-            tvResult.setText("Wrong URL format!");
-        } catch (URISyntaxException e){
-            tvResult.setText("Wrong URI format!");
-        }
+        registerUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/add");
     }
 
     @Override
@@ -103,18 +91,19 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                 DialogFragment dateDialog = new DatePickerFragment();
                 dateDialog.show(getSupportFragmentManager(), "Intratuin");
                 break;
+
             case R.id.cbShowPassword:
                 if(cbShowPassword.isChecked())
                     etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 else etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                etPassword.setSelection(etPassword.length());
+                    etPassword.setSelection(etPassword.length());
                 break;
 
             case R.id.cbShowRePassword:
                 if(cbShowRePassword.isChecked())
                     etRePassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 else etRePassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                etRePassword.setSelection(etRePassword.length());
+                    etRePassword.setSelection(etRePassword.length());
                 break;
 
             case R.id.bCancel:
@@ -123,10 +112,9 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                 break;
 
             case R.id.bSignUp:
-                tvResult.setText("");
                 //DATA VALIDATION MUST BE HERE!
                 //boolean formatCorrect=formatErrorManaging();
-                if(register!=null){//&& Data validation passed
+                if(registerUri!=null){//&& Data validation passed
                     Customer cust=new Customer();
                     cust.setId(0);
                     cust.setFirstName(etFirstName.getText().toString());
@@ -142,12 +130,24 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                     cust.setPhoneNumber(etPhone.getText().toString());
                     if(rbMale.isChecked())
                         cust.setGender(1);
-                    else cust.setGender(0);
+                    else
+                        cust.setGender(0);
 
-                    new RequestResponse().execute(cust);
+                    new RequestResponse<Customer>(registerUri, 3,
+                            getSupportFragmentManager()).execute(cust);
                 }
                 break;
+
+            case R.id.ivIntratuin:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.intratuin.nl/"));
+                startActivity(browserIntent);
+                break;
         }
+    }
+
+    private Date parseDate(String str){
+        String[] s=str.split("/");
+        return new Date(Integer.parseInt(s[2])-1900,Integer.parseInt(s[0])-1,Integer.parseInt(s[1]));
     }
     /*private boolean formatErrorManaging(){
         tvError.setText("");
@@ -238,30 +238,4 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
             return "";
         return "You have to select sex!";
     }*/
-    private Date parseDate(String str){
-        String[] s=str.split("/");
-        return new Date(Integer.parseInt(s[2])-1900,Integer.parseInt(s[0])-1,Integer.parseInt(s[1]));
-    }
-
-    class RequestResponse extends AsyncTask<Customer, Void, Message> {
-        @Override
-        protected Message doInBackground(Customer... customer) {
-            try {
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                SimpleClientHttpRequestFactory rf =
-                        (SimpleClientHttpRequestFactory) restTemplate.getRequestFactory();
-                rf.setReadTimeout(2000);
-                rf.setConnectTimeout(2000);
-                Message jsonObject = restTemplate.postForObject(register, customer[0], Message.class);
-                return jsonObject;
-            } catch (Exception e) {
-                return null;
-            }
-        }
-        @Override
-        protected void onPostExecute(Message msg){
-            tvResult.setText(msg==null?"Request error!":msg.getMessage());
-        }
-    }
 }

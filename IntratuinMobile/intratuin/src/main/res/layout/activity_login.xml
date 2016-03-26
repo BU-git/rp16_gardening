@@ -1,66 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
+    android:fillViewport="true">
+
+<RelativeLayout
+    android:id="@+id/rlLogin"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@drawable/gradient"
     android:orientation="vertical"
     tools:context="nl.intratuin.LoginActivity">
 
+    <ImageView
+        android:id="@+id/ivIntratuin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/image_stroke"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/logo"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Log-in //fb"
         android:id="@+id/bFacebook"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/ivIntratuin"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true" />
 
-    <Button
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log-in //TW"
         android:id="@+id/bTwitter"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/bFacebook"
+        android:layout_marginTop="10dp"
+        android:layout_alignLeft="@+id/bFacebook"
+        android:layout_alignStart="@+id/bFacebook" />
+
 
     <EditText
         android:id="@+id/etEmailAddress"
         android:layout_width="match_parent"
         android:inputType="textEmailAddress"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:layout_height="wrap_content"
-        android:hint="Email"
+        android:layout_marginTop="30dp"
+        android:hint="@string/email"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/bTwitter"
+        android:background="@drawable/textedit"
         android:password="false" />
 
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:inputType="textPassword|text"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="@string/pass"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/textedit"
+        android:layout_below="@id/etEmailAddress"
         android:maxLength="15" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Remember me"
+        android:text="@string/remember"
+        android:layout_marginLeft="10dp"
+        android:background="#FFF8DC"
+        android:layout_below="@id/etPassword"
         android:id="@+id/cbRemember" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show password"
+        android:text="@string/showpass"
         android:id="@+id/cbShow"
-        android:layout_gravity="right" />
+        android:background="#FFF8DC"
+        android:layout_marginRight="10dp"
+        android:layout_alignTop="@+id/cbRemember"
+        android:layout_alignRight="@+id/bLogin"
+        android:layout_alignEnd="@+id/bLogin" />
 
     <Button
         android:id="@+id/bLogin"
+        android:background="@drawable/button_action"
         android:layout_width="match_parent"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_height="wrap_content"
-        android:text="Sign-in"
+        android:text="@string/logbut"
+        android:layout_below="@id/cbRemember"
         android:clickable="false" />
-
 <!--
      <com.facebook.login.widget.LoginButton
         android:id="@+id/bLoginFacebook"
@@ -70,30 +112,30 @@
 
     <Button
         android:id="@+id/bRegister"
-        android:layout_width="176dp"
-        android:layout_marginBottom="10dp"
-        android:layout_height="wrap_content"
-        android:text="Register"
-        android:clickable="false" />
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="@string/register"
+        android:layout_marginLeft="10dp"
+        android:textSize="10sp"
+        android:background="@drawable/button_action"
+        android:clickable="false"
+        android:layout_below="@+id/bLogin"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
     <Button
         android:id="@+id/bForgot"
-        android:layout_width="134dp"
-        android:layout_marginBottom="10dp"
-        android:layout_height="wrap_content"
-        android:text="Forgot password"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:textSize="10sp"
+        android:layout_marginRight="10dp"
+        android:text="@string/forgotpass"
+        android:background="@drawable/button_action"
         android:clickable="false"
-        android:layout_gravity="right"
-        android:maxLength="60" />
+        android:layout_below="@+id/bLogin"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
-    <TextView
-        android:id="@+id/tvResult"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textColor="#000000"
-        android:textSize="25dp"
-        android:textAlignment="center" />
+</RelativeLayout>
 
-</LinearLayout>
-
+</ScrollView>

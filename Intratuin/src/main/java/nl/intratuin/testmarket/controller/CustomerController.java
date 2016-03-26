@@ -1,6 +1,8 @@
 package nl.intratuin.testmarket.controller;
 
 import nl.intratuin.testmarket.Credentials;
+import nl.intratuin.testmarket.Settings;
+import nl.intratuin.testmarket.TwitterLogin;
 import nl.intratuin.testmarket.service.contract.CustomerService;
 import nl.intratuin.testmarket.Message;
 import nl.intratuin.testmarket.entity.Customer;
@@ -35,15 +37,26 @@ public class CustomerController {
     public @ResponseBody Message login(@RequestBody Credentials credentials) {
         return service.login(credentials);
     }
-
+    
     @RequestMapping(value = "faceBookLogin", method = RequestMethod.POST)
     public @ResponseBody Message faceBookLogin(@RequestBody Credentials credentials){
         return new Message("Mock for FB login");
     }
 
-    @RequestMapping(value = "twitterLogin", method = RequestMethod.POST)
-    public @ResponseBody Message twitterLogin(@RequestBody Credentials credentials){
-        return new Message("Mock for Twitter login");
+    @RequestMapping(value = "loginTwitter", method = RequestMethod.POST)
+    public @ResponseBody Message loginTwitter(@RequestBody TwitterLogin twitterLogin) {
+        String twitterKey = twitterLogin.getKey();
+        String emailToLogin = twitterLogin.getEmail();
+        if(!twitterKey.equals(Settings.getEncryptedTwitterKey(emailToLogin)))
+            return new Message("Wrong Twitter key.");
+        Integer foundCustomerId = service.findByEmail(emailToLogin);
+        if (foundCustomerId != null) {
+            return new Message("Login is successful");
+        } else {
+            Customer newCustomer = new Customer();
+            newCustomer.setEmail(emailToLogin);
+            service.save(newCustomer);
+            return new Message("Registration and login is successful.");
+        }
     }
-
 }
