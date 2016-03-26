@@ -9,6 +9,7 @@ import nl.intratuin.testmarket.entity.Customer;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.security.SignatureException;
 import java.util.List;
 
 @RestController
@@ -60,8 +61,12 @@ public class CustomerController {
     public @ResponseBody Message loginTwitter(@RequestBody TwitterLogin twitterLogin) {
         String twitterKey = twitterLogin.getKey();
         String emailToLogin = twitterLogin.getEmail();
-        if(!twitterKey.equals(Settings.getEncryptedTwitterKey(emailToLogin)))
-            return new Message("Wrong Twitter key.");
+        try {
+            if (!twitterKey.equals(Settings.getEncryptedTwitterKey(emailToLogin)))
+                return new Message("Wrong Twitter key.");
+        } catch(SignatureException e){
+            return new Message("Server encryption error");
+        }
         Integer foundCustomerId = service.findByEmail(emailToLogin);
         if (foundCustomerId != null) {
             return new Message("Login is successful");

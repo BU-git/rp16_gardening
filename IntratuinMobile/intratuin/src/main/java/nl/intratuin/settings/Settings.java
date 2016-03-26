@@ -1,6 +1,13 @@
 package nl.intratuin.settings;
 
+import android.util.Base64;
+
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+
+import java.security.SignatureException;
+
+import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.Mac;
 
 /**
  * Created by Иван on 19.03.2016.
@@ -20,11 +27,25 @@ public class Settings {
     public static TwitterAuthConfig getTwitterConfig() {
         return new TwitterAuthConfig(twitter_par1,twitter_par2);
     }
-    public static String getEncryptedTwitterKey(String key){
+    public static String getEncryptedTwitterKey(String key) throws SignatureException{
         String value=twitter_par1+twitter_par2;
-        String encrypted="";
-        for(int i=0; i<value.length(); i++)
-            encrypted=encrypted+(value.charAt(i)^key.charAt(i%key.length()));
-        return encrypted;
+        String result="";
+        try {
+            // get an hmac_sha1 key from the raw key bytes
+            SecretKeySpec signingKey = new SecretKeySpec(key.getBytes(), "HmacSHA1");
+
+            // get an hmac_sha1 Mac instance and initialize with the signing key
+            Mac mac = Mac.getInstance("HmacSHA1");
+            mac.init(signingKey);
+
+            // compute the hmac on input data bytes
+            byte[] rawHmac = mac.doFinal(value.getBytes());
+
+            // base64-encode the hmac
+            result = Base64.encodeToString(rawHmac,Base64.DEFAULT);
+        } catch (Exception e) {
+            throw new SignatureException("Failed to generate HMAC : " + e.getMessage());
+        }
+        return result.substring(0,result.length()-1);
     }
 }
