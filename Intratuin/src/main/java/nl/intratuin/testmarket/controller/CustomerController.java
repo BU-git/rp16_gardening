@@ -2,13 +2,13 @@ package nl.intratuin.testmarket.controller;
 
 import nl.intratuin.testmarket.Credentials;
 import nl.intratuin.testmarket.Settings;
-import nl.intratuin.testmarket.TwitterLogin;
 import nl.intratuin.testmarket.service.contract.CustomerService;
 import nl.intratuin.testmarket.Message;
 import nl.intratuin.testmarket.entity.Customer;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.security.SignatureException;
 import java.util.List;
 
 @RestController
@@ -44,11 +44,15 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "loginTwitter", method = RequestMethod.POST)
-    public @ResponseBody Message loginTwitter(@RequestBody TwitterLogin twitterLogin) {
-        String twitterKey = twitterLogin.getKey();
-        String emailToLogin = twitterLogin.getEmail();
-        if(!twitterKey.equals(Settings.getEncryptedTwitterKey(emailToLogin)))
-            return new Message("Wrong Twitter key.");
+    public @ResponseBody Message loginTwitter(@RequestBody Credentials credentials) {
+        String twitterKey = credentials.getPassword();
+        String emailToLogin = credentials.getEmail();
+        try {
+            if (!twitterKey.equals(Settings.getEncryptedTwitterKey(emailToLogin)))
+                return new Message("Wrong Twitter key.");
+        } catch(SignatureException e){
+            return new Message("Server encryption error");
+        }
         Integer foundCustomerId = service.findByEmail(emailToLogin);
         if (foundCustomerId != null) {
             return new Message("Login is successful");

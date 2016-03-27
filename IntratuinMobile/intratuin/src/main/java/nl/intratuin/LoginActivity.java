@@ -19,13 +19,15 @@ import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.net.URI;
+import java.security.SignatureException;
 
 import io.fabric.sdk.android.Fabric;
 import nl.intratuin.dto.Credentials;
-import nl.intratuin.dto.TwitterLogin;
+import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.*;
 import nl.intratuin.settings.Settings;
 
@@ -84,13 +86,30 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 TwitterSession session = result.data;
                 twitterLoginUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/loginTwitter");
                 if(twitterLoginUri!=null){
-                    TwitterLogin twitterLogin=new TwitterLogin();
-                    String email="bob@com";//TODO: get email from Twitter API when app will be whitelisted
-                    twitterLogin.setEmail(email);
-                    twitterLogin.setKey(Settings.getEncryptedTwitterKey(email));
+                    final Credentials credentials=new Credentials();
+                    TwitterAuthClient authClient = new TwitterAuthClient();
+                    authClient.requestEmail(session, new Callback<String>() {
+                        @Override
+                        public void success(Result<String> result) {
+                            try {
+                                String email = result.data;
+                                credentials.setEmail(email);
+                                credentials.setPassword(Settings.getEncryptedTwitterKey(email));
 
-                    new RequestResponse<TwitterLogin>(twitterLoginUri, 3,
-                            getSupportFragmentManager()).execute(twitterLogin);
+                                new RequestResponse<Credentials>(twitterLoginUri, 3,
+                                        getSupportFragmentManager()).execute(credentials);
+                            } catch(SignatureException e){
+                                ErrorFragment ef= ErrorFragment.newError("Encryption error!");
+                                ef.show(getSupportFragmentManager(), "Intratuin");
+                            }
+                        }
+
+                        @Override
+                        public void failure(TwitterException exception) {
+                            ErrorFragment ef= ErrorFragment.newError("Can't get email from Twitter!");
+                            ef.show(getSupportFragmentManager(), "Intratuin");
+                        }
+                    });
                 }
             }
 

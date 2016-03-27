@@ -1,10 +1,13 @@
-package nl.intratuin.testmarket.dao.contract;
+package nl.intratuin.testmarket.service.contract;
 
 import nl.intratuin.testmarket.entity.Product;
 
 import java.util.List;
 
-public interface ProductDao {
+/**
+ * Created by Иван on 27.03.2016.
+ */
+public interface ProductService {
     Product findById(int id);
 
     List<Product> findAll();
