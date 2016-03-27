@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">Intratuin</string>
+    <string name="facebook_app_id">1720162671574425</string>
+    <string name="login_facebook">Log in with Facebook</string>
+
     <string name="recover">Recover password</string>
     <string name="register">Register</string>
-    <string name="facebook_app_id">Facebook</string>
     <string name="choose_date">Select date</string>
     <string name="ready">Ok</string>
     <string name="email">Email</string>
