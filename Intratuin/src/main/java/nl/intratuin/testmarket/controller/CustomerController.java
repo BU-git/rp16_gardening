@@ -37,7 +37,7 @@ public class CustomerController {
     public @ResponseBody Message login(@RequestBody Credentials credentials) {
         return service.login(credentials);
     }
-    
+
     @RequestMapping(value = "faceBookLogin", method = RequestMethod.POST)
     public @ResponseBody Message faceBookLogin(@RequestBody Credentials credentials){
         return new Message("Mock for FB login");
