@@ -2,7 +2,6 @@ package nl.intratuin.testmarket.controller;
 
 import nl.intratuin.testmarket.Credentials;
 import nl.intratuin.testmarket.Settings;
-import nl.intratuin.testmarket.TwitterLogin;
 import nl.intratuin.testmarket.service.contract.CustomerService;
 import nl.intratuin.testmarket.Message;
 import nl.intratuin.testmarket.entity.Customer;
@@ -58,9 +57,9 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "loginTwitter", method = RequestMethod.POST)
-    public @ResponseBody Message loginTwitter(@RequestBody TwitterLogin twitterLogin) {
-        String twitterKey = twitterLogin.getKey();
-        String emailToLogin = twitterLogin.getEmail();
+    public @ResponseBody Message loginTwitter(@RequestBody Credentials credentials) {
+        String twitterKey = credentials.getPassword();
+        String emailToLogin = credentials.getEmail();
         try {
             if (!twitterKey.equals(Settings.getEncryptedTwitterKey(emailToLogin)))
                 return new Message("Wrong Twitter key.");

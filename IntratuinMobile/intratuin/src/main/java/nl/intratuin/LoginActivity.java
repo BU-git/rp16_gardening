@@ -27,7 +27,6 @@ import java.security.SignatureException;
 
 import io.fabric.sdk.android.Fabric;
 import nl.intratuin.dto.Credentials;
-import nl.intratuin.dto.TwitterLogin;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.*;
 import nl.intratuin.settings.Settings;
@@ -87,18 +86,18 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 TwitterSession session = result.data;
                 twitterLoginUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/loginTwitter");
                 if(twitterLoginUri!=null){
-                    final TwitterLogin twitterLogin=new TwitterLogin();
+                    final Credentials credentials=new Credentials();
                     TwitterAuthClient authClient = new TwitterAuthClient();
                     authClient.requestEmail(session, new Callback<String>() {
                         @Override
                         public void success(Result<String> result) {
                             try {
                                 String email = result.data;
-                                twitterLogin.setEmail(email);
-                                twitterLogin.setKey(Settings.getEncryptedTwitterKey(email));
+                                credentials.setEmail(email);
+                                credentials.setPassword(Settings.getEncryptedTwitterKey(email));
 
-                                new RequestResponse<TwitterLogin>(twitterLoginUri, 3,
-                                        getSupportFragmentManager()).execute(twitterLogin);
+                                new RequestResponse<Credentials>(twitterLoginUri, 3,
+                                        getSupportFragmentManager()).execute(credentials);
                             } catch(SignatureException e){
                                 ErrorFragment ef= ErrorFragment.newError("Encryption error!");
                                 ef.show(getSupportFragmentManager(), "Intratuin");

@@ -19,6 +19,8 @@ public class Settings {
 
     private static boolean useDeployed = false;
 
+    private static int connectionTimeout=3000;
+
     private static String hostLocal="192.168.1.23";//local -- depends on your computer's inner ip
     private static String hostBionic="128.0.169.5";//bionic -- do not change
 
@@ -48,4 +50,6 @@ public class Settings {
         }
         return result.substring(0,result.length()-1);
     }
+
+    public static int getConnectionTimeout() { return connectionTimeout; }
 }

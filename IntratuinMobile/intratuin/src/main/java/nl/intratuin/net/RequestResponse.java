@@ -52,8 +52,8 @@ public class RequestResponse<T> extends AsyncTask<T, Void, Message> {
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 SimpleClientHttpRequestFactory rf =
                         (SimpleClientHttpRequestFactory) restTemplate.getRequestFactory();
-                rf.setReadTimeout(2000);
-                rf.setConnectTimeout(2000);
+                rf.setReadTimeout(Settings.getConnectionTimeout());
+                rf.setConnectTimeout(Settings.getConnectionTimeout());
                 jsonObject = restTemplate.postForObject(uri, param[0], Message.class);
                 if(jsonObject!=null)
                     break;
