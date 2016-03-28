@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,6 +26,8 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.net.URI;
 import java.security.SignatureException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.fabric.sdk.android.Fabric;
 import nl.intratuin.dto.Credentials;
@@ -52,6 +56,13 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     URI loginUri=null;
     URI twitterLoginUri=null;
 
+    public static final String EMAIL_PATTERN =
+            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    public static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,15})";
+    Pattern pattern;
+    Matcher matcher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +75,28 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         bFacebook = (Button) findViewById(R.id.bFacebook);
         bTwitter = (TwitterLoginButton) findViewById(R.id.bTwitter);
         etEmailAddress = (EditText)findViewById(R.id.etEmailAddress);
+        etEmailAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                pattern = Pattern.compile(EMAIL_PATTERN);
+                matcher = pattern.matcher(etEmailAddress.getText().toString());
+                if(!hasFocus && !matcher.matches()){
+                    etEmailAddress.setError("Email must be like email");
+                }
+            }
+        });
+
         etPassword = (EditText)findViewById(R.id.etPassword);
+        etPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                pattern = Pattern.compile(PASSWORD_PATTERN);
+                matcher = pattern.matcher(etPassword.getText().toString());
+                if(!hasFocus && !matcher.matches()){
+                    etPassword.setError("Password has to be 6-15 chars, at least 1 small letter, 1 cap. letter and 1 number");
+                }
+            }
+        });
         bLogin = (Button) findViewById(R.id.bLogin);
         bRegister = (Button) findViewById(R.id.bRegister);
         bForgot = (Button) findViewById(R.id.bForgot);
@@ -98,15 +130,15 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
                                 new RequestResponse<Credentials>(twitterLoginUri, 3,
                                         getSupportFragmentManager()).execute(credentials);
-                            } catch(SignatureException e){
-                                ErrorFragment ef= ErrorFragment.newError("Encryption error!");
+                            } catch (SignatureException e) {
+                                ErrorFragment ef = ErrorFragment.newError("Encryption error!");
                                 ef.show(getSupportFragmentManager(), "Intratuin");
                             }
                         }
 
                         @Override
                         public void failure(TwitterException exception) {
-                            ErrorFragment ef= ErrorFragment.newError("Can't get email from Twitter!");
+                            ErrorFragment ef = ErrorFragment.newError("Can't get email from Twitter!");
                             ef.show(getSupportFragmentManager(), "Intratuin");
                         }
                     });
@@ -127,6 +159,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         // Activity that it triggered.
         bTwitter.onActivityResult(requestCode, resultCode, data);
     }
+
 
 
     @Override
