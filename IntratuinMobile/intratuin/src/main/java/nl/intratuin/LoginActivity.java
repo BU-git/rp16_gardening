@@ -67,6 +67,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     URI loginUri=null;
     URI twitterLoginUri=null;
+    URI facebookLoginUri = null;
 
     public static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
