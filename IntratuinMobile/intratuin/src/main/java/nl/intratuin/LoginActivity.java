@@ -76,6 +76,13 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     Pattern pattern;
     Matcher matcher;
 
+    public static final String EMAIL_PATTERN =
+            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    public static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,15})";
+    Pattern pattern;
+    Matcher matcher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,6 +204,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         callbackManager.onActivityResult(requestCode, resultCode, data);
         bTwitter.onActivityResult(requestCode, resultCode, data);
     }
+
 
 
 

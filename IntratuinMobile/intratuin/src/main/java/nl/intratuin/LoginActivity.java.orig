@@ -34,12 +34,9 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.net.URI;
 import java.security.SignatureException;
-<<<<<<< HEAD
 import java.util.Arrays;
-=======
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
->>>>>>> sprint
 
 import io.fabric.sdk.android.Fabric;
 import nl.intratuin.dto.Credentials;
@@ -230,7 +227,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 if(cbShow.isChecked())
                     etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 else etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    etPassword.setSelection(etPassword.length());
+                etPassword.setSelection(etPassword.length());
                 break;
 
             case R.id.ivIntratuin:
