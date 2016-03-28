@@ -76,7 +76,7 @@ public class CustomerController {
                     ? new Message("Login is successful")
                     : addWithFacebook(profile);
         } else {
-            return new Message("to successfully login we need your email");
+            return new Message("We need your email to login you successfully.");
         }
     }
 

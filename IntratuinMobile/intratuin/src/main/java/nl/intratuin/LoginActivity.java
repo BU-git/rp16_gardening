@@ -173,12 +173,16 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
             @Override
             public void onCancel() {
-                tvInfo.setText("Login attempt canceled.");
+                //tvInfo.setText("Login attempt canceled.");
+                ErrorFragment ef= ErrorFragment.newError("Login attempt canceled.");
+                ef.show(getSupportFragmentManager(), "Intratuin");
             }
 
             @Override
             public void onError(FacebookException error) {
-                tvInfo.setText("Login attempt failed.");
+                //tvInfo.setText("Login attempt failed.");
+                ErrorFragment ef= ErrorFragment.newError("Login attempt failed.");
+                ef.show(getSupportFragmentManager(), "Intratuin");
             }
         });
     }
