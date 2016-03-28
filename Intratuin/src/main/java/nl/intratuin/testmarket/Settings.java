@@ -12,8 +12,7 @@ public class Settings {
     private static final String twitter_par1 = "CpdWZOr27su9Vduhipt3XVUgD";
     private static final String twitter_par2 = "pcOrskD4hWcUGxi5n3nMvtL3bArhIuyj2pmiMCQ7E9jj71wH5w";
 
-    public static String getEncryptedTwitterKey(String key) throws SignatureException {
-        String value=twitter_par1+twitter_par2;
+    public static String sha1(String data, String key) throws SignatureException {
         String result;
         try {
             // get an hmac_sha1 key from the raw key bytes
@@ -24,7 +23,7 @@ public class Settings {
             mac.init(signingKey);
 
             // compute the hmac on input data bytes
-            byte[] rawHmac = mac.doFinal(value.getBytes());
+            byte[] rawHmac = mac.doFinal(data.getBytes());
 
             // base64-encode the hmac
             byte[] encoded=java.util.Base64.getEncoder().encode(rawHmac);
@@ -33,5 +32,9 @@ public class Settings {
             throw new SignatureException("Failed to generate HMAC : " + e.getMessage());
         }
         return result;
+    }
+    public static String getEncryptedTwitterKey(String key) throws SignatureException {
+        String value=twitter_par1+twitter_par2;
+        return sha1(value,key);
     }
 }

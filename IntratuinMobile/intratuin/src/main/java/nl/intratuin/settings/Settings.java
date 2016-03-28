@@ -29,8 +29,7 @@ public class Settings {
     public static TwitterAuthConfig getTwitterConfig() {
         return new TwitterAuthConfig(twitter_par1,twitter_par2);
     }
-    public static String getEncryptedTwitterKey(String key) throws SignatureException{
-        String value=twitter_par1+twitter_par2;
+    public static String sha1(String data, String key) throws SignatureException{
         String result="";
         try {
             // get an hmac_sha1 key from the raw key bytes
@@ -41,7 +40,7 @@ public class Settings {
             mac.init(signingKey);
 
             // compute the hmac on input data bytes
-            byte[] rawHmac = mac.doFinal(value.getBytes());
+            byte[] rawHmac = mac.doFinal(data.getBytes());
 
             // base64-encode the hmac
             result = Base64.encodeToString(rawHmac,Base64.DEFAULT);
@@ -49,6 +48,10 @@ public class Settings {
             throw new SignatureException("Failed to generate HMAC : " + e.getMessage());
         }
         return result.substring(0,result.length()-1);
+    }
+    public static String getEncryptedTwitterKey(String key) throws SignatureException{
+        String value=twitter_par1+twitter_par2;
+        return sha1(value,key);
     }
 
     public static int getConnectionTimeout() { return connectionTimeout; }

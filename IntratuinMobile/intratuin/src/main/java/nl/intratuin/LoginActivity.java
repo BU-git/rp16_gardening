@@ -31,6 +31,8 @@ import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.*;
 import nl.intratuin.settings.Settings;
 
+import static nl.intratuin.settings.Settings.sha1;
+
 //import com.facebook.CallbackManager;
 //import com.facebook.FacebookSdk;
 //import com.facebook.login.widget.LoginButton;
@@ -95,7 +97,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                 String email = result.data;
                                 credentials.setEmail(email);
                                 credentials.setPassword(Settings.getEncryptedTwitterKey(email));
-
                                 new RequestResponse<Credentials>(twitterLoginUri, 3,
                                         getSupportFragmentManager()).execute(credentials);
                             } catch(SignatureException e){
@@ -141,10 +142,17 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 if(loginUri!=null){//&& Data validation passed
                     Credentials crd=new Credentials();
                     crd.setEmail(etEmailAddress.getText().toString());
-                    crd.setPassword(etPassword.getText().toString());
-
-                    new RequestResponse<Credentials>(loginUri, 3,
-                            getSupportFragmentManager()).execute(crd);
+                    //crd.setPassword(etPassword.getText().toString());
+                    try {
+                        crd.setPassword(sha1(etPassword.getText().toString(), crd.getEmail()));
+                        new RequestResponse<Credentials>(loginUri, 3,
+                                getSupportFragmentManager()).execute(crd);
+                    } catch(SignatureException e){
+                        ErrorFragment ef= ErrorFragment.newError("Password encryption error!");
+                        ef.show(getSupportFragmentManager(), "Intratuin");
+                    }
+                    //new RequestResponse<Credentials>(loginUri, 3,
+                    //        getSupportFragmentManager()).execute(crd);
                 }
                 break;
 
