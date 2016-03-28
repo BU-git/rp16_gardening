@@ -12,7 +12,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -24,20 +32,21 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.net.URI;
 import java.security.SignatureException;
+import java.util.Arrays;
 
 import io.fabric.sdk.android.Fabric;
 import nl.intratuin.dto.Credentials;
+import nl.intratuin.dto.TransferAccessToken;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.*;
 import nl.intratuin.settings.Settings;
 
-//import com.facebook.CallbackManager;
-//import com.facebook.FacebookSdk;
-//import com.facebook.login.widget.LoginButton;
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
+    CallbackManager callbackManager;
 
-    Button bFacebook;
+    TextView tvInfo;
+    LoginButton lbFacebook;
     TwitterLoginButton bTwitter;
     EditText etEmailAddress;
     EditText etPassword;
@@ -51,18 +60,20 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     URI loginUri=null;
     URI twitterLoginUri=null;
+    URI facebookLoginUri=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TwitterAuthConfig authConfig = Settings.getTwitterConfig();
         Fabric.with(this, new Twitter(authConfig));
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_login);
-        //FacebookSdk.sdkInitialize(getApplicationContext());
-        //callbackManager = CallbackManager.Factory.create();
 
-        bFacebook = (Button) findViewById(R.id.bFacebook);
         bTwitter = (TwitterLoginButton) findViewById(R.id.bTwitter);
+        lbFacebook = (LoginButton) findViewById(R.id.bLoginFacebook);
+        tvInfo = (TextView) findViewById(R.id.tvInfo);
         etEmailAddress = (EditText)findViewById(R.id.etEmailAddress);
         etPassword = (EditText)findViewById(R.id.etPassword);
         bLogin = (Button) findViewById(R.id.bLogin);
@@ -72,7 +83,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         cbShow = (CheckBox) findViewById(R.id.cbShow);
         ivIntratuin = (ImageView) findViewById(R.id.ivIntratuin);
 
-        bFacebook.setOnClickListener(this);
         bTwitter.setOnClickListener(this);
         bLogin.setOnClickListener(this);
         bRegister.setOnClickListener(this);
@@ -84,9 +94,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             @Override
             public void success(Result<TwitterSession> result) {
                 TwitterSession session = result.data;
-                twitterLoginUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/loginTwitter");
-                if(twitterLoginUri!=null){
-                    final Credentials credentials=new Credentials();
+                twitterLoginUri = new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/loginTwitter");
+                if (twitterLoginUri != null) {
+                    final Credentials credentials = new Credentials();
                     TwitterAuthClient authClient = new TwitterAuthClient();
                     authClient.requestEmail(session, new Callback<String>() {
                         @Override
@@ -98,15 +108,15 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
                                 new RequestResponse<Credentials>(twitterLoginUri, 3,
                                         getSupportFragmentManager()).execute(credentials);
-                            } catch(SignatureException e){
-                                ErrorFragment ef= ErrorFragment.newError("Encryption error!");
+                            } catch (SignatureException e) {
+                                ErrorFragment ef = ErrorFragment.newError("Encryption error!");
                                 ef.show(getSupportFragmentManager(), "Intratuin");
                             }
                         }
 
                         @Override
                         public void failure(TwitterException exception) {
-                            ErrorFragment ef= ErrorFragment.newError("Can't get email from Twitter!");
+                            ErrorFragment ef = ErrorFragment.newError("Can't get email from Twitter!");
                             ef.show(getSupportFragmentManager(), "Intratuin");
                         }
                     });
@@ -118,13 +128,37 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 Log.d("TwitterKit", "Login with Twitter failure", exception);
             }
         });
+
+        lbFacebook.setReadPermissions(Arrays.asList("email", "user_birthday", "user_location"));
+        lbFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                facebookLoginUri = new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/loginFacebook");
+                TransferAccessToken accessToken = new TransferAccessToken(loginResult.getAccessToken().getToken());
+
+                new RequestResponse<TransferAccessToken>(facebookLoginUri, 3,
+                        getSupportFragmentManager()).execute(accessToken);
+            }
+
+            @Override
+            public void onCancel() {
+                tvInfo.setText("Login attempt canceled.");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                tvInfo.setText("Login attempt failed.");
+            }
+        });
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // Make sure that the loginButton hears the result from any
         // Activity that it triggered.
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         bTwitter.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -132,8 +166,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.bFacebook:
-                break;
             case R.id.bLogin:
                 loginUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/login");
                 //DATA VALIDATION MUST BE HERE!
