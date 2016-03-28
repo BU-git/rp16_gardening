@@ -23,25 +23,34 @@
         android:src="@drawable/logo"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp" />
-    <Button
+
+    <TextView
+        android:id="@+id/tvInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log-in //fb"
-        android:id="@+id/bFacebook"
+        android:textColor="#3dd70e"
+        android:textSize="10dp"
+        android:textAlignment="center" />
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/bLoginFacebook"
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="10dp"
         android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:text="@string/login_facebook"
         android:layout_below="@+id/ivIntratuin"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginTop="10dp"/>
 
     <com.twitter.sdk.android.core.identity.TwitterLoginButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/bTwitter"
         android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/bFacebook"
+        android:layout_below="@+id/bLoginFacebook"
         android:layout_marginTop="10dp"
-        android:layout_alignLeft="@+id/bFacebook"
-        android:layout_alignStart="@+id/bFacebook" />
+        android:layout_alignLeft="@+id/bLoginFacebook"
+        android:layout_alignStart="@+id/bLoginFacebook" />
 
 
     <EditText
@@ -103,12 +112,6 @@
         android:text="@string/logbut"
         android:layout_below="@id/cbRemember"
         android:clickable="false" />
-<!--
-     <com.facebook.login.widget.LoginButton
-        android:id="@+id/bLoginFacebook"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_height="wrap_content" /> -->
 
     <Button
         android:id="@+id/bRegister"
