@@ -34,31 +34,13 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public @ResponseBody Message add(@RequestBody Customer newCustomer) {
-        //Check whether is email already registered or not
-        String emailToRegister = newCustomer.getEmail().toLowerCase();
-        Integer existedCustomerId = service.findByEmail(emailToRegister);
-
-        if (existedCustomerId != null) {
-            return new Message("Sorry, this email address is already registered, choose another.");
-        } else {
-            service.save(newCustomer);
-            return new Message("Registration is successful");
-        }
+    public @ResponseBody Message addCustomer(@RequestBody Customer newCustomer) {
+        return service.addCustomer(newCustomer);
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public @ResponseBody Message login(@RequestBody Credentials credentials) {
-        String emailToLogin = credentials.getEmail();
-        Integer foundCustomerId = service.findByEmail(emailToLogin);
-        if (foundCustomerId != null) {
-            Customer customerToLogin = service.findById(foundCustomerId);
-            return (customerToLogin.getPassword().equals(credentials.getPassword()))
-                    ? new Message("Login is successful")
-                    : new Message("Sorry, your username and password are incorrect - please try again.");
-        } else {
-            return new Message("Sorry, your username and password are incorrect - please try again.");
-        }
+        return service.login(credentials);
     }
 
     @RequestMapping(value = "loginTwitter", method = RequestMethod.POST)
@@ -82,24 +64,23 @@ public class CustomerController {
         }
     }
 
-    @RequestMapping(value = "loginWithFacebook", method = RequestMethod.POST)
+    @RequestMapping(value = "loginFacebook", method = RequestMethod.POST)
     public @ResponseBody Message loginWithFacebook(@RequestBody TransferAccessToken accessToken) {
         Facebook facebook = new FacebookTemplate(accessToken.getAccessToken(), "IntratuinMobile", "1720162671574425");
         User profile = facebook.userOperations().getUserProfile();
         String emailToLoginWithFacebook = profile.getEmail();
         if(emailToLoginWithFacebook != null) {
             Integer existedCustomerId = service.findByEmail(emailToLoginWithFacebook);
+
             return existedCustomerId != null
                     ? new Message("Login is successful")
                     : addWithFacebook(profile);
-        }
-        else {
+        } else {
             return new Message("to successfully login we need your email");
         }
     }
 
     private Message addWithFacebook(User profile) {
-
         Customer customer = new Customer();
 
         customer.setFirstName(profile.getFirstName());
@@ -124,3 +105,4 @@ public class CustomerController {
         return new Message("Registration with Facebook is successful");
     }
 }
+

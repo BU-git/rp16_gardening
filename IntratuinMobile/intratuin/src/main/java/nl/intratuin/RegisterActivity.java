@@ -17,12 +17,14 @@ import android.widget.TextView;
 
 import java.net.URI;
 import java.sql.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import nl.intratuin.dto.Customer;
 import nl.intratuin.handlers.DatePickerFragment;
 import nl.intratuin.net.*;
 
-public class RegisterActivity extends AppCompatActivity implements OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements OnClickListener, View.OnFocusChangeListener {
 
     EditText etFirstName;
     EditText etTussen;
@@ -44,6 +46,9 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     Button bCancel;
     Button bSignUp;
     ImageView ivIntratuin;
+
+    Pattern pattern;
+    Matcher matcher;
 
     URI registerUri=null;
 
@@ -80,8 +85,22 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         bSignUp.setOnClickListener(this);
         ivIntratuin.setOnClickListener(this);
 
+        etFirstName.setOnFocusChangeListener(this);
+        etLastName.setOnFocusChangeListener(this);
+        etEmail.setOnFocusChangeListener(this);
+        etPassword.setOnFocusChangeListener(this);
+        etRePassword.setOnFocusChangeListener(this);
+        etCity.setOnFocusChangeListener(this);
+        etStreet.setOnFocusChangeListener(this);
+        etHouse.setOnFocusChangeListener(this);
+        etPostcode.setOnFocusChangeListener(this);
+        tvBirthday.setOnFocusChangeListener(this);
+
+
         registerUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/add");
     }
+
+
 
     @Override
     public void onClick(View view) {
@@ -148,6 +167,69 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     private Date parseDate(String str){
         String[] s=str.split("/");
         return new Date(Integer.parseInt(s[2])-1900,Integer.parseInt(s[0])-1,Integer.parseInt(s[1]));
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        switch (v.getId()){
+            case R.id.etEmail:
+                pattern = Pattern.compile(LoginActivity.EMAIL_PATTERN);
+                matcher = pattern.matcher(etEmail.getText().toString());
+                if(!hasFocus && !matcher.matches()){
+                    etEmail.setError("Email must be like email");
+                }
+                break;
+            case R.id.etPassword:
+                pattern = Pattern.compile(LoginActivity.PASSWORD_PATTERN);
+                matcher = pattern.matcher(etPassword.getText().toString());
+                if(!hasFocus && !matcher.matches()){
+                    etPassword.setError("Password has to be 6-15 chars, at least 1 small letter, 1 cap. letter and 1 number");
+                }
+                break;
+            case R.id.etRePassword:
+                if(!hasFocus && !etPassword.getText().toString().equals(etRePassword.getText().toString())){
+                    etRePassword.setError("Your passwords are mismatches");
+                }
+                break;
+            case R.id.etFirstName://TODO:implement logic with gender and birthday
+                if (!hasFocus){
+                    etFirstName.setError("First name can not be blank");
+                }
+                break;
+            case R.id.etLastName:
+                if (!hasFocus){
+                    etLastName.setError("Last name can not be blank");
+                }
+                break;
+            case R.id.etCity:
+                if (!hasFocus){
+                    etCity.setError("City can not be blank");
+                }
+                break;
+            case R.id.etStreet:
+                if (!hasFocus){
+                    etStreet.setError("Street can not be blank");
+                }
+                break;
+            case R.id.etHouse:
+                if (!hasFocus){
+                    etHouse.setError("House number can not be blank");
+                }
+                break;
+            case R.id.etPostcode:
+                if (!hasFocus){
+                    etPostcode.setError("Postcode can not be blank");
+                }
+                break;
+            case R.id.tvBirthday:
+                if (!hasFocus){
+                    tvBirthday.setError("Birthday field  can not be blank");
+                }
+                break;
+            default:
+                break;
+        }
+
     }
     /*private boolean formatErrorManaging(){
         tvError.setText("");
