@@ -67,14 +67,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     URI loginUri=null;
     URI twitterLoginUri=null;
-    URI facebookLoginUri=null;
-
-    public static final String EMAIL_PATTERN =
-            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    public static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,15})";
-    Pattern pattern;
-    Matcher matcher;
 
     public static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -138,9 +130,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             @Override
             public void success(Result<TwitterSession> result) {
                 TwitterSession session = result.data;
-                twitterLoginUri = new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/loginTwitter");
-                if (twitterLoginUri != null) {
-                    final Credentials credentials = new Credentials();
+                twitterLoginUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/loginTwitter");
+                if(twitterLoginUri!=null){
+                    final Credentials credentials=new Credentials();
                     TwitterAuthClient authClient = new TwitterAuthClient();
                     authClient.requestEmail(session, new Callback<String>() {
                         @Override
@@ -152,8 +144,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
                                 new RequestResponse<Credentials>(twitterLoginUri, 3,
                                         getSupportFragmentManager()).execute(credentials);
-                            } catch (SignatureException e) {
-                                ErrorFragment ef = ErrorFragment.newError("Encryption error!");
+                            } catch(SignatureException e){
+                                ErrorFragment ef= ErrorFragment.newError("Encryption error!");
                                 ef.show(getSupportFragmentManager(), "Intratuin");
                             }
                         }

@@ -32,9 +32,15 @@ import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.SignatureException;
+<<<<<<< HEAD
 import java.util.Arrays;
+=======
+>>>>>>> sprint
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,6 +71,20 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     URI loginUri=null;
     URI twitterLoginUri=null;
     URI facebookLoginUri=null;
+
+    public static final String EMAIL_PATTERN =
+            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    public static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,15})";
+    Pattern pattern;
+    Matcher matcher;
+
+    public static final String EMAIL_PATTERN =
+            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    public static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,15})";
+    Pattern pattern;
+    Matcher matcher;
 
     public static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -108,6 +128,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 }
             }
         });
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> sprint
         bLogin = (Button) findViewById(R.id.bLogin);
         bRegister = (Button) findViewById(R.id.bRegister);
         bForgot = (Button) findViewById(R.id.bForgot);
@@ -168,8 +193,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 facebookLoginUri = new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/loginFacebook");
                 TransferAccessToken accessToken = new TransferAccessToken(loginResult.getAccessToken().getToken());
 
-                new RequestResponse<TransferAccessToken>(facebookLoginUri, 3,
-                        getSupportFragmentManager()).execute(accessToken);
+                new RequestResponse<TransferAccessToken>(facebookLoginUri, 3, getSupportFragmentManager()).execute(accessToken);
             }
 
             @Override
@@ -196,6 +220,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
 
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> sprint
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -227,7 +255,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 if(cbShow.isChecked())
                     etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 else etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                etPassword.setSelection(etPassword.length());
+                    etPassword.setSelection(etPassword.length());
                 break;
 
             case R.id.ivIntratuin:
@@ -288,5 +316,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         return passwordErrorText;
     }*/
+
 }
 
