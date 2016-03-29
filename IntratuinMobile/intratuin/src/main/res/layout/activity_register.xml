@@ -121,7 +121,9 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="62dp"
-            android:checked="true" />
+            android:checked="true"
+            android:buttonTint="#ffffff"
+            android:textColor="#ffffff" />
 
         <RadioButton
             android:id="@+id/rbFemale"
@@ -130,7 +132,9 @@
             android:text="@string/female"
             android:layout_below="@+id/etFirstName"
             android:layout_alignLeft="@+id/rbMale"
-            android:layout_alignStart="@+id/rbMale" />
+            android:layout_alignStart="@+id/rbMale"
+            android:buttonTint="#ffffff"
+            android:textColor="#ffffff" />
 
     </RadioGroup>
 
@@ -279,7 +283,9 @@
         android:id="@+id/cbShowPassword"
         android:layout_below="@+id/bBirthday"
         android:layout_alignRight="@+id/bBirthday"
-        android:layout_alignEnd="@+id/bBirthday" />
+        android:layout_alignEnd="@+id/bBirthday"
+        android:buttonTint="#ffffff"
+        android:textColor="#ffffff" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -291,7 +297,9 @@
         android:id="@+id/cbShowRePassword"
         android:layout_below="@+id/etPassword"
         android:layout_toRightOf="@+id/etPassword"
-        android:layout_toEndOf="@+id/etPassword" />
+        android:layout_toEndOf="@+id/etPassword"
+        android:textColor="#ffffff"
+        android:buttonTint="#ffffff" />
 
     <Button
         android:id="@+id/bCancel"

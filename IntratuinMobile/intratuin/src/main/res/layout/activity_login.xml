@@ -28,7 +28,7 @@
         android:id="@+id/bLoginFacebook"
         android:layout_width="wrap_content"
         android:layout_marginBottom="10dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:text="@string/login_facebook"
         android:layout_below="@+id/ivIntratuin"
         android:layout_centerHorizontal="true"
@@ -36,7 +36,7 @@
 
     <com.twitter.sdk.android.core.identity.TwitterLoginButton
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:id="@+id/bTwitter"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/bLoginFacebook"
