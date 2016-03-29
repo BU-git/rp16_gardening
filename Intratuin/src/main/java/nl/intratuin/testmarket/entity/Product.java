@@ -9,19 +9,19 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PRODUCT_ID")
-    Integer productId;
+    private int productId;
 
-    @Column(name = "PRODUCT_NAМE")
-    String productName;
+    @Column(name = "PRODUCT_NAME")
+    private String productName;
 
     @Column(name = "PRODUCT_PRICE")
-    int productPrice;
+    private int productPrice;
 
     public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(Integer productId) {
+    public void setProductId(int productId) {
         this.productId = productId;
     }
 
