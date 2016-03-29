@@ -19,14 +19,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:background="@drawable/image_stroke"
-            android:layout_marginTop="10dp"
+            android:background="#FFF8DC"
+            android:layout_marginTop="20dp"
             android:src="@drawable/logo"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"/>
 
         <EditText
             android:id="@+id/etEmailAddress"
+            android:layout_below="@+id/ivIntratuin"
             android:layout_width="match_parent"
             android:inputType="textEmailAddress"
             android:layout_height="wrap_content"
@@ -34,8 +35,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="100dp"
-            android:layout_below="@+id/ivIntratuin"
             android:background="@drawable/textedit"
+            android:drawableLeft="@drawable/ic_action_name"
             android:password="false" />
 
         <Button

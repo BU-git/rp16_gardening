@@ -18,11 +18,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@drawable/image_stroke"
-        android:layout_marginTop="10dp"
+        android:background="#FFF8DC"
+        android:layout_marginTop="20dp"
         android:src="@drawable/logo"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"/>
 
     <EditText
         android:id="@+id/etFirstName"
@@ -33,6 +33,7 @@
         android:inputType="textCapWords|textPersonName"
         android:hint="@string/firstname"
         android:maxLength="100"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_below="@+id/ivIntratuin"
         android:layout_alignParentLeft="true"

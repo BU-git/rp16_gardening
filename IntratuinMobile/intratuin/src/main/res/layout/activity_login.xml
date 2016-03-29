@@ -18,11 +18,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@drawable/image_stroke"
-        android:layout_marginTop="10dp"
+        android:background="#FFF8DC"
+        android:layout_marginTop="20dp"
         android:src="@drawable/logo"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,6 +56,7 @@
         android:layout_marginRight="10dp"
         android:layout_below="@id/bTwitter"
         android:background="@drawable/textedit"
+        android:drawableLeft="@drawable/ic_action_name"
         android:password="false" />
 
     <EditText
@@ -69,6 +70,7 @@
         android:layout_marginRight="10dp"
         android:background="@drawable/textedit"
         android:layout_below="@id/etEmailAddress"
+        android:drawableLeft="@drawable/ic_action_name2"
         android:maxLength="15" />
 
     <CheckBox
@@ -76,20 +78,21 @@
         android:layout_height="wrap_content"
         android:text="@string/remember"
         android:layout_marginLeft="10dp"
-        android:background="#FFF8DC"
-        android:layout_below="@id/etPassword"
-        android:id="@+id/cbRemember" />
+        android:layout_below="@id/cbShow"
+        android:id="@+id/cbRemember"
+        android:backgroundTint="#ffffff"
+        android:textColor="#ffffff"
+        android:buttonTint="#ffffff" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/showpass"
         android:id="@+id/cbShow"
-        android:background="#FFF8DC"
-        android:layout_marginRight="10dp"
-        android:layout_alignTop="@+id/cbRemember"
-        android:layout_alignRight="@+id/bLogin"
-        android:layout_alignEnd="@+id/bLogin" />
+        android:layout_marginLeft="10dp"
+        android:layout_below="@id/etPassword"
+        android:textColor="#ffffff"
+        android:buttonTint="#ffffff" />
 
     <Button
         android:id="@+id/bLogin"
@@ -102,7 +105,7 @@
         android:layout_height="wrap_content"
         android:text="@string/logbut"
         android:layout_below="@id/cbRemember"
-        android:clickable="false" />
+        android:clickable="true" />
 <!--
      <com.facebook.login.widget.LoginButton
         android:id="@+id/bLoginFacebook"
