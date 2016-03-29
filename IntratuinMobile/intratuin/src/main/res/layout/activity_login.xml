@@ -31,8 +31,11 @@
         android:layout_height="30dp"
         android:text="@string/login_facebook"
         android:layout_below="@+id/ivIntratuin"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="50dp"
+        android:layout_alignRight="@+id/bTwitter"
+        android:layout_alignEnd="@+id/bTwitter"
+        android:layout_alignLeft="@+id/bTwitter"
+        android:layout_alignStart="@+id/bTwitter" />
 
     <com.twitter.sdk.android.core.identity.TwitterLoginButton
         android:layout_width="wrap_content"
