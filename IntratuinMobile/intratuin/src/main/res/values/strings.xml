@@ -7,8 +7,8 @@
     <string name="register">Register</string>
     <string name="choose_date">Select date</string>
     <string name="ready">Ok</string>
-    <string name="email">Email</string>
-    <string name="pass">Password</string>
+    <string name="email"> Email</string>
+    <string name="pass"> Password</string>
     <string name="remember">Remember me  </string>
     <string name="showpass">Show password  </string>
     <string name="logbut">Sign-in</string>

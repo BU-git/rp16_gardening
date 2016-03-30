@@ -50,7 +50,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     TextView tvInfo;
     LoginButton lbFacebook;
-    TwitterLoginButton bTwitter;
+    TwitterLoginButton bTwitterHidden;
+    Button bTwitter;
     EditText etEmailAddress;
     EditText etPassword;
     Button bLogin;
@@ -81,9 +82,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_login);
 
-        bTwitter = (TwitterLoginButton) findViewById(R.id.bTwitter);
+        bTwitterHidden = (TwitterLoginButton) findViewById(R.id.bTwitterHidden);
+        bTwitter = (Button) findViewById(R.id.bTwitter);
         lbFacebook = (LoginButton) findViewById(R.id.bLoginFacebook);
-        tvInfo = (TextView) findViewById(R.id.tvInfo);
+        //tvInfo = (TextView) findViewById(R.id.tvInfo);
         etEmailAddress = (EditText)findViewById(R.id.etEmailAddress);
         etEmailAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -123,7 +125,13 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         cbShow.setOnClickListener(this);
         ivIntratuin.setOnClickListener(this);
 
-        bTwitter.setCallback(new Callback<TwitterSession>() {
+        bTwitter.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bTwitterHidden.performClick();
+            }
+        });
+        bTwitterHidden.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
                 TwitterSession session = result.data;
@@ -194,7 +202,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         // Make sure that the loginButton hears the result from any
         // Activity that it triggered.
         callbackManager.onActivityResult(requestCode, resultCode, data);
-        bTwitter.onActivityResult(requestCode, resultCode, data);
+        bTwitterHidden.onActivityResult(requestCode, resultCode, data);
     }
 
 
