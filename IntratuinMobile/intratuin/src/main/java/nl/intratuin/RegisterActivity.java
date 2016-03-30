@@ -5,7 +5,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -16,15 +19,19 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.net.URI;
+import java.security.SignatureException;
 import java.sql.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import nl.intratuin.dto.Customer;
 import nl.intratuin.handlers.DatePickerFragment;
+import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.*;
 
-public class RegisterActivity extends AppCompatActivity implements OnClickListener, View.OnFocusChangeListener {
+import static nl.intratuin.settings.Settings.sha1;
+
+public class RegisterActivity extends AppCompatActivity implements OnClickListener {
 
     EditText etFirstName;
     EditText etTussen;
@@ -78,24 +85,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         bSignUp = (Button)findViewById(R.id.bSignUp);
         ivIntratuin = (ImageView) findViewById(R.id.ivIntratuin);
 
-        bBirthday.setOnClickListener(this);
-        cbShowPassword.setOnClickListener(this);
-        cbShowRePassword.setOnClickListener(this);
-        bCancel.setOnClickListener(this);
-        bSignUp.setOnClickListener(this);
-        ivIntratuin.setOnClickListener(this);
-
-        etFirstName.setOnFocusChangeListener(this);
-        etLastName.setOnFocusChangeListener(this);
-        etEmail.setOnFocusChangeListener(this);
-        etPassword.setOnFocusChangeListener(this);
-        etRePassword.setOnFocusChangeListener(this);
-        etCity.setOnFocusChangeListener(this);
-        etStreet.setOnFocusChangeListener(this);
-        etHouse.setOnFocusChangeListener(this);
-        etPostcode.setOnFocusChangeListener(this);
-        tvBirthday.setOnFocusChangeListener(this);
-
+        setListeners();
 
         registerUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/add");
     }
@@ -107,6 +97,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         switch (view.getId()) {
 
             case R.id.bBirthday:
+                tvBirthday.setError(null);
                 DialogFragment dateDialog = new DatePickerFragment();
                 dateDialog.show(getSupportFragmentManager(), "Intratuin");
                 break;
@@ -131,9 +122,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                 break;
 
             case R.id.bSignUp:
-                //DATA VALIDATION MUST BE HERE!
-                //boolean formatCorrect=formatErrorManaging();
-                if(registerUri!=null){//&& Data validation passed
+                if(registerUri!=null && dataValidation()){//&& Data validation passed
                     Customer cust=new Customer();
                     cust.setId(0);
                     cust.setFirstName(etFirstName.getText().toString());
@@ -145,15 +134,20 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                     cust.setHouseNumber(etHouse.getText().toString());
                     cust.setPostalCode(etPostcode.getText().toString());
                     cust.setBirthday(parseDate(tvBirthday.getText().toString()));
-                    cust.setPassword(etPassword.getText().toString());
+                    //cust.setPassword(etPassword.getText().toString());
                     cust.setPhoneNumber(etPhone.getText().toString());
                     if(rbMale.isChecked())
                         cust.setGender(1);
                     else
                         cust.setGender(0);
-
-                    new RequestResponse<Customer>(registerUri, 3,
-                            getSupportFragmentManager()).execute(cust);
+                    try {
+                        cust.setPassword(sha1(etPassword.getText().toString(), cust.getEmail()));
+                        new RequestResponse<Customer>(registerUri, 3,
+                                getSupportFragmentManager()).execute(cust);
+                    } catch(SignatureException e){
+                        ErrorFragment ef= ErrorFragment.newError("Password encryption error!");
+                        ef.show(getSupportFragmentManager(), "Intratuin");
+                    }
                 }
                 break;
 
@@ -169,155 +163,259 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         return new Date(Integer.parseInt(s[2])-1900,Integer.parseInt(s[0])-1,Integer.parseInt(s[1]));
     }
 
-    @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        switch (v.getId()){
-            case R.id.etEmail:
+    private void setListeners(){
+        etFirstName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus && etFirstName.getText().length()==0){
+                    etFirstName.setError("First name can not be blank");
+                }
+            }
+        });
+        etFirstName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                etFirstName.setError(null);
+            }
+        });
+
+        etLastName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus && etLastName.getText().length() == 0) {
+                    etLastName.setError("Last name can not be blank");
+                }
+            }
+        });
+        etLastName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                etLastName.setError(null);
+            }
+        });
+
+        etEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
                 pattern = Pattern.compile(LoginActivity.EMAIL_PATTERN);
                 matcher = pattern.matcher(etEmail.getText().toString());
-                if(!hasFocus && !matcher.matches()){
-                    etEmail.setError("Email must be like email");
+                if (!hasFocus && !matcher.matches()) {
+                    showEmailError();
                 }
-                break;
-            case R.id.etPassword:
+            }
+        });
+
+        etPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
                 pattern = Pattern.compile(LoginActivity.PASSWORD_PATTERN);
                 matcher = pattern.matcher(etPassword.getText().toString());
-                if(!hasFocus && !matcher.matches()){
-                    etPassword.setError("Password has to be 6-15 chars, at least 1 small letter, 1 cap. letter and 1 number");
+                if (!hasFocus && !matcher.matches()) {
+                    showPassError();
                 }
-                break;
-            case R.id.etRePassword:
+            }
+        });
+
+        etRePassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus && !etPassword.getText().toString().equals(etRePassword.getText().toString())){
                     etRePassword.setError("Your passwords are mismatches");
                 }
-                break;
-            case R.id.etFirstName://TODO:implement logic with gender and birthday
-                if (!hasFocus){
-                    etFirstName.setError("First name can not be blank");
-                }
-                break;
-            case R.id.etLastName:
-                if (!hasFocus){
-                    etLastName.setError("Last name can not be blank");
-                }
-                break;
-            case R.id.etCity:
-                if (!hasFocus){
+            }
+        });
+
+        etCity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus && etCity.getText().length()==0){
                     etCity.setError("City can not be blank");
                 }
-                break;
-            case R.id.etStreet:
-                if (!hasFocus){
+            }
+        });
+        etCity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                etCity.setError(null);
+            }
+        });
+
+        etStreet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus && etStreet.getText().length() == 0) {
                     etStreet.setError("Street can not be blank");
                 }
-                break;
-            case R.id.etHouse:
-                if (!hasFocus){
+            }
+        });
+        etStreet.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                etStreet.setError(null);
+            }
+        });
+
+        etHouse.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus && etHouse.getText().length() == 0) {
                     etHouse.setError("House number can not be blank");
                 }
-                break;
-            case R.id.etPostcode:
-                if (!hasFocus){
+            }
+        });
+        etHouse.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                etHouse.setError(null);
+            }
+        });
+
+        etPostcode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus && etPostcode.getText().length() == 0) {
                     etPostcode.setError("Postcode can not be blank");
                 }
-                break;
-            case R.id.tvBirthday:
-                if (!hasFocus){
-                    tvBirthday.setError("Birthday field  can not be blank");
+            }
+        });
+        etPostcode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                etPostcode.setError(null);
+            }
+        });
+
+        tvBirthday.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus && tvBirthday.getText().length()==0){
+                    tvBirthday.setError("Birthday field can not be blank");
                 }
-                break;
-            default:
-                break;
-        }
+            }
+        });
 
+        bBirthday.setOnClickListener(this);
+        cbShowPassword.setOnClickListener(this);
+        cbShowRePassword.setOnClickListener(this);
+        bCancel.setOnClickListener(this);
+        bSignUp.setOnClickListener(this);
+        ivIntratuin.setOnClickListener(this);
     }
-    /*private boolean formatErrorManaging(){
-        tvError.setText("");
-        String errorText=emptyFieldError();
-        if(errorText!=""){
-            tvError.setText(errorText);
-            return false;
-        }
-        errorText=longFieldError();
-        if(errorText!=""){
-            tvError.setText(errorText);
-            return false;
-        }
-        errorText=emailFormatError();
-        if(errorText!=""){
-            tvError.setText(errorText);
-            return false;
-        }
-        errorText=passwordFormatError();
-        if(errorText!=""){
-            tvError.setText(errorText);
-            return false;
-        }
-        errorText=rePasswordFormatError();
-        if(errorText!=""){
-            tvError.setText(errorText);
-            return false;
-        }
-        errorText=sexError();
-        if(errorText!=""){
-            tvError.setText(errorText);
-            return false;
-        }
-        return true;
-    }*/
-    /*private String emptyFieldError(){
-        if(etFirstName.getText().length()==0)
-            return "You have to enter first name!";
-        if(etLastName.getText().length()==0)
-            return "You have to enter last name!";
-        if(tvBirthday.getText().length()==0)
-            return "You have to enter birth date!";
-        return "";
-    }*/
-    /*private String longFieldError(){
-        if(etFirstName.getText().length()>100)
-            return "First name is too long!";
-        if(etLastName.getText().length()>100)
-            return "Last name is too long!";
-        return "";
-    }*/
-    /*private String emailFormatError(){
-        String emailErrorText="";
-        if(etMailAddress.getText().length()==0)
-            emailErrorText="You have to enter email!";
-        else if(etMailAddress.getText().toString().indexOf("@")<1 ||
-                etMailAddress.getText().toString().indexOf("@")==etMailAddress.getText()
-                        .length()-1)
-            emailErrorText="Wrong email format!";
-        else if(etMailAddress.getText().toString().indexOf("@")!=
-                etMailAddress.getText().toString().lastIndexOf("@"))
-            emailErrorText="Wrong email format!";
-        return emailErrorText;
-    }*/
-    /*private String passwordFormatError(){
-        String passwordErrorText="";
+    private void showEmailError(){
+        if(etEmail.getText().length()==0)
+            etEmail.setError("Email can't be blank!");
+        else etEmail.setError("Wrong email format!");
+    }
+    private void showPassError(){
         if(etPassword.getText().length()==0)
-            passwordErrorText="You have to enter password!";
-        else if(etPassword.getText().length()<6 || etPassword.getText().length()>15)
-            passwordErrorText="Password must be from 6 to 15 characters!";
-        //else if(!etPassword.getText().toString().matches("d") ||       //Contains digit
-        //        !etPassword.getText().toString().matches("[a-z]") ||   //Contains small letter
-        //        !etPassword.getText().toString().matches("[A-Z]]"))    //Contains cap letter
-        //    passwordErrorText="Password must contain digit, small and big letters!";//Those regexp not tested yet
+            etPassword.setError("Password can't be blank!");
+        else etPassword.setError("Password has to be 6-15 chars, at least 1 small letter, " +
+                "1 cap. letter and 1 number");
+    }
+    private boolean dataValidation(){
+        boolean res=true;
+        if(etFirstName.getText().length()==0){
+            etFirstName.setError("First name can not be blank");
+            res=false;
+        }
 
-        return passwordErrorText;
-    }*/
-    /*private String rePasswordFormatError() {
-        String passwordErrorText="";
-        if(etRePassword.getText().length()==0)
-            passwordErrorText="You have to re-enter password!";
-        else if(!etPassword.getText().toString().equals(etRePassword.getText().toString()))
-            passwordErrorText="Passwords in two fields does not match!";
-        return passwordErrorText;
-    }*/
-    /*private String sexError() {
-        if(rbFemale.isChecked()||rbMale.isChecked())
-            return "";
-        return "You have to select sex!";
-    }*/
+        if(etLastName.getText().length()==0){
+            etLastName.setError("Last name can not be blank");
+            res=false;
+        }
+
+        pattern = Pattern.compile(LoginActivity.EMAIL_PATTERN);
+        matcher = pattern.matcher(etEmail.getText().toString());
+        if(!matcher.matches()){
+            showEmailError();
+            res=false;
+        }
+
+        if(etCity.getText().length()==0){
+            etCity.setError("City can not be blank");
+            res=false;
+        }
+
+        if(etStreet.getText().length()==0){
+            etStreet.setError("Street can not be blank");
+            res=false;
+        }
+
+        if(etHouse.getText().length()==0){
+            etHouse.setError("House can not be blank");
+            res=false;
+        }
+
+        if(etPostcode.getText().length()==0){
+            etPostcode.setError("Postcode can not be blank");
+            res=false;
+        }
+
+        if(tvBirthday.getText().length()==0){
+            tvBirthday.setError("Birthday can not be blank");
+            res=false;
+        }
+
+        pattern = Pattern.compile(LoginActivity.PASSWORD_PATTERN);
+        matcher = pattern.matcher(etPassword.getText().toString());
+        if(!matcher.matches()){
+            showPassError();
+            res=false;
+        }
+
+        if(!etPassword.getText().toString().equals(etRePassword.getText().toString())){
+            etRePassword.setError("Your passwords are mismatches");
+            res=false;
+        }
+
+        return res;
+    }
 }

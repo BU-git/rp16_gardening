@@ -18,11 +18,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@drawable/image_stroke"
-        android:layout_marginTop="10dp"
+        android:background="#FFF8DC"
+        android:layout_marginTop="20dp"
         android:src="@drawable/logo"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"/>
 
     <EditText
         android:id="@+id/etFirstName"
@@ -30,15 +30,16 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:background="@drawable/textedit"
-        android:inputType="textCapWords|textPersonName"
         android:hint="@string/firstname"
         android:maxLength="100"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_below="@+id/ivIntratuin"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/ivIntratuin"
-        android:layout_alignEnd="@+id/ivIntratuin" />
+        android:layout_alignEnd="@+id/ivIntratuin"
+        android:inputType="textNoSuggestions|textCapWords" />
 
     <EditText
         android:id="@+id/etTussen"
@@ -70,7 +71,7 @@
         android:layout_below="@+id/etTussen"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:inputType="textCapWords|textPersonName"
+        android:inputType="textNoSuggestions|textCapWords"
         android:maxLength="100" />
 
 
@@ -120,7 +121,9 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="62dp"
-            android:checked="true" />
+            android:checked="true"
+            android:buttonTint="#ffffff"
+            android:textColor="#ffffff" />
 
         <RadioButton
             android:id="@+id/rbFemale"
@@ -129,7 +132,9 @@
             android:text="@string/female"
             android:layout_below="@+id/etFirstName"
             android:layout_alignLeft="@+id/rbMale"
-            android:layout_alignStart="@+id/rbMale" />
+            android:layout_alignStart="@+id/rbMale"
+            android:buttonTint="#ffffff"
+            android:textColor="#ffffff" />
 
     </RadioGroup>
 
@@ -168,7 +173,7 @@
         android:layout_below="@+id/etEmail"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:inputType="textCapWords"
+        android:inputType="textNoSuggestions|textCapWords"
         android:maxLength="60" />
 
     <EditText
@@ -185,7 +190,7 @@
         android:layout_toLeftOf="@+id/bSignUp"
         android:layout_toStartOf="@+id/bSignUp"
         android:maxLength="60"
-        android:inputType="textCapWords" />
+        android:inputType="textNoSuggestions|textCapWords"/>
 
     <EditText
         android:id="@+id/etHouse"
@@ -200,8 +205,8 @@
         android:layout_below="@+id/etCity"
         android:layout_toRightOf="@+id/etStreet"
         android:layout_toEndOf="@+id/etStreet"
-        android:inputType="text"
-        android:maxLength="5" />
+        android:inputType="textNoSuggestions|text"
+        android:maxLength="8" />
 
     <EditText
         android:id="@+id/etPostcode"
@@ -215,7 +220,7 @@
         android:hint="@string/post"
         android:layout_below="@+id/etHouse"
         android:layout_centerHorizontal="true"
-        android:inputType="text"
+        android:inputType="textNoSuggestions|text"
         android:maxLength="10" />
 
     <TextView
@@ -278,7 +283,9 @@
         android:id="@+id/cbShowPassword"
         android:layout_below="@+id/bBirthday"
         android:layout_alignRight="@+id/bBirthday"
-        android:layout_alignEnd="@+id/bBirthday" />
+        android:layout_alignEnd="@+id/bBirthday"
+        android:buttonTint="#ffffff"
+        android:textColor="#ffffff" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -290,7 +297,9 @@
         android:id="@+id/cbShowRePassword"
         android:layout_below="@+id/etPassword"
         android:layout_toRightOf="@+id/etPassword"
-        android:layout_toEndOf="@+id/etPassword" />
+        android:layout_toEndOf="@+id/etPassword"
+        android:textColor="#ffffff"
+        android:buttonTint="#ffffff" />
 
     <Button
         android:id="@+id/bCancel"

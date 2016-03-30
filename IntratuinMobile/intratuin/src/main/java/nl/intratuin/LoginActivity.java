@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,12 +14,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.twitter.sdk.android.Twitter;
@@ -32,11 +28,7 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.security.SignatureException;
 import java.util.Arrays;
 import java.util.List;
@@ -47,9 +39,11 @@ import io.fabric.sdk.android.Fabric;
 import nl.intratuin.dto.Credentials;
 import nl.intratuin.dto.TransferAccessToken;
 import nl.intratuin.handlers.ErrorFragment;
-import nl.intratuin.net.*;
+import nl.intratuin.net.RequestResponse;
+import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.Settings;
 
+import static nl.intratuin.settings.Settings.sha1;
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
     static final List<String> PERMISSIONS = Arrays.asList("email", "user_birthday", "user_hometown");
@@ -57,7 +51,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     TextView tvInfo;
     LoginButton lbFacebook;
-    TwitterLoginButton bTwitter;
+    TwitterLoginButton bTwitterHidden;
+    Button bTwitter;
     EditText etEmailAddress;
     EditText etPassword;
     Button bLogin;
@@ -88,9 +83,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_login);
 
-        bTwitter = (TwitterLoginButton) findViewById(R.id.bTwitter);
+        bTwitterHidden = (TwitterLoginButton) findViewById(R.id.bTwitterHidden);
+        bTwitter = (Button) findViewById(R.id.bTwitter);
         lbFacebook = (LoginButton) findViewById(R.id.bLoginFacebook);
-        tvInfo = (TextView) findViewById(R.id.tvInfo);
+
         etEmailAddress = (EditText)findViewById(R.id.etEmailAddress);
         etEmailAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -98,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 pattern = Pattern.compile(EMAIL_PATTERN);
                 matcher = pattern.matcher(etEmailAddress.getText().toString());
                 if(!hasFocus && !matcher.matches()){
-                    etEmailAddress.setError("Email must be like email");
+                    showEmailError();
                 }
             }
         });
@@ -110,11 +106,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 pattern = Pattern.compile(PASSWORD_PATTERN);
                 matcher = pattern.matcher(etPassword.getText().toString());
                 if(!hasFocus && !matcher.matches()){
-                    etPassword.setError("Password has to be 6-15 chars, at least 1 small letter, 1 cap. letter and 1 number");
+                    showPassError();
                 }
             }
         });
-
 
         bLogin = (Button) findViewById(R.id.bLogin);
         bRegister = (Button) findViewById(R.id.bRegister);
@@ -130,11 +125,17 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         cbShow.setOnClickListener(this);
         ivIntratuin.setOnClickListener(this);
 
-        bTwitter.setCallback(new Callback<TwitterSession>() {
+        bTwitter.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bTwitterHidden.performClick();
+            }
+        });
+        bTwitterHidden.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
                 TwitterSession session = result.data;
-                twitterLoginUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/loginTwitter");
+                twitterLoginUri = new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/loginTwitter");
                 if (twitterLoginUri != null) {
                     final Credentials credentials = new Credentials();
                     TwitterAuthClient authClient = new TwitterAuthClient();
@@ -145,7 +146,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                 String email = result.data;
                                 credentials.setEmail(email);
                                 credentials.setPassword(Settings.getEncryptedTwitterKey(email));
-
                                 new RequestResponse<Credentials>(twitterLoginUri, 3,
                                         getSupportFragmentManager()).execute(credentials);
                             } catch (SignatureException e) {
@@ -181,12 +181,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
             @Override
             public void onCancel() {
-                tvInfo.setText("Login attempt canceled.");
+                ErrorFragment ef= ErrorFragment.newError("Login attempt canceled.");
+                ef.show(getSupportFragmentManager(), "Intratuin");
             }
 
             @Override
             public void onError(FacebookException error) {
-                tvInfo.setText("Login attempt failed.");
+                ErrorFragment ef= ErrorFragment.newError("Login attempt failed.");
+                ef.show(getSupportFragmentManager(), "Intratuin");
             }
         });
     }
@@ -198,26 +200,26 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         // Make sure that the loginButton hears the result from any
         // Activity that it triggered.
         callbackManager.onActivityResult(requestCode, resultCode, data);
-        bTwitter.onActivityResult(requestCode, resultCode, data);
+        bTwitterHidden.onActivityResult(requestCode, resultCode, data);
     }
-
-
-
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bLogin:
                 loginUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/login");
-                //DATA VALIDATION MUST BE HERE!
-                //boolean formatCorrect=formatErrorManaging();
-                if(loginUri!=null){//&& Data validation passed
+
+                if(loginUri!=null && dataValidation()){//&& Data validation passed
                     Credentials crd=new Credentials();
                     crd.setEmail(etEmailAddress.getText().toString());
-                    crd.setPassword(etPassword.getText().toString());
-
-                    new RequestResponse<Credentials>(loginUri, 3,
-                            getSupportFragmentManager()).execute(crd);
+                    try {
+                        crd.setPassword(sha1(etPassword.getText().toString(), crd.getEmail()));
+                        new RequestResponse<Credentials>(loginUri, 3,
+                                getSupportFragmentManager()).execute(crd);
+                    } catch(SignatureException e){
+                        ErrorFragment ef= ErrorFragment.newError("Password encryption error!");
+                        ef.show(getSupportFragmentManager(), "Intratuin");
+                    }
                 }
                 break;
 
@@ -247,57 +249,34 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
 
 
-    /*private boolean formatErrorManaging(){
-        //Checks formats, return true if everything is correct. Shows error and returns false if not
-        String emailErrorText=emailFormatError();
-
-        if(emailErrorText!=""){
-            tvEmailError.setVisibility(View.VISIBLE);
-            tvEmailError.setText(emailErrorText);
-        }
-        else{
-            tvEmailError.setVisibility(View.GONE);
-            tvEmailError.setText("");
-        }
-
-        String passwordErrorText=passwordFormatError();
-
-        if(passwordErrorText!=""){
-            tvPasswordError.setVisibility(View.VISIBLE);
-            tvPasswordError.setText(passwordErrorText);
-        }
-        else{
-            tvPasswordError.setVisibility(View.GONE);
-            tvPasswordError.setText("");
-        }
-
-        if(emailErrorText=="" && passwordErrorText=="")
-            return true;
-        return false;
-    }*/
-    /*private String emailFormatError(){
-        String emailErrorText="";
+    private void showEmailError(){
         if(etEmailAddress.getText().length()==0)
-            emailErrorText="You have to enter email!";
-        else if(etEmailAddress.getText().toString().indexOf("@")<1 ||
-                etEmailAddress.getText().toString().indexOf("@")==etEmailAddress.getText()
-                        .length()-1)
-            emailErrorText="Wrong email format!";
-        return emailErrorText;
-    }*/
-    /*private String passwordFormatError(){
-        String passwordErrorText="";
+            etEmailAddress.setError("Email can't be blank!");
+        else etEmailAddress.setError("Wrong email format!");
+    }
+    private void showPassError(){
         if(etPassword.getText().length()==0)
-            passwordErrorText="You have to enter password!";
-        else if(etPassword.getText().length()<6)
-            passwordErrorText="Password must be from 6 to 15 characters!";
-        //else if(!etPassword.getText().toString().matches("d") ||       //Contains digit
-        //        !etPassword.getText().toString().matches("[a-z]") ||   //Contains small letter
-        //        !etPassword.getText().toString().matches("[A-Z]]"))    //Contains cap letter
-        //    passwordErrorText="Password must contain digit, small and big letters!";//Those regexp not tested yet
+            etPassword.setError("Password can't be blank!");
+        else etPassword.setError("Password has to be 6-15 chars, at least 1 small letter, " +
+                "1 cap. letter and 1 number");
+    }
+    private boolean dataValidation(){
+        pattern = Pattern.compile(EMAIL_PATTERN);
+        matcher = pattern.matcher(etEmailAddress.getText().toString());
+        boolean emailError = !matcher.matches();
+        if(emailError){
+            showEmailError();
+        }
 
-        return passwordErrorText;
-    }*/
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(etPassword.getText().toString());
+        boolean passError = !matcher.matches();
+        if(passError){
+            showPassError();
+        }
 
+        boolean validationError=emailError||passError;
+        return !validationError;
+    }
 }
 

@@ -54,7 +54,5 @@ public class CustomerController {
         User profile = facebook.userOperations().getUserProfile();
         return service.loginWithFacebook(profile);
     }
-
-
 }
 

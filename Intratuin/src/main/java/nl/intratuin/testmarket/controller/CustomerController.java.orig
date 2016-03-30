@@ -50,9 +50,13 @@ public class CustomerController {
 
     @RequestMapping(value = "loginFacebook", method = RequestMethod.POST)
     public @ResponseBody Message loginWithFacebook(@RequestBody TransferAccessToken accessToken) {
-<<<<<<< HEAD
         Facebook facebook = new FacebookTemplate(accessToken.getAccessToken(), "IntratuinMobile", "1720162671574425");
         User profile = facebook.userOperations().getUserProfile();
+<<<<<<< HEAD
+        return service.loginWithFacebook(profile);
+    }
+
+=======
         String emailToLoginWithFacebook = profile.getEmail();
         if(emailToLoginWithFacebook != null) {
             Integer existedCustomerId = service.findByEmail(emailToLoginWithFacebook);
@@ -61,7 +65,7 @@ public class CustomerController {
                     ? new Message("Login is successful")
                     : addWithFacebook(profile);
         } else {
-            return new Message("to successfully login we need your email");
+            return new Message("We need your email to login you successfully.");
         }
     }
 
@@ -71,26 +75,10 @@ public class CustomerController {
         customer.setFirstName(profile.getFirstName());
         customer.setLastName(profile.getLastName());
         customer.setEmail(profile.getEmail());
-        customer.setCity(profile.getLocation().getName().toString());
-
-        String birthdayFromFacebook = profile.getBirthday();
-        if(birthdayFromFacebook != null) {
-            String[] arrForBirthday = birthdayFromFacebook.split("/");
-            LocalDate birthdayLocalDate = LocalDate.of(Integer.parseInt(arrForBirthday[2]),
-                    Integer.parseInt(arrForBirthday[0]), Integer.parseInt(arrForBirthday[1]));
-            java.sql.Date birthday = java.sql.Date.valueOf(birthdayLocalDate);
-            customer.setBirthday(birthday);
+        if(profile.getLocation() != null) {
+            customer.setCity( profile.getLocation().getName().toString());
         }
-
-        String genderFromFacebook = profile.getGender();
-        if(genderFromFacebook != null) {
-            customer.setGender(genderFromFacebook.equals("male") ? 1 : 0);
-        }
-        service.save(customer);
-        return new Message("Registration with Facebook is successful");
-=======
-       return service.loginFacebook(accessToken);
 >>>>>>> sprint
-    }
+
 }
 

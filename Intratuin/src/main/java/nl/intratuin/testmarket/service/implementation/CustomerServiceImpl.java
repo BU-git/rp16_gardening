@@ -3,18 +3,11 @@ package nl.intratuin.testmarket.service.implementation;
 import nl.intratuin.testmarket.Credentials;
 import nl.intratuin.testmarket.Message;
 import nl.intratuin.testmarket.Settings;
-import nl.intratuin.testmarket.TransferAccessToken;
 import nl.intratuin.testmarket.dao.contract.CustomerDao;
 import nl.intratuin.testmarket.service.contract.CustomerService;
 import nl.intratuin.testmarket.entity.Customer;
-import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.User;
-import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -36,15 +29,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Transactional
-    public void save(Customer customer) {
-        customer.setEmail(customer.getEmail().toLowerCase());
-        customerDao.save(customer);
-    }
-
-    public Integer findByEmail(String email) {
-        return customerDao.findByEmail(email.toLowerCase());
-    }
-
     public Message addCustomer(Customer customer) {
         //Check whether is email already registered or not
         String emailToRegister = customer.getEmail().toLowerCase();
@@ -72,6 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    @Transactional
     public Message loginTwitter(Credentials credentials) {
         String twitterKey = credentials.getPassword();
         String emailToLogin = credentials.getEmail();
@@ -112,7 +97,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         customer.setFirstName(profile.getFirstName());
         customer.setLastName(profile.getLastName());
-        customer.setEmail(profile.getEmail());
+        customer.setEmail(profile.getEmail().toLowerCase());
 
         if(profile.getLocation() != null) {
             customer.setCity( profile.getLocation().getName().toString());
@@ -130,7 +115,7 @@ public class CustomerServiceImpl implements CustomerService {
         if(genderFromFacebook != null) {
             customer.setGender(genderFromFacebook.equals("male") ? 1 : 0);
         }
-        save(customer);
+        customerDao.save(customer);
         return new Message("Registration with Facebook is successful");
     }
 }
