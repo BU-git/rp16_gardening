@@ -10,4 +10,6 @@ public interface ProductDao {
     List<Product> findAll();
 
     List<Product> findByName(String name);
+
+    List<Product> findAllByCategory(String category);
 }
