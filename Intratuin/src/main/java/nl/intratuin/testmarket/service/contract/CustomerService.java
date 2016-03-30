@@ -21,4 +21,10 @@ public interface CustomerService {
 
     Message login(Credentials credentials);
 
+    Message loginTwitter(Credentials credentials);
+
+    Message loginWithFacebook(User profile);
+
+    //Message addWithFacebook(User profile);
+
 }

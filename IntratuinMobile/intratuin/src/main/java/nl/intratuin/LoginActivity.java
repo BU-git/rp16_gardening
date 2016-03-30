@@ -21,6 +21,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.twitter.sdk.android.Twitter;
@@ -38,6 +39,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.SignatureException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,6 +52,7 @@ import nl.intratuin.settings.Settings;
 
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
+    static final List<String> PERMISSIONS = Arrays.asList("email", "user_birthday", "user_hometown");
     CallbackManager callbackManager;
 
     TextView tvInfo;
@@ -132,8 +135,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             public void success(Result<TwitterSession> result) {
                 TwitterSession session = result.data;
                 twitterLoginUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/loginTwitter");
-                if(twitterLoginUri!=null){
-                    final Credentials credentials=new Credentials();
+                if (twitterLoginUri != null) {
+                    final Credentials credentials = new Credentials();
                     TwitterAuthClient authClient = new TwitterAuthClient();
                     authClient.requestEmail(session, new Callback<String>() {
                         @Override
@@ -145,8 +148,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
                                 new RequestResponse<Credentials>(twitterLoginUri, 3,
                                         getSupportFragmentManager()).execute(credentials);
-                            } catch(SignatureException e){
-                                ErrorFragment ef= ErrorFragment.newError("Encryption error!");
+                            } catch (SignatureException e) {
+                                ErrorFragment ef = ErrorFragment.newError("Encryption error!");
                                 ef.show(getSupportFragmentManager(), "Intratuin");
                             }
                         }
@@ -166,7 +169,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             }
         });
 
-        lbFacebook.setReadPermissions(Arrays.asList("email", "user_birthday", "user_location"));
+        lbFacebook.setReadPermissions(PERMISSIONS);
         lbFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -241,6 +244,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 break;
         }
     }
+
+
 
     /*private boolean formatErrorManaging(){
         //Checks formats, return true if everything is correct. Shows error and returns false if not
