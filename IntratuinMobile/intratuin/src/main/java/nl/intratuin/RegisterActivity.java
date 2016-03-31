@@ -41,8 +41,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     EditText etStreet;
     EditText etHouse;
     EditText etPostcode;
-    TextView tvBirthday;
-    Button bBirthday;
+    EditText etBirthday;
     EditText etPassword;
     CheckBox cbShowPassword;
     EditText etRePassword;
@@ -62,6 +61,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_register);
 
         etFirstName = (EditText)findViewById(R.id.etFirstName);
@@ -72,8 +72,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         etStreet = (EditText)findViewById(R.id.etStreet);
         etHouse = (EditText)findViewById(R.id.etHouse);
         etPostcode = (EditText)findViewById(R.id.etPostcode);
-        tvBirthday = (TextView)findViewById(R.id.tvBirthday);
-        bBirthday = (Button)findViewById(R.id.bBirthday);
+        etBirthday = (EditText)findViewById(R.id.etBirthday);
         etPassword = (EditText)findViewById(R.id.etPassword);
         cbShowPassword = (CheckBox) findViewById(R.id.cbShowPassword);
         etRePassword = (EditText)findViewById(R.id.etRePassword);
@@ -96,8 +95,8 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
 
-            case R.id.bBirthday:
-                tvBirthday.setError(null);
+            case R.id.etBirthday:
+                etBirthday.setError(null);
                 DialogFragment dateDialog = new DatePickerFragment();
                 dateDialog.show(getSupportFragmentManager(), "Intratuin");
                 break;
@@ -133,8 +132,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                     cust.setStreetName(etStreet.getText().toString());
                     cust.setHouseNumber(etHouse.getText().toString());
                     cust.setPostalCode(etPostcode.getText().toString());
-                    cust.setBirthday(parseDate(tvBirthday.getText().toString()));
-                    //cust.setPassword(etPassword.getText().toString());
+                    cust.setBirthday(parseDate(etBirthday.getText().toString()));
                     cust.setPhoneNumber(etPhone.getText().toString());
                     if(rbMale.isChecked())
                         cust.setGender(1);
@@ -158,7 +156,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         }
     }
 
-    private Date parseDate(String str){
+    public static Date parseDate(String str){
         String[] s=str.split("/");
         return new Date(Integer.parseInt(s[2])-1900,Integer.parseInt(s[0])-1,Integer.parseInt(s[1]));
     }
@@ -333,16 +331,24 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
             }
         });
 
-        tvBirthday.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etBirthday.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus && tvBirthday.getText().length()==0){
-                    tvBirthday.setError("Birthday field can not be blank");
+                if (!hasFocus && etBirthday.getText().length() == 0) {
+                    etBirthday.setError("Birthday field can not be blank");
                 }
             }
         });
 
-        bBirthday.setOnClickListener(this);
+        etBirthday.setOnClickListener(this);
+        etBirthday.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    etBirthday.performClick();
+                }
+            }
+        });
         cbShowPassword.setOnClickListener(this);
         cbShowRePassword.setOnClickListener(this);
         bCancel.setOnClickListener(this);
@@ -399,8 +405,8 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
             res=false;
         }
 
-        if(tvBirthday.getText().length()==0){
-            tvBirthday.setError("Birthday can not be blank");
+        if(etBirthday.getText().length()==0){
+            etBirthday.setError("Birthday can not be blank");
             res=false;
         }
 
