@@ -32,10 +32,9 @@ public class DatePickerFragment extends DialogFragment
             day = c.get(Calendar.DAY_OF_MONTH);
         } else {
             Date dt = RegisterActivity.parseDate(strDate);
-            dt = new Date(116,11,4);
             year=dt.getYear()+1900;
-            month=dt.getMonth()+1;
-            day=dt.getDay();
+            month=dt.getMonth();
+            day=dt.getDate();
         }
 
         Dialog picker = new DatePickerDialog(getActivity(), this,

@@ -125,6 +125,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         bForgot.setOnClickListener(this);
         cbShow.setOnClickListener(this);
         ivIntratuin.setOnClickListener(this);
+        ivIntratuin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    ivIntratuin.performClick();
+                }
+            }
+        });
 
         bTwitter.setOnClickListener(new OnClickListener() {
             @Override
@@ -280,4 +288,3 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         return !validationError;
     }
 }
-

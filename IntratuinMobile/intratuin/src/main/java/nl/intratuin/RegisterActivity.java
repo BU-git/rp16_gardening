@@ -341,7 +341,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         });
 
         etBirthday.setOnClickListener(this);
-        etBirthday.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+        etBirthday.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
@@ -354,6 +354,14 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         bCancel.setOnClickListener(this);
         bSignUp.setOnClickListener(this);
         ivIntratuin.setOnClickListener(this);
+        ivIntratuin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    ivIntratuin.performClick();
+                }
+            }
+        });
     }
     private void showEmailError(){
         if(etEmail.getText().length()==0)

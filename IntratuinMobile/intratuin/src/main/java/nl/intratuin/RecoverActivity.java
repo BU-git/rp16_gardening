@@ -39,6 +39,14 @@ public class RecoverActivity extends AppCompatActivity implements View.OnClickLi
         bRegister.setOnClickListener(this);
         bRecover.setOnClickListener(this);
         bBack.setOnClickListener(this);
+        ivIntratuin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    ivIntratuin.performClick();
+                }
+            }
+        });
     }
 
     @Override

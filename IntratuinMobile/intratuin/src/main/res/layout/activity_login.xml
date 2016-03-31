@@ -22,7 +22,11 @@
         android:layout_marginTop="30dp"
         android:src="@drawable/logo"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+        <requestFocus/>
+    </ImageView>
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/bLoginFacebook"
