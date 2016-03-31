@@ -2,5 +2,10 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#ACC351</color>
+    <color name="colorControlNormal">#AAAAAA</color>
+    <color name="textColor">#5C6725</color>
+    <color name="textColorHint">#333333</color>
+    <color name="textColorLight">#ACC351</color>
 </resources>
+
