@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         bTwitter = (TwitterLoginButton) findViewById(R.id.bTwitter);
         lbFacebook = (LoginButton) findViewById(R.id.bLoginFacebook);
-        tvInfo = (TextView) findViewById(R.id.tvInfo);
+        //tvInfo = (TextView) findViewById(R.id.tvInfo);
         etEmailAddress = (EditText)findViewById(R.id.etEmailAddress);
         etEmailAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

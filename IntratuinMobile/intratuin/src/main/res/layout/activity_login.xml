@@ -78,21 +78,21 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/remember"
+        android:text="@string/showpass"
+        android:id="@+id/cbShow"
         android:layout_marginLeft="10dp"
-        android:layout_below="@id/cbShow"
-        android:id="@+id/cbRemember"
-        android:backgroundTint="#ffffff"
+        android:layout_below="@id/etPassword"
         android:textColor="#ffffff"
         android:buttonTint="#ffffff" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/showpass"
-        android:id="@+id/cbShow"
+        android:text="@string/remember"
         android:layout_marginLeft="10dp"
-        android:layout_below="@id/etPassword"
+        android:layout_below="@id/cbShow"
+        android:id="@+id/cbRemember"
+        android:backgroundTint="#ffffff"
         android:textColor="#ffffff"
         android:buttonTint="#ffffff" />
 
