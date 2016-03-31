@@ -52,7 +52,33 @@ public class CustomerController {
     public @ResponseBody Message loginWithFacebook(@RequestBody TransferAccessToken accessToken) {
         Facebook facebook = new FacebookTemplate(accessToken.getAccessToken(), "IntratuinMobile", "1720162671574425");
         User profile = facebook.userOperations().getUserProfile();
+<<<<<<< HEAD
         return service.loginWithFacebook(profile);
     }
+
+=======
+        String emailToLoginWithFacebook = profile.getEmail();
+        if(emailToLoginWithFacebook != null) {
+            Integer existedCustomerId = service.findByEmail(emailToLoginWithFacebook);
+
+            return existedCustomerId != null
+                    ? new Message("Login is successful")
+                    : addWithFacebook(profile);
+        } else {
+            return new Message("We need your email to login you successfully.");
+        }
+    }
+
+    private Message addWithFacebook(User profile) {
+        Customer customer = new Customer();
+
+        customer.setFirstName(profile.getFirstName());
+        customer.setLastName(profile.getLastName());
+        customer.setEmail(profile.getEmail());
+        if(profile.getLocation() != null) {
+            customer.setCity( profile.getLocation().getName().toString());
+        }
+>>>>>>> sprint
+
 }
 

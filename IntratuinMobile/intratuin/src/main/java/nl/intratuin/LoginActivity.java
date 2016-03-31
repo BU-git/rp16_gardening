@@ -28,10 +28,10 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-
 import java.net.URI;
 import java.security.SignatureException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,6 +46,7 @@ import nl.intratuin.settings.Settings;
 import static nl.intratuin.settings.Settings.sha1;
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
+    static final List<String> PERMISSIONS = Arrays.asList("email", "user_birthday", "user_hometown");
     CallbackManager callbackManager;
 
     TextView tvInfo;
@@ -86,7 +87,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         bTwitterHidden = (TwitterLoginButton) findViewById(R.id.bTwitterHidden);
         bTwitter = (Button) findViewById(R.id.bTwitter);
         lbFacebook = (LoginButton) findViewById(R.id.bLoginFacebook);
-        //tvInfo = (TextView) findViewById(R.id.tvInfo);
+
         etEmailAddress = (EditText)findViewById(R.id.etEmailAddress);
         etEmailAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -110,7 +111,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 }
             }
         });
-
 
         bLogin = (Button) findViewById(R.id.bLogin);
         bRegister = (Button) findViewById(R.id.bRegister);
@@ -170,7 +170,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             }
         });
 
-        lbFacebook.setReadPermissions(Arrays.asList("email", "user_birthday", "user_location"));
+        lbFacebook.setReadPermissions(PERMISSIONS);
         lbFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -182,14 +182,12 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
             @Override
             public void onCancel() {
-                //tvInfo.setText("Login attempt canceled.");
                 ErrorFragment ef= ErrorFragment.newError("Login attempt canceled.");
                 ef.show(getSupportFragmentManager(), "Intratuin");
             }
 
             @Override
             public void onError(FacebookException error) {
-                //tvInfo.setText("Login attempt failed.");
                 ErrorFragment ef= ErrorFragment.newError("Login attempt failed.");
                 ef.show(getSupportFragmentManager(), "Intratuin");
             }
@@ -205,9 +203,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         callbackManager.onActivityResult(requestCode, resultCode, data);
         bTwitterHidden.onActivityResult(requestCode, resultCode, data);
     }
-
-
-
 
     @Override
     public void onClick(View view) {
@@ -252,6 +247,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 break;
         }
     }
+
+
 
     private void showEmailError(){
         if(etEmailAddress.getText().length()==0)
