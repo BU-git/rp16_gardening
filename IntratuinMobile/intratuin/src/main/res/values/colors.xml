@@ -7,5 +7,6 @@
     <color name="textColor">#5C6725</color>
     <color name="textColorHint">#333333</color>
     <color name="textColorLight">#ACC351</color>
+    <color name="twitter_pressed">#687781</color>
 </resources>
 
