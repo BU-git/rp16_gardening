@@ -1,10 +1,8 @@
 package nl.intratuin.handlers;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -21,14 +17,13 @@ import com.squareup.picasso.Picasso;
 import nl.intratuin.R;
 import nl.intratuin.net.RequestResponseGET;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import nl.intratuin.dto.Product;
+import nl.intratuin.net.UriConstructor;
 
 
 public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterable{
@@ -108,21 +103,14 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
 
     private List<Product> findProducts(String searchQuery) {
         List<Product> productSearchResult = new ArrayList<>();
-        String searchUri = null;
-
-        try {
-            searchUri = new URL("http", "128.0.169.5", 8888, "/product/search?searchQuery={searchQuery}").toString();
-        } catch (MalformedURLException  e) {
-        }
+        String searchUri = "http://128.0.169.5:8888/Intratuin/product/search/{name}";
 
         AsyncTask<String, Void, List<Product>> productFilterResult =
                 new RequestResponseGET<String>(searchUri, 3,
                         ((FragmentActivity)context).getSupportFragmentManager()).execute(searchQuery);
         try {
             productSearchResult = productFilterResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return productSearchResult;

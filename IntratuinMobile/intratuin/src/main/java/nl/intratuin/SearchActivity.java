@@ -22,6 +22,5 @@ public class SearchActivity extends AppCompatActivity {
         textView.setThreshold(3);
         ProductAutoCompleteAdapter adapter = new ProductAutoCompleteAdapter(this);
         textView.setAdapter(adapter);
-        lSearch = (ListView) findViewById(R.id.lSearch);
     }
 }

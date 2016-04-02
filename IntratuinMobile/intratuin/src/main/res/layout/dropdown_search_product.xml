@@ -33,7 +33,7 @@
             android:layout_centerVertical="true"
             android:layout_alignLeft="@id/productName"
             android:paddingTop="8dp"
-            android:textColor="@color/colorGreen"
+            android:textColor="@color/textColorLight"
             android:text="€"
             android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
@@ -45,7 +45,7 @@
             android:layout_toRightOf="@id/currency_eur"
             android:layout_centerVertical="true"
             android:layout_below="@id/productName"
-            android:textColor="@color/colorGreen"
+            android:textColor="@color/textColorLight"
             android:paddingTop="8dp"
             android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceLarge"/>

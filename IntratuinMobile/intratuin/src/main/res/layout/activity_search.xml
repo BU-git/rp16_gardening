@@ -40,13 +40,10 @@
             android:layout_centerHorizontal="true"
             android:inputType="text"
             android:hint="Search"
+            android:textColorHint="@color/hint_search"
             android:drawableLeft="@drawable/ic_search"
             android:foregroundTint="#caed7f">
         </AutoCompleteTextView>
 
-        <ListView
-            android:layout_width="fill_parent"
-            android:id="@+id/lSearch"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 </ScrollView>

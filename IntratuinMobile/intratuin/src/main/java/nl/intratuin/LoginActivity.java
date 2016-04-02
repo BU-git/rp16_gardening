@@ -3,7 +3,9 @@ package nl.intratuin;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
@@ -33,6 +35,7 @@ import java.net.URI;
 import java.security.SignatureException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,8 +48,10 @@ import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.Settings;
 
 import static nl.intratuin.settings.Settings.sha1;
+import nl.intratuin.dto.TransferMessage;
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
+    FragmentManager fragmentManager;
     static final List<String> PERMISSIONS = Arrays.asList("email", "user_birthday", "user_hometown");
     CallbackManager callbackManager;
 
@@ -221,15 +226,24 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         switch (view.getId()) {
             case R.id.bLogin:
                 loginUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/login");
+                TransferMessage respondMessage;
 
                 if(loginUri!=null && dataValidation()){//&& Data validation passed
                     Credentials crd=new Credentials();
                     crd.setEmail(etEmailAddress.getText().toString());
                     try {
                         crd.setPassword(sha1(etPassword.getText().toString(), crd.getEmail()));
-                        new RequestResponse<Credentials>(loginUri, 3,
-                                getSupportFragmentManager()).execute(crd);
-                    } catch(SignatureException e){
+
+                        AsyncTask<Credentials, Void, TransferMessage> jsonRespond =
+                                new RequestResponse<Credentials>(loginUri, 3, getSupportFragmentManager()).execute(crd);
+                        respondMessage = jsonRespond.get();
+                        if(respondMessage.getMessage().equals("Login is successful")) {
+                            startActivity(new Intent(this, SearchActivity.class));
+                        } else {
+                            ErrorFragment ef= ErrorFragment.newError(respondMessage==null?"Request error!":respondMessage.getMessage());
+                            ef.show(fragmentManager, "Intratuin");
+                        }
+                    } catch(SignatureException | InterruptedException | ExecutionException e){
                         ErrorFragment ef= ErrorFragment.newError("Password encryption error!");
                         ef.show(getSupportFragmentManager(), "Intratuin");
                     }

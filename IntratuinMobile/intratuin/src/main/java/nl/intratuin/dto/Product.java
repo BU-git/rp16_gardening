@@ -5,6 +5,15 @@ public class Product {
     private String productName;
     private double productPrice;
     private String productImage;
+    private int categoryId;
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
 
     public int getProductId() {
         return productId;

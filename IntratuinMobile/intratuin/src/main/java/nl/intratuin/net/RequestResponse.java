@@ -1,5 +1,6 @@
 package nl.intratuin.net;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 
@@ -9,14 +10,14 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 
-import nl.intratuin.dto.Message;
+import nl.intratuin.dto.TransferMessage;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.settings.Settings;
 
 /**
  * Created by Иван on 25.03.2016.
  */
-public class RequestResponse<T> extends AsyncTask<T, Void, Message> {
+public class RequestResponse<T> extends AsyncTask<T, Void, TransferMessage> {
     private URI uri;
     private int retry;
     private FragmentManager fragmentManager;
@@ -29,9 +30,9 @@ public class RequestResponse<T> extends AsyncTask<T, Void, Message> {
         this.fragmentManager=fragmentManager;
     }
     @Override
-    protected Message doInBackground(T... param) {
+    protected TransferMessage doInBackground(T... param) {
         try {
-            Message jsonObject=null;
+            TransferMessage jsonObject=null;
             for(int i=0; i<retry; i++) {
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -39,7 +40,7 @@ public class RequestResponse<T> extends AsyncTask<T, Void, Message> {
                         (SimpleClientHttpRequestFactory) restTemplate.getRequestFactory();
                 rf.setReadTimeout(Settings.getConnectionTimeout());
                 rf.setConnectTimeout(Settings.getConnectionTimeout());
-                jsonObject = restTemplate.postForObject(uri, param[0], Message.class);
+                jsonObject = restTemplate.postForObject(uri, param[0], TransferMessage.class);
                 if(jsonObject!=null)
                     break;
             }
@@ -49,7 +50,7 @@ public class RequestResponse<T> extends AsyncTask<T, Void, Message> {
         }
     }
     @Override
-    protected void onPostExecute(Message msg){
+    protected void onPostExecute(TransferMessage msg){
         ErrorFragment ef= ErrorFragment.newError(msg==null?"Request error!":msg.getMessage());
         ef.show(fragmentManager, "Intratuin");
     }
