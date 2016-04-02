@@ -28,7 +28,7 @@
             <requestFocus/>
         </ImageView>
 
-        <SearchView
+        <AutoCompleteTextView
             android:id="@+id/svIntratuin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,8 +38,11 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_centerHorizontal="true"
-            android:inputType="text">
-        </SearchView>
+            android:inputType="text"
+            android:hint="Search"
+            android:drawableLeft="@drawable/ic_search"
+            android:foregroundTint="#caed7f">
+        </AutoCompleteTextView>
 
         <ListView
             android:layout_width="fill_parent"
