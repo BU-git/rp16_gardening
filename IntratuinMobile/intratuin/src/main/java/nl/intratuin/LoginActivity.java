@@ -77,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         TwitterAuthConfig authConfig = Settings.getTwitterConfig();
         Fabric.with(this, new Twitter(authConfig));
         FacebookSdk.sdkInitialize(this.getApplicationContext());
@@ -86,11 +87,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         bTwitterHidden = (TwitterLoginButton) findViewById(R.id.bTwitterHidden);
         bTwitter = (Button) findViewById(R.id.bTwitter);
         lbFacebook = (LoginButton) findViewById(R.id.bLoginFacebook);
-<<<<<<< HEAD
-        //tvInfo = (TextView) findViewById(R.id.tvInfo);
-=======
 
->>>>>>> 02a86c4baae01c2887c7504011bc0d613f1dabf9
         etEmailAddress = (EditText)findViewById(R.id.etEmailAddress);
         etEmailAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -128,6 +125,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         bForgot.setOnClickListener(this);
         cbShow.setOnClickListener(this);
         ivIntratuin.setOnClickListener(this);
+        ivIntratuin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    ivIntratuin.performClick();
+                }
+            }
+        });
 
         bTwitter.setOnClickListener(new OnClickListener() {
             @Override
@@ -283,4 +288,3 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         return !validationError;
     }
 }
-

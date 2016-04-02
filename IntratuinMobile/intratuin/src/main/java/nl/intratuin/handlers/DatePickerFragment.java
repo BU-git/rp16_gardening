@@ -7,22 +7,35 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import nl.intratuin.R;
+import nl.intratuin.RegisterActivity;
 
+import java.sql.Date;
 import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
+    EditText etBirthday;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+        etBirthday = (EditText) getActivity().findViewById(R.id.etBirthday);
+        String strDate=etBirthday.getText().toString();
+        int year,month,day;
+        if(strDate.indexOf('/')==-1) {
+            year = c.get(Calendar.YEAR);
+            month = c.get(Calendar.MONTH);
+            day = c.get(Calendar.DAY_OF_MONTH);
+        } else {
+            Date dt = RegisterActivity.parseDate(strDate);
+            year=dt.getYear()+1900;
+            month=dt.getMonth();
+            day=dt.getDate();
+        }
 
         Dialog picker = new DatePickerDialog(getActivity(), this,
                 year, month, day);
@@ -42,7 +55,6 @@ public class DatePickerFragment extends DialogFragment
     @Override
     public void onDateSet(android.widget.DatePicker datePicker, int year,
                           int month, int day) {
-        TextView tvBirthDate = (TextView) getActivity().findViewById(R.id.tvBirthday);
-        tvBirthDate.setText((month + 1) + "/" + day + "/" + year);
+        etBirthday.setText((month + 1) + "/" + day + "/" + year);
     }
 }

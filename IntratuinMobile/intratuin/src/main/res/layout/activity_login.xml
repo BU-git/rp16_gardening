@@ -22,7 +22,11 @@
         android:layout_marginTop="30dp"
         android:src="@drawable/logo"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+        <requestFocus/>
+    </ImageView>
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/bLoginFacebook"
@@ -79,7 +83,8 @@
         android:textColor="@color/textColor"
         android:textColorHint="@color/textColorHint"
         android:textSize="16dp"
-        android:textIsSelectable="false" />
+        android:textIsSelectable="false"
+        android:paddingRight="10dp" />
 
     <EditText
         android:id="@+id/etPassword"
@@ -96,7 +101,8 @@
         android:textColor="@color/textColor"
         android:textColorHint="@color/textColorHint"
         android:textSize="16dp"
-        android:layout_marginTop="11dp" />
+        android:layout_marginTop="11dp"
+        android:paddingRight="10dp" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -131,7 +137,8 @@
         android:text="@string/logbut"
         android:layout_below="@id/cbRemember"
         android:clickable="true"
-        android:textColor="@color/textColor"/>
+        android:textColor="@color/textColor"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/bRegister"
