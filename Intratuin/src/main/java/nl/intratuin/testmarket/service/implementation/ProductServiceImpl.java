@@ -32,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> findAllByCategory(String category) {
+    public List<Product> findAllByCategory(int category) {
         return productDao.findAllByCategory(category);
     }
 }

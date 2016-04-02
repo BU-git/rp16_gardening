@@ -19,8 +19,6 @@ public class ProductController {
 
     @Autowired
     ProductService productService;
-    @Autowired
-    CategoryService categoryService;
 
     @RequestMapping("all")
     public List<Product> getAll() {
@@ -37,23 +35,4 @@ public class ProductController {
         return productService.findByName(name);
     }
 
-    @RequestMapping(value = "category/{id}/all")
-    public List<Product> getByCategoryId(@PathVariable String id) {
-        return productService.findByName(id);
-    }
-
-    @RequestMapping("category")
-    public List<Category> getAllRootCategories() {
-        return categoryService.findAllRootCategories();
-    }
-
-    @RequestMapping(value = "category/{id}")
-    public List<Category> getCategoryById(@PathVariable int id) {
-        return categoryService.findById(id);
-    }
-
-    @RequestMapping(value = "category/{id}/children")
-    public List<Category> getAllChildCategories(@PathVariable int id) {
-        return categoryService.findChildCategories(id);
-    }
 }

@@ -34,7 +34,7 @@ public class CategoryDaoImpl implements CategoryDao {
     public List<Category> findById(int categoryId) {
         TypedQuery<Category> queryFindCategoryById = em.createQuery("SELECT C FROM Category C WHERE C.categoryId " +
                 "LIKE :regexp", Category.class);
-        queryFindCategoryById.setParameter("regexp","%"+categoryId+"%");
+        queryFindCategoryById.setParameter("regexp",categoryId);
         return queryFindCategoryById.getResultList();
     }
 }
