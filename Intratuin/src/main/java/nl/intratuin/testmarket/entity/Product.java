@@ -20,6 +20,9 @@ public class Product {
     @Column(name = "PRODUCT_PRICE")
     private int productPrice;
 
+    @Column(name = "PRODUCT_IMAGE_SMALL")
+    private String productImage;
+
     public Integer getProductId() {
         return productId;
     }
@@ -50,5 +53,13 @@ public class Product {
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
     }
 }
