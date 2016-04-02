@@ -1,6 +1,7 @@
 package nl.intratuin;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -118,6 +119,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         cbRemember = (CheckBox) findViewById(R.id.cbRemember);
         cbShow = (CheckBox) findViewById(R.id.cbShow);
         ivIntratuin = (ImageView) findViewById(R.id.ivIntratuin);
+
+        Typeface fontTwitter = Typeface.createFromAsset(getAssets(), "fonts/GothamNarrow.ttf");
+        bTwitter.setTypeface(fontTwitter, Typeface.BOLD );
 
         bTwitter.setOnClickListener(this);
         bLogin.setOnClickListener(this);
