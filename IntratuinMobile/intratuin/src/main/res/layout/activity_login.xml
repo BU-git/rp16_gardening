@@ -18,81 +18,115 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="#FFF8DC"
-        android:layout_marginTop="20dp"
+        android:background="#FFFFFF"
+        android:layout_marginTop="30dp"
         android:src="@drawable/logo"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+        <requestFocus/>
+    </ImageView>
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/bLoginFacebook"
-        android:layout_width="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:text="@string/login_facebook"
         android:layout_below="@+id/ivIntratuin"
         android:layout_marginTop="50dp"
-        android:layout_alignRight="@+id/bTwitter"
-        android:layout_alignEnd="@+id/bTwitter"
-        android:layout_alignLeft="@+id/bTwitter"
-        android:layout_alignStart="@+id/bTwitter" />
+        android:background="@drawable/facebook_login"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp" />
 
-    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:id="@+id/bTwitter"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/bLoginFacebook"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="15dp"
+        android:layout_alignRight="@+id/bLoginFacebook"
+        android:layout_alignEnd="@+id/bTwitterHidden"
+        android:layout_alignLeft="@+id/bLoginFacebook"
+        android:layout_alignStart="@+id/bTwitterHidden"
+        android:background="@drawable/twitter_login_action"
+        android:drawableLeft="@drawable/twitter_logo_action"
+        android:visibility="visible"
+        android:textColor="#ffffff"
+        android:text="@string/tw__login_btn_txt"
+        android:textAllCaps="false"/>
+
+    <!--Invisible button! Visible is bTwitter - for customization-->
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:id="@+id/bTwitterHidden"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/bLoginFacebook"
+        android:layout_marginTop="15dp"
+        android:visibility="invisible"
+        android:enabled="false"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp" />
 
 
     <EditText
         android:id="@+id/etEmailAddress"
         android:layout_width="match_parent"
         android:inputType="textEmailAddress"
-        android:layout_marginBottom="20dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="37dp"
         android:hint="@string/email"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_below="@id/bTwitter"
         android:background="@drawable/textedit"
         android:drawableLeft="@drawable/ic_action_name"
-        android:password="false" />
+        android:password="false"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/textColorHint"
+        android:textSize="16dp"
+        android:textIsSelectable="false"
+        android:paddingRight="10dp" />
 
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:inputType="textPassword|text"
-        android:layout_marginBottom="20dp"
         android:layout_height="wrap_content"
         android:hint="@string/pass"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:background="@drawable/textedit"
         android:layout_below="@id/etEmailAddress"
         android:drawableLeft="@drawable/ic_action_name2"
-        android:maxLength="15" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/remember"
-        android:layout_marginLeft="10dp"
-        android:layout_below="@id/cbShow"
-        android:id="@+id/cbRemember"
-        android:backgroundTint="#ffffff"
-        android:textColor="#ffffff"
-        android:buttonTint="#ffffff" />
+        android:maxLength="15"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/textColorHint"
+        android:textSize="16dp"
+        android:layout_marginTop="11dp"
+        android:paddingRight="10dp" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/showpass"
         android:id="@+id/cbShow"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="50dp"
         android:layout_below="@id/etPassword"
+        android:textColor="#ffffff"
+        android:buttonTint="#ffffff"
+        android:layout_marginTop="22dp" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/remember"
+        android:layout_marginLeft="50dp"
+        android:layout_below="@id/cbShow"
+        android:id="@+id/cbRemember"
+        android:backgroundTint="#ffffff"
         android:textColor="#ffffff"
         android:buttonTint="#ffffff" />
 
@@ -100,40 +134,47 @@
         android:id="@+id/bLogin"
         android:background="@drawable/button_action"
         android:layout_width="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_height="wrap_content"
         android:text="@string/logbut"
         android:layout_below="@id/cbRemember"
-        android:clickable="true" />
+        android:clickable="true"
+        android:textColor="@color/textColor"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/bRegister"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:text="@string/register"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="50dp"
         android:textSize="10sp"
-        android:background="@drawable/button_action"
+        android:background="@drawable/button_minor_action"
         android:clickable="false"
         android:layout_below="@+id/bLogin"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:textColor="@color/textColorLight"
+        android:layout_toLeftOf="@+id/bForgot"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10dp" />
 
     <Button
         android:id="@+id/bForgot"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="30dp"
         android:textSize="10sp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="50dp"
         android:text="@string/forgotpass"
-        android:background="@drawable/button_action"
+        android:background="@drawable/button_minor_action"
         android:clickable="false"
         android:layout_below="@+id/bLogin"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/textColorLight"
+        android:layout_marginTop="15dp" />
 
 </RelativeLayout>
 

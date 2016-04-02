@@ -28,11 +28,11 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     public Integer findByEmail(String email) {
+        email = email.toLowerCase();
         TypedQuery<Integer> queryFindByEmail = em.createQuery("SELECT c.id FROM Customer c WHERE c.email = :email", Integer.class);
         queryFindByEmail.setParameter("email", email);
         List<Integer> foundCustomerIds = queryFindByEmail.getResultList();
         return (foundCustomerIds.size() == 0) ? null : foundCustomerIds.get(0);
     }
-
 }
 

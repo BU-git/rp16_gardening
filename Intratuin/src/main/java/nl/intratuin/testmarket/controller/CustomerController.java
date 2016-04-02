@@ -1,14 +1,19 @@
 package nl.intratuin.testmarket.controller;
 
 import nl.intratuin.testmarket.Credentials;
+import nl.intratuin.testmarket.Settings;
 import nl.intratuin.testmarket.TransferAccessToken;
 import nl.intratuin.testmarket.service.contract.CustomerService;
 import nl.intratuin.testmarket.Message;
 import nl.intratuin.testmarket.entity.Customer;
-import nl.intratuin.testmarket.util.SocialNetworkUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.User;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.web.bind.annotation.*;
+
 import javax.inject.Inject;
+import java.security.SignatureException;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -17,8 +22,6 @@ public class CustomerController {
 
     @Inject
     CustomerService service;
-    @Autowired
-    SocialNetworkUtil socialNetworkUtil;
 
     @RequestMapping("all")
     public List<Customer> getAll() {
@@ -42,12 +45,14 @@ public class CustomerController {
 
     @RequestMapping(value = "loginTwitter", method = RequestMethod.POST)
     public @ResponseBody Message loginTwitter(@RequestBody Credentials credentials) {
-        return socialNetworkUtil.loginWithTwitter(credentials);
+        return service.loginTwitter(credentials);
     }
 
     @RequestMapping(value = "loginFacebook", method = RequestMethod.POST)
     public @ResponseBody Message loginWithFacebook(@RequestBody TransferAccessToken accessToken) {
-        return socialNetworkUtil.loginWithFacebook(accessToken);
+        Facebook facebook = new FacebookTemplate(accessToken.getAccessToken(), "IntratuinMobile", "1720162671574425");
+        User profile = facebook.userOperations().getUserProfile();
+        return service.loginWithFacebook(profile);
     }
 }
 

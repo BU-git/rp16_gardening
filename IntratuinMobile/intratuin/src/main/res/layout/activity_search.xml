@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/llSearch"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/gradient"
+        android:orientation="vertical"
+        tools:context="nl.intratuin.RegisterActivity">
+
+        <ImageView
+            android:id="@+id/ivIntratuin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="#FFFFFF"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/logo"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+            <requestFocus/>
+        </ImageView>
+
+        <SearchView
+            android:id="@+id/svIntratuin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/ivIntratuin"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_centerHorizontal="true"
+            android:inputType="text">
+        </SearchView>
+
+        <ListView
+            android:layout_width="fill_parent"
+            android:id="@+id/lSearch"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>

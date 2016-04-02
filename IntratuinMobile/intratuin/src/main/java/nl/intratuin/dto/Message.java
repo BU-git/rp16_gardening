@@ -1,6 +1,6 @@
 package nl.intratuin.dto;
 
-public class Message {
+public class Message{
     private String message;
 
     public String getMessage() {
