@@ -3,47 +3,126 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/pat21"
     android:fillViewport="true">
+
 
     <LinearLayout
         android:id="@+id/llSearch"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@drawable/gradient"
         android:orientation="vertical"
+        android:background="@drawable/pat21"
         tools:context="nl.intratuin.RegisterActivity">
-
-        <ImageView
-            android:id="@+id/ivIntratuin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:background="#FFFFFF"
-            android:layout_marginTop="30dp"
-            android:src="@drawable/logo"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
-            <requestFocus/>
-        </ImageView>
 
         <AutoCompleteTextView
             android:id="@+id/svIntratuin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            android:layout_marginTop="20dp"
             android:layout_below="@+id/ivIntratuin"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="#FFFFFF"
             android:inputType="text"
-            android:hint="Search"
-            android:textColorHint="@color/hint_search"
-            android:drawableLeft="@drawable/ic_search"
-            android:foregroundTint="#caed7f">
-        </AutoCompleteTextView>
+            android:iconifiedByDefault="false"
+
+            android:hint="@string/search"
+            android:textColorHint="@color/colorAccent"
+            android:drawableLeft="@drawable/search_icon"
+
+            >
+            </AutoCompleteTextView>
+<!--android:searchIcon="@drawable/search_icon"-->
+
+        <ImageView
+            android:id="@+id/ivIntratuin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="#FFFFFF"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:src="@drawable/logo">
+
+            <!--What is this?-->
+            <requestFocus />
+        </ImageView>
+
+
+        <!-- Need to resize category_picture.png -->
+        <ImageView
+            android:id="@+id/ivCategoryPicture"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="#FFFFFF"
+
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/category_picture">
+        </ImageView>
+
+        <!-- It's just a text-->
+        <Button
+            android:id="@+id/textCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_action"
+            android:text="@string/categories"
+            android:clickable="false"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            >
+        </Button>
+
+        <!-- do it scrollable-->
+        <ListView
+            android:id="@+id/lSearch"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:divider="@color/colorAccent"
+            android:dividerHeight="1px"
+            android:layout_weight="0.1"
+            >
+
+        </ListView>
+
+        <GridLayout
+            android:id="@+id/searchButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|fill_horizontal"
+            android:columnCount="3"
+            android:orientation="horizontal"
+
+            >
+                <ImageButton
+                    android:src="@drawable/search_barcode"
+                    android:background="@drawable/pat21"
+                    >
+                </ImageButton>
+                <ImageButton
+                    android:src="@drawable/search_man"
+                    android:background="@drawable/pat21"
+                    android:layout_gravity="fill_horizontal"
+                    >
+                </ImageButton>
+                <ImageButton
+                    android:src="@drawable/search_basket"
+                    android:background="@drawable/pat21"
+                    >
+                </ImageButton>
+        </GridLayout>
 
     </LinearLayout>
 </ScrollView>
