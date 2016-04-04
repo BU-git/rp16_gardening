@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/pat21"
-    android:fillViewport="true">
+    android:background="@drawable/gradient"
+    android:orientation="vertical"
+    android:fillViewport="true"
+    tools:context="nl.intratuin.RegisterActivity">
 
-
-    <LinearLayout
-        android:id="@+id/llSearch"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:background="@drawable/gradient"
-        tools:context="nl.intratuin.RegisterActivity">
-
-        <AutoCompleteTextView
-            android:id="@+id/svIntratuin"
+           <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ivIntratuin"
@@ -31,9 +24,7 @@
 
             android:hint="@string/search"
             android:textColorHint="@color/colorAccent"
-            android:drawableLeft="@drawable/search_icon"
-
-            >
+            android:drawableLeft="@drawable/search_icon">
             </AutoCompleteTextView>
 <!--android:searchIcon="@drawable/search_icon"-->
 
@@ -84,7 +75,6 @@
             >
         </Button>
 
-        <!-- do it scrollable-->
         <ListView
             android:id="@+id/lSearch"
             android:layout_width="fill_parent"
@@ -93,9 +83,8 @@
             android:divider="@color/colorAccent"
             android:dividerHeight="1px"
             android:layout_weight="0.1"
-            >
-
-        </ListView>
+            android:ems="10"
+            android:scrollIndicators="right" />
 
         <GridLayout
             android:id="@+id/searchButtons"
@@ -108,21 +97,19 @@
             >
                 <ImageButton
                     android:src="@drawable/search_barcode"
-                    android:background="@drawable/pat21"
+                    android:background="@drawable/gradient"
                     >
                 </ImageButton>
                 <ImageButton
                     android:src="@drawable/search_man"
-                    android:background="@drawable/pat21"
+                    android:background="@drawable/gradient"
                     android:layout_gravity="fill_horizontal"
                     >
                 </ImageButton>
                 <ImageButton
                     android:src="@drawable/search_basket"
-                    android:background="@drawable/pat21"
+                    android:background="@drawable/gradient"
                     >
                 </ImageButton>
         </GridLayout>
-
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>
