@@ -1,6 +1,5 @@
 package nl.intratuin.net;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 

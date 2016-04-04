@@ -16,8 +16,6 @@ import com.squareup.picasso.Picasso;
 
 import nl.intratuin.R;
 import nl.intratuin.net.RequestResponseGET;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -32,7 +30,7 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
     private List<Product> resultSearch;
 
     public ProductAutoCompleteAdapter(Context context) {
-       this.context = context;
+        this.context = context;
         resultSearch = new ArrayList<>();
     }
     @Override
@@ -47,7 +45,7 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return resultSearch.get(position).getProductId();
     }
 
     @Override
@@ -103,7 +101,8 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
 
     private List<Product> findProducts(String searchQuery) {
         List<Product> productSearchResult = new ArrayList<>();
-        String searchUri = "http://128.0.169.5:8888/Intratuin/product/search/{name}";
+        String searchUri = new UriConstructor(((FragmentActivity)context).getSupportFragmentManager())
+                .makeFullURI("/product/search").toString()+"/{name}";
 
         AsyncTask<String, Void, List<Product>> productFilterResult =
                 new RequestResponseGET<String>(searchUri, 3,
