@@ -19,14 +19,12 @@ import nl.intratuin.dto.Product;
 public class RequestResponseGET<T> extends AsyncTask<T, Void, List<Product>> {
     private String  uri;
     private int retry;
-    private FragmentManager fragmentManager;
-    public RequestResponseGET(String uri, int retry, FragmentManager fragmentManager) {
+    public RequestResponseGET(String uri, int retry) {
         super();
         this.uri=uri;
         if(retry<1)
             this.retry=1;
         else this.retry=retry;
-//        this.fragmentManager=fragmentManager;
     }
     @Override
     protected List<Product> doInBackground(T... param) {

@@ -1,47 +1,56 @@
 package nl.intratuin.handlers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import nl.intratuin.R;
-import nl.intratuin.net.RequestResponseGET;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import nl.intratuin.R;
 import nl.intratuin.dto.Product;
-import nl.intratuin.net.UriConstructor;
+import nl.intratuin.net.RequestResponseGET;
 
 
-public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterable{
+public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterable {
 
     private final Context context;
     private List<Product> resultSearch;
+    private Filter filter;
+
 
     public ProductAutoCompleteAdapter(Context context) {
-       this.context = context;
+        this.context = context;
         resultSearch = new ArrayList<>();
     }
+
     @Override
     public int getCount() {
         return resultSearch.size();
     }
 
     @Override
-    public Product getItem(int position) {
+    public Object getItem(int position) {
         return resultSearch.get(position);
     }
 
@@ -52,8 +61,8 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-       ViewHolder holder;
-        if(convertView == null) {
+        ViewHolder holder;
+        if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(R.layout.dropdown_search_product, parent, false);
             holder = new ViewHolder(convertView);
@@ -62,7 +71,7 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Product product = getItem(position);
+        final Product product = (Product) this.getItem(position);
         holder.productName.setText(product.getProductName());
         holder.productPrice.setText("" + product.getProductPrice());
         Picasso.with(context)
@@ -70,50 +79,53 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
                 .resize(80, 80)
                 .centerCrop()
                 .into(holder.productImage);
-
-        return  convertView;
+        return convertView;
     }
 
     @Override
     public Filter getFilter() {
-        Filter filter = new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults filterResults = new FilterResults();
-                if (constraint != null) {
-                    List<Product> products = findProducts(constraint.toString());
-                    filterResults.values = products;
-                    filterResults.count = products.size();
-                }
-                return filterResults;
-            }
-
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                if (results != null && results.count > 0) {
-                    resultSearch = (List<Product>) results.values;
-                    notifyDataSetChanged();
-                } else {
-                    notifyDataSetInvalidated();
-                }
-            }
-        };
+        if (filter == null) {
+            filter = new SearchFilter();
+        }
         return filter;
     }
 
-    private List<Product> findProducts(String searchQuery) {
-        List<Product> productSearchResult = new ArrayList<>();
-        String searchUri = "http://128.0.169.5:8888/Intratuin/product/search/{name}";
+    private class SearchFilter extends android.widget.Filter {
 
-        AsyncTask<String, Void, List<Product>> productFilterResult =
-                new RequestResponseGET<String>(searchUri, 3,
-                        ((FragmentActivity)context).getSupportFragmentManager()).execute(searchQuery);
-        try {
-            productSearchResult = productFilterResult.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            //List<Product> list = listProduct;
+            FilterResults filterResults = new FilterResults();
+
+            if (constraint != null) {
+                List<Product> retList = findProducts(constraint.toString());
+                filterResults.values = retList;
+                filterResults.count = retList.size();
+            }
+            return filterResults;
         }
-        return productSearchResult;
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            //searchAdapter.clear();
+            if (results.count > 0) {
+                resultSearch = (List<Product>) results.values;
+            }
+        }
+
+        private List<Product> findProducts(String searchQuery) {
+            List<Product> productSearchResult = new ArrayList<>();
+            String searchUri = "http://128.0.169.5:8888/Intratuin/product/search/{name}";
+
+            AsyncTask<String, Void, List<Product>> productFilterResult =
+                    new RequestResponseGET<String>(searchUri, 1).execute(searchQuery);
+            try {
+                productSearchResult = productFilterResult.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+            return productSearchResult;
+        }
     }
 
     private static class ViewHolder {
@@ -130,3 +142,4 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
         }
     }
 }
+

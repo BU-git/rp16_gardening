@@ -38,4 +38,15 @@
     <string name="search">Search...</string>
     <string name="loading">Loading</string>
 
+    <string-array name="categories">
+        <item>House plants(1)</item>
+        <item>Garden plants(2)</item>
+        <item>Indoor and outdoor pots(3)</item>
+        <item>Garden and tarrace(4)</item>
+        <item>Garden furniture(5)</item>
+        <item>Barbeques(6)</item>
+        <item>Living(7)</item>
+        <item>Animals(2)</item>
+    </string-array>
+
 </resources>
