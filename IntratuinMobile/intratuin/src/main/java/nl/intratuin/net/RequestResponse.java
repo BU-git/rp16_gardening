@@ -50,7 +50,13 @@ public class RequestResponse<T> extends AsyncTask<T, Void, TransferMessage> {
     }
     @Override
     protected void onPostExecute(TransferMessage msg){
-        ErrorFragment ef= ErrorFragment.newError(msg==null?"Request error!":msg.getMessage());
-        ef.show(fragmentManager, "Intratuin");
+        if(msg==null) {
+            msg = new TransferMessage();
+            msg.setMessage("Request error!");
+        }
+        if(msg.getMessage().indexOf("success")==-1) {
+            ErrorFragment ef = ErrorFragment.newError(msg.getMessage());
+            ef.show(fragmentManager, "Intratuin");
+        }
     }
 }

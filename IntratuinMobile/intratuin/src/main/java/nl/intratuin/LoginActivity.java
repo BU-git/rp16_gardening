@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         ivIntratuin = (ImageView) findViewById(R.id.ivIntratuin);
 
         Typeface fontTwitter = Typeface.createFromAsset(getAssets(), "fonts/GothamNarrow.ttf");
-        bTwitter.setTypeface(fontTwitter, Typeface.BOLD );
+        bTwitter.setTypeface(fontTwitter, Typeface.BOLD);
 
         bTwitter.setOnClickListener(this);
         bLogin.setOnClickListener(this);
@@ -164,9 +164,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                 String email = result.data;
                                 credentials.setEmail(email);
                                 credentials.setPassword(Settings.getEncryptedTwitterKey(email));
+                                AsyncTask<Credentials, Void, TransferMessage> jsonRespond =
                                 new RequestResponse<Credentials>(twitterLoginUri, 3,
                                         getSupportFragmentManager()).execute(credentials);
-                            } catch (SignatureException e) {
+                                TransferMessage respondMessage = jsonRespond.get();
+                                if(respondMessage.getMessage().equals("Login is successful")) {
+                                    startActivity(new Intent(LoginActivity.this, SearchActivity.class));
+                                }
+                            } catch (SignatureException | InterruptedException | ExecutionException e) {
                                 ErrorFragment ef = ErrorFragment.newError("Encryption error!");
                                 ef.show(getSupportFragmentManager(), "Intratuin");
                             }
@@ -194,7 +199,19 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 facebookLoginUri = new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/loginFacebook");
                 TransferAccessToken accessToken = new TransferAccessToken(loginResult.getAccessToken().getToken());
 
-                new RequestResponse<TransferAccessToken>(facebookLoginUri, 3, getSupportFragmentManager()).execute(accessToken);
+                AsyncTask<TransferAccessToken, Void, TransferMessage> jsonRespond =
+                        new RequestResponse<TransferAccessToken>(facebookLoginUri, 3,
+                                getSupportFragmentManager()).execute(accessToken);
+                TransferMessage respondMessage=null;
+                try {
+                    respondMessage = jsonRespond.get();
+                } catch(InterruptedException | ExecutionException e){
+                    ErrorFragment ef= ErrorFragment.newError("Error!");
+                    ef.show(getSupportFragmentManager(), "Intratuin");
+                }
+                if(respondMessage.getMessage().equals("Login is successful")) {
+                    startActivity(new Intent(LoginActivity.this, SearchActivity.class));
+                }
             }
 
             @Override
