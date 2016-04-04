@@ -23,7 +23,7 @@
          <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
          <property name="url" value="jdbc:mysql://localhost:3306/BIONIC"/>
          <property name="username" value="root"/>
-         <property name="password" value="gathering"/>
+         <property name="password" value="Macik_23"/>
      </bean>
 
 
