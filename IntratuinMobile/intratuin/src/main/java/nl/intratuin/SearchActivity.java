@@ -11,8 +11,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.URI;
+import java.util.List;
+
+import nl.intratuin.dto.Category;
 import nl.intratuin.dto.Product;
 import nl.intratuin.handlers.ProductAutoCompleteAdapter;
+import nl.intratuin.net.UriConstructor;
 
 public class SearchActivity extends AppCompatActivity{
     ListView lSearch;
@@ -21,6 +26,8 @@ public class SearchActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
+
         setContentView(R.layout.activity_search);
 
         lSearch = (ListView) findViewById(R.id.lSearch);
@@ -52,8 +59,5 @@ public class SearchActivity extends AppCompatActivity{
                 startActivity(productPadeIntent);
             }
         });
-
     }
-
 }
-

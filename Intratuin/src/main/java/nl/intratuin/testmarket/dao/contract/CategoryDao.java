@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface CategoryDao {
 
-    List<Category> findAllRootCaegories();
+    List<Category> findAllCategories();
+
+    List<Category> findAllRootCategories();
 
     List<Category> findChildCategories(int categoryId);
 

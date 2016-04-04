@@ -16,7 +16,13 @@ public class CategoryDaoImpl implements CategoryDao {
     private EntityManager em;
 
     @Override
-    public List<Category> findAllRootCaegories() {
+    public List<Category> findAllCategories() {
+        TypedQuery<Category> queryFindAllCategories = em.createQuery("SELECT C FROM Category C", Category.class);
+        return queryFindAllCategories.getResultList();
+    }
+
+    @Override
+    public List<Category> findAllRootCategories() {
         TypedQuery<Category> queryFindAllRootCategories = em.createQuery("SELECT C FROM Category C WHERE C.parentId is null",
                 Category.class);
         return queryFindAllRootCategories.getResultList();
@@ -26,7 +32,7 @@ public class CategoryDaoImpl implements CategoryDao {
     public List<Category> findChildCategories(int categoryId) {
         TypedQuery<Category> queryFindChildCategories = em.createQuery("SELECT C FROM Category C WHERE C.parentId " +
                 "LIKE :regexp", Category.class);
-        queryFindChildCategories.setParameter("regexp","%"+categoryId+"%");
+        queryFindChildCategories.setParameter("regexp",categoryId);
         return queryFindChildCategories.getResultList();
     }
 
