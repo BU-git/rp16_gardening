@@ -1,4 +1,4 @@
-package nl.intratuin.testmarket;
+package nl.intratuin.testmarket.dto;
 
 public class Credentials {
     private String password;
@@ -22,4 +22,5 @@ public class Credentials {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }

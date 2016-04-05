@@ -21,6 +21,10 @@ public class CategoryController {
     CategoryService categoryService;
 
     @RequestMapping("all")
+    public List<Category> getAllCategories() {
+        return categoryService.findAllCategories();
+    }
+    @RequestMapping("root")
     public List<Category> getAllRootCategories() {
         return categoryService.findAllRootCategories();
     }

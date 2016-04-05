@@ -4,25 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import nl.intratuin.R;
+import nl.intratuin.net.RequestResponseGET;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -30,6 +25,7 @@ import java.util.concurrent.ExecutionException;
 import nl.intratuin.R;
 import nl.intratuin.dto.Product;
 import nl.intratuin.net.RequestResponseGET;
+import nl.intratuin.net.UriConstructor;
 
 
 public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterable {
@@ -56,7 +52,7 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return resultSearch.get(position).getProductId();
     }
 
     @Override
@@ -114,10 +110,12 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
 
         private List<Product> findProducts(String searchQuery) {
             List<Product> productSearchResult = new ArrayList<>();
-            String searchUri = "http://128.0.169.5:8888/Intratuin/product/search/{name}";
+            String searchUri = new UriConstructor(((FragmentActivity) context).getSupportFragmentManager())
+                    .makeFullURI("/product/search").toString() + "/{name}";
 
             AsyncTask<String, Void, List<Product>> productFilterResult =
-                    new RequestResponseGET<String>(searchUri, 1).execute(searchQuery);
+                    new RequestResponseGET(searchUri, 1, Product[].class,
+                            ((FragmentActivity) context).getSupportFragmentManager()).execute(searchQuery);
             try {
                 productSearchResult = productFilterResult.get();
             } catch (InterruptedException | ExecutionException e) {

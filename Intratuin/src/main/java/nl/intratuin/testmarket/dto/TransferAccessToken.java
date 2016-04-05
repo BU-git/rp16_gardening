@@ -1,4 +1,4 @@
-package nl.intratuin.testmarket;
+package nl.intratuin.testmarket.dto;
 
 public class TransferAccessToken {
 
