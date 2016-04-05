@@ -94,7 +94,6 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            //List<Product> list = listProduct;
             FilterResults filterResults = new FilterResults();
 
             if (constraint != null) {
