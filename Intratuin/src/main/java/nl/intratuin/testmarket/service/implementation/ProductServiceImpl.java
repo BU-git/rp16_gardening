@@ -30,4 +30,9 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findByName(String name) {
         return productDao.findByName(name);
     }
+
+    @Override
+    public List<Product> findAllByCategory(int category) {
+        return productDao.findAllByCategory(category);
+    }
 }

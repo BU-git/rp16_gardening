@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <RelativeLayout
+        android:id="@+id/rlLogin"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/gradient"
+        android:orientation="vertical"
+        tools:context="nl.intratuin.ProductDetailsPageActivity">
+
+
+
+        <TextView
+            android:id="@+id/tvProductName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="30dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"/>
+
+
+        <TextView android:id="@+id/tvCurrencyEur"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_below="@id/tvProductName"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:textColor="@color/colorAccent"
+            android:text="€"
+            android:textSize="20dp"
+            android:textStyle="bold"/>
+
+        <TextView android:id="@+id/tvProductPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/tvCurrencyEur"
+            android:layout_alignBottom="@id/tvCurrencyEur"
+            android:textColor="@color/colorAccent"
+            android:textSize="20dp"
+            android:textStyle="bold"/>
+
+        <ImageView android:id="@+id/ivProductImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+
+
+    </RelativeLayout>
+
+</ScrollView>

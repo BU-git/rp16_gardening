@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import nl.intratuin.dto.Customer;
+import nl.intratuin.dto.TransferMessage;
 import nl.intratuin.handlers.DatePickerFragment;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.*;
@@ -140,7 +141,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                         cust.setGender(0);
                     try {
                         cust.setPassword(sha1(etPassword.getText().toString(), cust.getEmail()));
-                        new RequestResponse<Customer>(registerUri, 3,
+                        new RequestResponse<Customer, TransferMessage>(registerUri, 3, TransferMessage.class,
                                 getSupportFragmentManager()).execute(cust);
                     } catch(SignatureException e){
                         ErrorFragment ef= ErrorFragment.newError("Password encryption error!");

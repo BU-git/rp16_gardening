@@ -1,7 +1,10 @@
 package nl.intratuin.testmarket.controller;
 
+import nl.intratuin.testmarket.entity.Category;
 import nl.intratuin.testmarket.entity.Product;
+import nl.intratuin.testmarket.service.contract.CategoryService;
 import nl.intratuin.testmarket.service.contract.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -14,21 +17,22 @@ import java.util.List;
 @RequestMapping("/product/")
 public class ProductController {
 
-    @Inject
-    ProductService service;
+    @Autowired
+    ProductService productService;
 
     @RequestMapping("all")
     public List<Product> getAll() {
-        return service.findAll();
+        return productService.findAll();
     }
 
     @RequestMapping(value = "{id}")
     public Product getById(@PathVariable int id) {
-        return service.findById(id);
+        return productService.findById(id);
     }
 
     @RequestMapping(value = "search/{name}")
     public List<Product> getByName(@PathVariable String name) {
-        return service.findByName(name);
+        return productService.findByName(name);
     }
+
 }

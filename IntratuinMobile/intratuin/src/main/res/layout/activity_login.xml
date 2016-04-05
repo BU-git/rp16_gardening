@@ -50,8 +50,12 @@
         android:layout_alignEnd="@+id/bTwitterHidden"
         android:layout_alignLeft="@+id/bLoginFacebook"
         android:layout_alignStart="@+id/bTwitterHidden"
-        android:background="@drawable/twitter_login"
-        android:visibility="visible" />
+        android:background="@drawable/twitter_login_action"
+        android:drawableLeft="@drawable/twitter_logo_action"
+        android:visibility="visible"
+        android:textColor="#ffffff"
+        android:text="@string/tw__login_btn_txt"
+        android:textAllCaps="false"/>
 
     <!--Invisible button! Visible is bTwitter - for customization-->
     <com.twitter.sdk.android.core.identity.TwitterLoginButton
@@ -152,7 +156,7 @@
         android:layout_below="@+id/bLogin"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textColor="@color/textColorLight"
+        android:textColor="@color/colorAccent"
         android:layout_toLeftOf="@+id/bForgot"
         android:layout_marginTop="15dp"
         android:layout_marginRight="10dp" />
@@ -169,7 +173,7 @@
         android:layout_below="@+id/bLogin"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:textColor="@color/textColorLight"
+        android:textColor="@color/colorAccent"
         android:layout_marginTop="15dp" />
 
 </RelativeLayout>

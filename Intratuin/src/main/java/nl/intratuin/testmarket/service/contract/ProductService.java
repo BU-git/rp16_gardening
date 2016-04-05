@@ -13,4 +13,6 @@ public interface ProductService {
     List<Product> findAll();
 
     List<Product> findByName(String name);
+
+    List<Product> findAllByCategory(int category);
 }
