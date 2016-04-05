@@ -16,6 +16,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -23,16 +24,19 @@
             android:name=".RegisterActivity"
             android:label="@string/register"
             android:screenOrientation="portrait" />
-        <activity android:name=".RecoverActivity"
+        <activity
+            android:name=".RecoverActivity"
             android:label="@string/recover"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity android:name="com.facebook.FacebookActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:label="@string/app_name" />
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
         <!--
              ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -43,6 +47,18 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="54232ea986b4a1d538079a1a020243c78d572f7d" />
+
+        <activity
+            android:name=".SearchActivity"
+            android:label="@string/search_hint"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
     </application>
 
 </manifest>
