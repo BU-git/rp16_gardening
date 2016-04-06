@@ -21,21 +21,22 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:background="#ffffff">
+            android:background="#ffffff"
+            android:id="@+id/rlTop">
 
             <TextView
                 android:id="@+id/tvProductName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textSize="30dp"
+                android:layout_marginTop="5dp"
+                android:textSize="28dp"
                 android:layout_centerHorizontal="true"
                 android:textColor="#000000"
                 android:textStyle="bold"
                 android:layout_alignParentLeft="false"
                 android:layout_marginLeft="0dp"
                 android:layout_alignParentTop="true"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="15dp" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -45,8 +46,10 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="0dp" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/button_arrow"
+                android:background="#ffffff" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -57,8 +60,10 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentLeft="false"
-                android:layout_marginLeft="48dp"
-                android:layout_marginTop="0dp" />
+                android:layout_marginTop="10dp"
+                android:src="@drawable/button_home"
+                android:background="#ffffff"
+                android:layout_marginRight="10dp" />
         </RelativeLayout>
 
 
@@ -71,7 +76,9 @@
             android:textColor="@color/colorAccent"
             android:text="€"
             android:textSize="20dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/rlTop" />
 
         <TextView android:id="@+id/tvProductPrice"
             android:layout_width="match_parent"
@@ -98,49 +105,67 @@
             android:id="@+id/bInfo"
             android:layout_alignTop="@+id/tvProductPrice"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/question"
+            android:background="@color/product_background"
+            android:layout_marginRight="10dp" />
 
         <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
             android:id="@+id/sSize"
             android:layout_alignParentBottom="false"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="0dp"
             android:layout_below="@+id/ivProductImage"
             android:layout_alignParentLeft="false"
             android:layout_alignParentRight="false"
             android:spinnerMode="dialog"
-            android:layout_marginLeft="200dp" />
+            android:background="@drawable/spinner_action"
+            android:layout_marginTop="30dp"
+            android:textAlignment="center" />
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:text="New Button"
             android:id="@+id/bLike"
             android:layout_below="@+id/ivProductImage"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="20dp" />
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="false"
+            android:src="@drawable/like"
+            android:background="@color/product_background"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/sSize"
+            android:scaleType="fitXY"
+            android:layout_marginTop="10dp" />
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:id="@+id/bCart"
             android:layout_below="@+id/ivProductImage"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="20dp" />
+            android:layout_alignParentRight="false"
+            android:layout_alignParentEnd="false"
+            android:src="@drawable/busket"
+            android:background="@color/product_background"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/sSize"
+            android:scaleType="fitXY"
+            android:layout_marginTop="10dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/sSize"
+            android:layout_below="@+id/bLike"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
-            android:background="#ffffff">
+            android:background="#ffffff"
+            android:id="@+id/rlBottom"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -149,44 +174,45 @@
                 android:id="@+id/tvRelated"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="10dp"
+                android:textSize="22dp"
+                android:textColor="#4c4c4c" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
                 android:id="@+id/ivRelated1"
                 android:layout_below="@+id/tvRelated"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="20dp" />
+                android:layout_marginTop="10dp" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
                 android:id="@+id/ivRelated2"
                 android:layout_alignTop="@+id/ivRelated1"
                 android:layout_toRightOf="@+id/ivRelated1"
                 android:layout_toEndOf="@+id/ivRelated1"
-                android:layout_marginLeft="20dp" />
+                android:layout_marginLeft="10dp" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
                 android:id="@+id/ivRelated3"
                 android:layout_alignTop="@+id/ivRelated2"
                 android:layout_toRightOf="@+id/ivRelated2"
                 android:layout_toEndOf="@+id/ivRelated2"
-                android:layout_marginLeft="20dp" />
+                android:layout_marginLeft="10dp" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
                 android:id="@+id/ivRelated4"
                 android:layout_alignTop="@+id/ivRelated3"
                 android:layout_toRightOf="@+id/ivRelated3"
                 android:layout_toEndOf="@+id/ivRelated3"
-                android:layout_marginLeft="20dp" />
+                android:layout_marginLeft="10dp" />
 
         </RelativeLayout>
 
