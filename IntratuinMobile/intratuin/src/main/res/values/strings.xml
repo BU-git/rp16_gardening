@@ -37,6 +37,7 @@
     <string name="search_hint">Product search</string>
     <string name="search">Search...</string>
     <string name="loading">Loading</string>
+    <string name="scanning">Scanning</string>
 
     <string-array name="categories">
         <item>House plants(1)</item>
