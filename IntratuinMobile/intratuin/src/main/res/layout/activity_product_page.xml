@@ -6,31 +6,66 @@
     android:fillViewport="true">
 
     <RelativeLayout
-        android:id="@+id/rlLogin"
+        android:id="@+id/rlProduct"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@drawable/gradient"
+        android:background="@color/product_background"
         android:orientation="vertical"
         tools:context="nl.intratuin.ProductDetailsPageActivity">
 
 
-
-        <TextView
-            android:id="@+id/tvProductName"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="30dp"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold"/>
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="#ffffff">
+
+            <TextView
+                android:id="@+id/tvProductName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="30dp"
+                android:layout_centerHorizontal="true"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:layout_alignParentLeft="false"
+                android:layout_marginLeft="0dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="10dp" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Button"
+                android:id="@+id/bBack"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="0dp" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="[Home]"
+                android:id="@+id/bHome"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="false"
+                android:layout_marginLeft="48dp"
+                android:layout_marginTop="0dp" />
+        </RelativeLayout>
 
 
         <TextView android:id="@+id/tvCurrencyEur"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_below="@id/tvProductName"
             android:paddingLeft="15dp"
             android:paddingTop="10dp"
             android:textColor="@color/colorAccent"
@@ -51,8 +86,109 @@
         <ImageView android:id="@+id/ivProductImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="false"
+            android:layout_marginTop="100dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bInfo"
+            android:layout_alignTop="@+id/tvProductPrice"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sSize"
+            android:layout_alignParentBottom="false"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="0dp"
+            android:layout_below="@+id/ivProductImage"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentRight="false"
+            android:spinnerMode="dialog"
+            android:layout_marginLeft="200dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Button"
+            android:id="@+id/bLike"
+            android:layout_below="@+id/ivProductImage"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="20dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bCart"
+            android:layout_below="@+id/ivProductImage"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="20dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/sSize"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:background="#ffffff">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Related products"
+                android:id="@+id/tvRelated"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivRelated1"
+                android:layout_below="@+id/tvRelated"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivRelated2"
+                android:layout_alignTop="@+id/ivRelated1"
+                android:layout_toRightOf="@+id/ivRelated1"
+                android:layout_toEndOf="@+id/ivRelated1"
+                android:layout_marginLeft="20dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivRelated3"
+                android:layout_alignTop="@+id/ivRelated2"
+                android:layout_toRightOf="@+id/ivRelated2"
+                android:layout_toEndOf="@+id/ivRelated2"
+                android:layout_marginLeft="20dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivRelated4"
+                android:layout_alignTop="@+id/ivRelated3"
+                android:layout_toRightOf="@+id/ivRelated3"
+                android:layout_toEndOf="@+id/ivRelated3"
+                android:layout_marginLeft="20dp" />
+
+        </RelativeLayout>
 
 
     </RelativeLayout>

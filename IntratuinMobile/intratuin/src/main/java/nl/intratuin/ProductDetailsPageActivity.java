@@ -13,6 +13,7 @@ public class ProductDetailsPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_page);
+        getSupportActionBar().hide();
 
         TextView tvProductName = (TextView) findViewById(R.id.tvProductName);
         ImageView ivProductImage = (ImageView) findViewById(R.id.ivProductImage);
