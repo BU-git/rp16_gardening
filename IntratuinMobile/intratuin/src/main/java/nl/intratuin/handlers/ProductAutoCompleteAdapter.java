@@ -4,17 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -119,7 +115,7 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
                     .makeFullURI("/product/search").toString() + "/{name}";
 
             AsyncTask<String, Void, List<Product>> productFilterResult =
-                    new RequestResponseGET<String>(searchUri, 3,
+                    new RequestResponseGET(searchUri, 1, Product[].class,
                             ((FragmentActivity) context).getSupportFragmentManager()).execute(searchQuery);
             try {
                 productSearchResult = productFilterResult.get();

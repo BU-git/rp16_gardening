@@ -1,23 +1,17 @@
 package nl.intratuin;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.net.URI;
-import java.util.List;
-
-import nl.intratuin.dto.Category;
 import nl.intratuin.dto.Product;
 import nl.intratuin.handlers.ProductAutoCompleteAdapter;
-import nl.intratuin.net.UriConstructor;
 
 public class SearchActivity extends AppCompatActivity{
     ListView lSearch;

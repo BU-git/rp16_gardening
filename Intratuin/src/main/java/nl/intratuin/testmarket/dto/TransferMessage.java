@@ -1,9 +1,9 @@
-package nl.intratuin.testmarket;
+package nl.intratuin.testmarket.dto;
 
-public class Message {
+public class TransferMessage {
     private String message;
 
-    public Message(String message) {
+    public TransferMessage(String message) {
         this.message = message;
     }
 

@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -164,9 +165,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                 String email = result.data;
                                 credentials.setEmail(email);
                                 credentials.setPassword(Settings.getEncryptedTwitterKey(email));
+
                                 AsyncTask<Credentials, Void, TransferMessage> jsonRespond =
-                                new RequestResponse<Credentials>(twitterLoginUri, 3,
-                                        getSupportFragmentManager()).execute(credentials);
+                                new RequestResponse<Credentials, TransferMessage>(twitterLoginUri, 3,
+                                        TransferMessage.class, getSupportFragmentManager()).execute(credentials);
                                 TransferMessage respondMessage = jsonRespond.get();
                                 if(respondMessage.getMessage().equals("Login is successful")) {
                                     startActivity(new Intent(LoginActivity.this, SearchActivity.class));
@@ -200,8 +202,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 TransferAccessToken accessToken = new TransferAccessToken(loginResult.getAccessToken().getToken());
 
                 AsyncTask<TransferAccessToken, Void, TransferMessage> jsonRespond =
-                        new RequestResponse<TransferAccessToken>(facebookLoginUri, 3,
-                                getSupportFragmentManager()).execute(accessToken);
+                        new RequestResponse<TransferAccessToken, TransferMessage>(facebookLoginUri, 3,
+                                TransferMessage.class, getSupportFragmentManager()).execute(accessToken);
                 TransferMessage respondMessage=null;
                 try {
                     respondMessage = jsonRespond.get();
@@ -252,7 +254,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         crd.setPassword(sha1(etPassword.getText().toString(), crd.getEmail()));
 
                         AsyncTask<Credentials, Void, TransferMessage> jsonRespond =
-                                new RequestResponse<Credentials>(loginUri, 3, getSupportFragmentManager()).execute(crd);
+                                new RequestResponse<Credentials, TransferMessage>(loginUri, 3 ,
+                                        TransferMessage.class, getSupportFragmentManager()).execute(crd);
                         respondMessage = jsonRespond.get();
                         if(respondMessage.getMessage().equals("Login is successful")) {
                             startActivity(new Intent(this, SearchActivity.class));
