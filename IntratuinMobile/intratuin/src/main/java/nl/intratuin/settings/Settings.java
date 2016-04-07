@@ -17,7 +17,7 @@ public class Settings {
     private static final String twitter_par1 = "CpdWZOr27su9Vduhipt3XVUgD";
     private static final String twitter_par2 = "pcOrskD4hWcUGxi5n3nMvtL3bArhIuyj2pmiMCQ7E9jj71wH5w";
 
-    private static boolean useDeployed = true;
+    private static boolean useDeployed = false;
 
     private static int connectionTimeout=7000;
 

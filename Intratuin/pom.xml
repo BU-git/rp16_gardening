@@ -210,6 +210,12 @@
             <version>${spring-social.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -232,5 +238,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
