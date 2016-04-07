@@ -90,7 +90,6 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            //List<Product> list = listProduct;
             FilterResults filterResults = new FilterResults();
 
             if (constraint != null) {
@@ -103,7 +102,6 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            //searchAdapter.clear();
             if (results.count > 0) {
                 resultSearch = (List<Product>) results.values;
             }

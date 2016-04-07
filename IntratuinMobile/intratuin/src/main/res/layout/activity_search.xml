@@ -76,9 +76,9 @@
     </Button>
 
     <ListView
-        android:id="@+id/lSearch"
+        android:id="@+id/categoryListView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="#FFFFFF"
         android:divider="@color/colorAccent"
         android:dividerHeight="1px"
@@ -86,36 +86,67 @@
         android:ems="10"
         android:scrollIndicators="right" />
 
-    <GridLayout
+    <RelativeLayout
         android:id="@+id/searchButtons"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|fill_horizontal"
+        android:layout_gravity="fill_horizontal|bottom|center_horizontal"
         android:columnCount="3"
         android:orientation="horizontal"
 
         >
         <ImageButton
-            android:id="@+id/bSearchBarcode"
-            android:src="@drawable/search_barcode"
-            android:clickable="true"
+            android:src="@drawable/barcode"
             android:background="@drawable/gradient"
-            >
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="fitXY"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false"
+            android:layout_marginTop="0dp"
+            android:id="@+id/ibBarcode"
+            android:layout_alignTop="@+id/ibBusket"
+            android:layout_toLeftOf="@+id/ibMan"
+            android:layout_marginRight="10dp">
         </ImageButton>
         <ImageButton
-            android:id="@+id/bSearchMan"
             android:src="@drawable/search_man"
             android:background="@drawable/gradient"
-            android:clickable="true"
-            android:layout_gravity="fill_horizontal"
-            >
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="fitXY"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false"
+            android:layout_marginTop="0dp"
+            android:id="@+id/ibMan"
+            android:layout_alignTop="@+id/ibBusket"
+            android:layout_toLeftOf="@+id/ibPlus"
+            android:layout_marginRight="10dp">
         </ImageButton>
         <ImageButton
-            android:id="@+id/bSearchBasket"
-            android:src="@drawable/search_basket"
-            android:clickable="true"
+            android:src="@drawable/busket"
             android:background="@drawable/gradient"
-            >
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="fitXY"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/ibBusket">
         </ImageButton>
-    </GridLayout>
+
+        <ImageButton
+            android:src="@drawable/plus"
+            android:background="@drawable/gradient"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="fitXY"
+            android:id="@+id/ibPlus"
+            android:layout_alignTop="@+id/ibBusket"
+            android:layout_toLeftOf="@+id/ibBusket"
+            android:layout_marginRight="10dp" />
+    </RelativeLayout>
 </LinearLayout>

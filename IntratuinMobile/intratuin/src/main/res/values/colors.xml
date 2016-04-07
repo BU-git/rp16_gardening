@@ -8,5 +8,6 @@
     <color name="textColorHint">#333333</color>
     <color name="twitter_pressed">#687781</color>
     <color name="hint_search">#caed7f</color>
+    <color name="product_background">#e7eae7</color>
 </resources>
 
