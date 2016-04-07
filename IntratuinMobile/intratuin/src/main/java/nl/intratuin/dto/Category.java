@@ -1,15 +1,19 @@
 package nl.intratuin.dto;
 
+import java.io.Serializable;
+
 /**
  * Created by Иван on 04.04.2016.
  */
-public class Category {
+public class Category implements Serializable{
 
     private int categoryId;
 
     private String name;
 
     private int parentId;
+
+    public Category(){}
 
     public int getCategoryId() {
         return categoryId;
