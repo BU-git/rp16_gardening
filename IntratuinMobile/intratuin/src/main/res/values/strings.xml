@@ -37,6 +37,12 @@
     <string name="search_hint">Product search</string>
     <string name="search">Search...</string>
     <string name="loading">Loading</string>
+    <string name="scanning">Scanning</string>
 
 
+    <string-array name="size">
+        <item>Size1</item>
+        <item>Size2</item>
+        <item>Size3</item>
+    </string-array>
 </resources>
