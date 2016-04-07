@@ -1,11 +1,15 @@
 package nl.intratuin.dto;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
     private int productId;
     private String productName;
     private double productPrice;
     private String productImage;
     private int categoryId;
+
+    public Product(){}
 
     public int getCategoryId() {
         return categoryId;

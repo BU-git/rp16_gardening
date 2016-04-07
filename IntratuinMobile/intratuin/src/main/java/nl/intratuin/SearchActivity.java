@@ -1,27 +1,31 @@
 package nl.intratuin;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import nl.intratuin.dto.Category;
 import nl.intratuin.dto.Product;
+import nl.intratuin.dto.TreeNode;
+import nl.intratuin.handlers.HierarchyCategoryAdapter;
+import nl.intratuin.handlers.ManagerLoader;
 import nl.intratuin.handlers.ProductAutoCompleteAdapter;
 import nl.intratuin.net.UriConstructor;
 
 public class SearchActivity extends AppCompatActivity{
-    ListView lSearch;
-    String[] categories;
+    private HierarchyCategoryAdapter categoryAdapter;
+    private ListView categoryListView;
+    private List<TreeNode> treeCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,18 +34,25 @@ public class SearchActivity extends AppCompatActivity{
 
         setContentView(R.layout.activity_search);
 
-        lSearch = (ListView) findViewById(R.id.lSearch);
-        categories = getResources().getStringArray(R.array.categories);
-        final ArrayAdapter<String> adapterCategories = new ArrayAdapter<String>(this, R.layout.activity_categories, android.R.id.text1, categories);
-        lSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        categoryListView = (ListView) findViewById(R.id.categoryListView);
 
+        treeCategory = generateCategoryHierarchy();
+
+        categoryAdapter = new HierarchyCategoryAdapter(this, treeCategory);
+        categoryListView.setAdapter(categoryAdapter);
+
+        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, final View view, int position, long id) {
-                String categoryName = (String) adapterView.getItemAtPosition(position);
-                Toast.makeText(SearchActivity.this, categoryName, Toast.LENGTH_SHORT).show();
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+                TreeNode treeNode = (TreeNode) adapter.getItemAtPosition(position);
+                Intent productListOfCategoryIntent = new Intent(SearchActivity.this, ProductListOfCategogyActivity.class);
+
+                List<TreeNode> children = treeNode.getChildren();
+//                if(children != null) {
+//                }
+                startActivity(productListOfCategoryIntent);
             }
         });
-        lSearch.setAdapter(adapterCategories);
 
         ProductAutoCompleteAdapter searchAdapter = new ProductAutoCompleteAdapter(this);
         AutoCompleteTextView autoCompleteTV = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
@@ -52,12 +63,33 @@ public class SearchActivity extends AppCompatActivity{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Product product = (Product) parent.getItemAtPosition(position);
 
-                Intent productPadeIntent = new Intent(SearchActivity.this, ProductDetailsPageActivity.class);
-                productPadeIntent.putExtra("productName", product.getProductName());
-                productPadeIntent.putExtra("productPrice", product.getProductPrice());
-                productPadeIntent.putExtra("productImage", product.getProductImage());
-                startActivity(productPadeIntent);
+                Intent productPageIntent = new Intent(SearchActivity.this, ProductDetailsPageActivity.class);
+                productPageIntent.putExtra("productName", product.getProductName());
+                productPageIntent.putExtra("productPrice", product.getProductPrice());
+                productPageIntent.putExtra("productImage", product.getProductImage());
+                startActivity(productPageIntent);
             }
         });
+    }
+
+    private List<TreeNode> generateCategoryHierarchy() {
+        String uri = new UriConstructor(((FragmentActivity) this).getSupportFragmentManager())
+                .makeFullURI("/category").toString() + "/all";
+        ManagerLoader managerLoader = new ManagerLoader(this);
+        List<Category> allCategory = managerLoader.loaderFromWebService(uri, null);
+
+        return buildArrTreeNode(allCategory, 0);
+    }
+
+    public List<TreeNode> buildArrTreeNode(List<Category> categoryList, int id) {
+        List<TreeNode> treeNodes = new ArrayList<>();
+        for (Category category : categoryList) {
+            if (category.getParentId() == id) {
+                TreeNode treeNode = new TreeNode(category.getCategoryId(), category.getName());
+                treeNode.setChildren(buildArrTreeNode(categoryList, treeNode.getId()));
+                treeNodes.add(treeNode);
+            }
+        }
+        return treeNodes;
     }
 }
