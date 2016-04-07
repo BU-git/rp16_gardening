@@ -96,18 +96,24 @@
 
         >
         <ImageButton
+            android:id="@+id/bSearchBarcode"
             android:src="@drawable/search_barcode"
+            android:clickable="true"
             android:background="@drawable/gradient"
             >
         </ImageButton>
         <ImageButton
+            android:id="@+id/bSearchMan"
             android:src="@drawable/search_man"
             android:background="@drawable/gradient"
+            android:clickable="true"
             android:layout_gravity="fill_horizontal"
             >
         </ImageButton>
         <ImageButton
+            android:id="@+id/bSearchBasket"
             android:src="@drawable/search_basket"
+            android:clickable="true"
             android:background="@drawable/gradient"
             >
         </ImageButton>
