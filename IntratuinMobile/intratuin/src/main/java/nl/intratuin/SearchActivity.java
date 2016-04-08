@@ -1,15 +1,21 @@
 package nl.intratuin;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,21 +28,22 @@ import nl.intratuin.handlers.ManagerLoader;
 import nl.intratuin.handlers.ProductAutoCompleteAdapter;
 import nl.intratuin.net.UriConstructor;
 
-public class SearchActivity extends AppCompatActivity{
-    private HierarchyCategoryAdapter categoryAdapter;
-    private ListView categoryListView;
-    private List<TreeNode> treeCategory;
+public class SearchActivity extends AppCompatActivity {
+    public static final String PRODUCT_SEARCH = "productSearch";
+    public static final String TREENODE = "TreeNode";
+    HierarchyCategoryAdapter categoryAdapter;
+    ListView categoryListView;
+    List<TreeNode> treeCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
 
         setContentView(R.layout.activity_search);
 
-        categoryListView = (ListView) findViewById(R.id.categoryListView);
-
         treeCategory = generateCategoryHierarchy();
+        categoryListView = (ListView) findViewById(R.id.categoryListView);
 
         categoryAdapter = new HierarchyCategoryAdapter(this, treeCategory);
         categoryListView.setAdapter(categoryAdapter);
@@ -44,13 +51,7 @@ public class SearchActivity extends AppCompatActivity{
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-                TreeNode treeNode = (TreeNode) adapter.getItemAtPosition(position);
-                Intent productListOfCategoryIntent = new Intent(SearchActivity.this, ProductListOfCategogyActivity.class);
-
-                List<TreeNode> children = treeNode.getChildren();
-//                if(children != null) {
-//                }
-                startActivity(productListOfCategoryIntent);
+                categoryAdapter.clickOnCategory(position);
             }
         });
 
@@ -64,9 +65,7 @@ public class SearchActivity extends AppCompatActivity{
                 Product product = (Product) parent.getItemAtPosition(position);
 
                 Intent productPageIntent = new Intent(SearchActivity.this, ProductDetailsPageActivity.class);
-                productPageIntent.putExtra("productName", product.getProductName());
-                productPageIntent.putExtra("productPrice", product.getProductPrice());
-                productPageIntent.putExtra("productImage", product.getProductImage());
+                productPageIntent.putExtra(PRODUCT_SEARCH, product);
                 startActivity(productPageIntent);
             }
         });
@@ -75,7 +74,7 @@ public class SearchActivity extends AppCompatActivity{
     private List<TreeNode> generateCategoryHierarchy() {
         String uri = new UriConstructor(((FragmentActivity) this).getSupportFragmentManager())
                 .makeFullURI("/category").toString() + "/all";
-        ManagerLoader managerLoader = new ManagerLoader(this);
+        ManagerLoader managerLoader = new ManagerLoader(this, Category[].class);
         List<Category> allCategory = managerLoader.loaderFromWebService(uri, null);
 
         return buildArrTreeNode(allCategory, 0);
@@ -92,4 +91,5 @@ public class SearchActivity extends AppCompatActivity{
         }
         return treeNodes;
     }
+
 }

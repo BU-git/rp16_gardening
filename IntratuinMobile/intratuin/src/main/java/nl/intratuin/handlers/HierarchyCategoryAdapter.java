@@ -1,19 +1,20 @@
 package nl.intratuin.handlers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.intratuin.ProductListByCategoryActivity;
 import nl.intratuin.R;
+import nl.intratuin.SearchActivity;
 import nl.intratuin.dto.TreeNode;
 
 public class HierarchyCategoryAdapter extends BaseAdapter {
@@ -21,8 +22,10 @@ public class HierarchyCategoryAdapter extends BaseAdapter {
     List<Indent> hierarchyArray;
     List<TreeNode> originalTreeNode;
     List<TreeNode> openTreeNode;
+    Context context;
 
     public HierarchyCategoryAdapter(Context context, List<TreeNode> originalTreeNode) {
+        this.context = context;
         this.originalTreeNode = originalTreeNode;
         inflater = LayoutInflater.from(context);
         hierarchyArray = new ArrayList<>();
@@ -48,7 +51,7 @@ public class HierarchyCategoryAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+       ViewHolder holder;
         if(convertView == null) {
             convertView = inflater.inflate(R.layout.category_item, parent, false);
             holder = new ViewHolder(convertView);
@@ -57,15 +60,17 @@ public class HierarchyCategoryAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Indent indentTreeNode = hierarchyArray.get(position);
+        final Indent indentTreeNode = hierarchyArray.get(position);
 
         holder.categoryName.setText(indentTreeNode.treeNode.getName());
         holder.iconExpand.setImageResource(indentTreeNode.treeNode.getIconResource());
-        holder.iconExpand.setOnClickListener(new View.OnClickListener() {
+        holder.iconForward.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                clickOnCategory(position);
+                Intent productListOfCategoryIntent = new Intent(context, ProductListByCategoryActivity.class);
+                productListOfCategoryIntent.putExtra(SearchActivity.TREENODE, indentTreeNode.treeNode);
+                context.startActivity(productListOfCategoryIntent);
             }
         });
 
@@ -110,10 +115,12 @@ public class HierarchyCategoryAdapter extends BaseAdapter {
     private static class ViewHolder {
         TextView categoryName;
         ImageView iconExpand;
+        ImageView iconForward;
 
         ViewHolder(View view) {
             categoryName = (TextView) view.findViewById(R.id.twCategoryName);
             iconExpand = (ImageView) view.findViewById(R.id.iconExpand);
+            iconForward = (ImageView) view.findViewById(R.id.iconForward);
         }
     }
 }

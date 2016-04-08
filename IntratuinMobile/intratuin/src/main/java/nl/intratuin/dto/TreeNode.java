@@ -1,12 +1,15 @@
 package nl.intratuin.dto;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import nl.intratuin.R;
 
-public class TreeNode implements Serializable {
+public class TreeNode implements Parcelable {
     private int id;
     private String name;
     private List<TreeNode> children;
@@ -52,4 +55,32 @@ public class TreeNode implements Serializable {
         this.children = children;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(id);
+        out.writeString(name);
+        out.writeList(children);
+    }
+
+    public static final Parcelable.Creator<TreeNode> CREATOR = new Parcelable.Creator<TreeNode>(){
+        public TreeNode createFromParcel(Parcel in){
+            return new TreeNode(in);
+        }
+        public TreeNode[] newArray(int size){
+            return new TreeNode[size];
+        }
+    };
+
+    private TreeNode(Parcel in){
+        id = in.readInt();
+        name = in.readString();
+        children = new ArrayList<>();
+        in.readList(children, getClass().getClassLoader());
+    }
 }

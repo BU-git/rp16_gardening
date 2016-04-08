@@ -9,7 +9,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import nl.intratuin.dto.Product;
+
 public class ProductDetailsPageActivity extends AppCompatActivity {
+    Product productBySearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +29,15 @@ public class ProductDetailsPageActivity extends AppCompatActivity {
         ImageView ivRelated4 = (ImageView) findViewById(R.id.ivRelated4);
         Spinner sSize = (Spinner) findViewById(R.id.sSize);
 
-        tvProductName.setText(getIntent().getExtras().getString("productName"));
-        tvProductPrice.setText("" + getIntent().getExtras().getDouble("productPrice"));
+        final Bundle extra = getIntent().getExtras();
+        if (extra != null) {
+            productBySearch = extra.getParcelable(SearchActivity.PRODUCT_SEARCH);
+        }
+
+        tvProductName.setText(productBySearch.getProductName());
+        tvProductPrice.setText("" + productBySearch.getProductPrice());
         Picasso.with(this)
-                .load(getIntent().getExtras().getString("productImage"))
+                .load(productBySearch.getProductImage())
                 .resize(500, 500)
                 .centerCrop()
                 .into(ivProductImage);

@@ -15,22 +15,21 @@ import nl.intratuin.dto.Product;
 import nl.intratuin.net.RequestResponseGET;
 import nl.intratuin.net.UriConstructor;
 
-public class ManagerLoader {
+public class ManagerLoader<T> {
     private final Context context;
+    Class<T> responseType;
 
-    public ManagerLoader(Context context) {
+    public ManagerLoader(Context context, Class<T> responseType) {
         this.context = context;
+        this.responseType = responseType;
     }
-    public List<Category> loaderFromWebService(String url, String paramQuery) {
-        List<Category> loaderResult = new ArrayList<>();
+    public List<T> loaderFromWebService(String url, String paramQuery) {
+        List<T> loaderResult = new ArrayList<>();
 
-        AsyncTask<String, Void, List<Category>> loaderCategoryResult =
-                new RequestResponseGET(url, 1, Category[].class,
+        AsyncTask<String, Void, List<T>> loaderCategoryResult =
+                new RequestResponseGET(url, 1, responseType,
                         ((FragmentActivity) context).getSupportFragmentManager()).execute(paramQuery);
-//        RequestResponseGET<String, Category> requestResponseGET = new RequestResponseGET(url, 1, Category[].class,
-//                ((FragmentActivity) context).getSupportFragmentManager());
-//
-//        List<Category> loaderCategoryResult = (List<Category>) requestResponseGET.execute(paramQuery);
+
         try {
             loaderResult = loaderCategoryResult.get();
         } catch (InterruptedException | ExecutionException e) {

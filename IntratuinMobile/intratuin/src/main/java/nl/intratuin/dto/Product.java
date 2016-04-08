@@ -1,8 +1,11 @@
 package nl.intratuin.dto;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
-public class Product implements Serializable {
+public class Product implements Parcelable {
     private int productId;
     private String productName;
     private double productPrice;
@@ -54,5 +57,36 @@ public class Product implements Serializable {
     @Override
     public String toString() {
         return productName + " - " + getProductPrice() + " €";
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(productId);
+        out.writeInt(categoryId);
+        out.writeString(productName);
+        out.writeString(productImage);
+        out.writeDouble(productPrice);
+    }
+
+    public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>(){
+        public Product createFromParcel(Parcel in){
+            return new Product(in);
+        }
+        public Product[] newArray(int size){
+            return new Product[size];
+        }
+    };
+
+    private Product(Parcel in){
+        productId = in.readInt();
+        categoryId = in.readInt();
+        productName = in.readString();
+        productImage = in.readString();
+        productPrice = in.readDouble();
     }
 }
