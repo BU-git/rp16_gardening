@@ -1,6 +1,7 @@
 package nl.intratuin;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -12,6 +13,7 @@ import nl.intratuin.dto.Product;
 import nl.intratuin.dto.TreeNode;
 import nl.intratuin.handlers.ManagerLoader;
 import nl.intratuin.handlers.ProductListAdapter;
+import nl.intratuin.net.UriConstructor;
 
 public class ProductListByCategoryActivity extends AppCompatActivity {
     ListView subCategoryListView;
@@ -58,9 +60,8 @@ public class ProductListByCategoryActivity extends AppCompatActivity {
     }
 
     private List<Product> generateProductListByCategory(String idCategory) {
-//        String uri = new UriConstructor(((FragmentActivity) this).getSupportFragmentManager())
-//                .makeFullURI("/product").toString() + "/list/byCategory/{idCategory}";
-        String uri = "http://192.168.1.210:8080/product/list/byCategory/{idCategory}";
+        String uri = new UriConstructor(((FragmentActivity) this).getSupportFragmentManager())
+                .makeFullURI("/product").toString() + "/list/byCategory/{idCategory}";
         ManagerLoader managerLoader = new ManagerLoader(this, Product[].class);
         List<Product> allProductByCategory = managerLoader.loaderFromWebService(uri, idCategory);
 
