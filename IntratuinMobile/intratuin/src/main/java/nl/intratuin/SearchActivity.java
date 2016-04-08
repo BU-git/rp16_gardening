@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -32,13 +33,13 @@ import nl.intratuin.handlers.ManagerLoader;
 import nl.intratuin.handlers.ProductAutoCompleteAdapter;
 import nl.intratuin.net.UriConstructor;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements OnClickListener {
     public static final String PRODUCT_SEARCH = "productSearch";
     public static final String TREENODE = "TreeNode";
-    HierarchyCategoryAdapter categoryAdapter;
-    ListView categoryListView;
-    List<TreeNode> treeCategory;
-public class SearchActivity extends AppCompatActivity implements OnClickListener {
+
+    private HierarchyCategoryAdapter categoryAdapter;
+    private ListView categoryListView;
+    private List<TreeNode> treeCategory;
 
     private ImageButton ibBarcode;
     private ImageButton ibMan;
@@ -49,25 +50,25 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
         //getSupportActionBar().hide();
-
             setContentView(R.layout.activity_search);
 
             ibBarcode = (ImageButton)findViewById(R.id.ibBarcode);
             ibMan = (ImageButton)findViewById(R.id.ibMan);
             ibBusket = (ImageButton)findViewById(R.id.ibBusket);
-            treeCategory = generateCategoryHierarchy();
-        categoryListView = (ListView) findViewById(R.id.categoryListView);
-
-            categoryAdapter = new HierarchyCategoryAdapter(this, treeCategory);
-            categoryListView.setAdapter(categoryAdapter);
+            categoryListView = (ListView) findViewById(R.id.categoryListView);
 
             ibBarcode.setOnClickListener(this);
             ibMan.setOnClickListener(this);
             ibBusket.setOnClickListener(this);
+
+            treeCategory = generateCategoryHierarchy();//all categories
+            categoryAdapter = new HierarchyCategoryAdapter(this, treeCategory);
+            categoryListView.setAdapter(categoryAdapter);
+
             categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-                categoryAdapter.clickOnCategory(position);
+                    categoryAdapter.clickOnCategory(position);
                 }
             });
 
@@ -81,7 +82,7 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
                     Product product = (Product) parent.getItemAtPosition(position);
 
                     Intent productPageIntent = new Intent(SearchActivity.this, ProductDetailsPageActivity.class);
-                productPageIntent.putExtra(PRODUCT_SEARCH, product);
+                    productPageIntent.putExtra(PRODUCT_SEARCH, product);
                     startActivity(productPageIntent);
                 }
             });
