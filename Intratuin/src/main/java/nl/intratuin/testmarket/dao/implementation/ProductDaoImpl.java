@@ -32,7 +32,7 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> findByName(String name) {
         TypedQuery<Product> queryFindProductsByName = em.createQuery("SELECT C FROM Product C WHERE C.productName " +
                 "LIKE :regexp", Product.class);
-        queryFindProductsByName.setParameter("regexp","%"+name+"%");
+        queryFindProductsByName.setParameter("regexp","%"+name.toLowerCase()+"%");
         return queryFindProductsByName.getResultList();
     }
 
