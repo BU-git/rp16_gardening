@@ -20,8 +20,4 @@ public interface CustomerService {
     TransferMessage loginTwitter(Credentials credentials);
 
     TransferMessage loginWithFacebook(User profile);
-
-    TransferMessage forgot(String email, Properties fMailServerConfig);
-
-    void recovery(String link, Properties fMailServerConfig);
 }

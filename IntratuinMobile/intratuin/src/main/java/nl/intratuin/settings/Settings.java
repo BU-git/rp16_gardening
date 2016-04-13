@@ -21,7 +21,7 @@ public class Settings {
 
     private static int connectionTimeout=7000;
 
-    private static String hostLocal="192.168.1.210";//local -- depends on your computer's inner ip
+    private static String hostLocal="192.168.1.23";//local -- depends on your computer's inner ip
     private static String hostBionic="128.0.169.5";//bionic -- do not change
 
     public static boolean usingDeployed() { return useDeployed; }

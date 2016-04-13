@@ -12,8 +12,6 @@ public class Settings {
     private static final String twitter_par1 = "CpdWZOr27su9Vduhipt3XVUgD";
     private static final String twitter_par2 = "pcOrskD4hWcUGxi5n3nMvtL3bArhIuyj2pmiMCQ7E9jj71wH5w";
 
-    private static final long deprecateTimeout = 3600;
-
     public static String sha1(String data, String key) throws SignatureException {
         String result;
         try {
@@ -39,5 +37,4 @@ public class Settings {
         String value=twitter_par1+twitter_par2;
         return sha1(value,key);
     }
-    public static long getDeprecateTimeout(){ return deprecateTimeout; }
 }

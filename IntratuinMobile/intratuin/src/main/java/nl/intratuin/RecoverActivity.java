@@ -2,7 +2,6 @@ package nl.intratuin;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -12,14 +11,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.net.URI;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import nl.intratuin.dto.TransferMessage;
-import nl.intratuin.handlers.ErrorFragment;
-import nl.intratuin.net.RequestResponse;
-import nl.intratuin.net.UriConstructor;
 
 public class RecoverActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -80,24 +73,7 @@ public class RecoverActivity extends AppCompatActivity implements View.OnClickLi
                     else etEmailAddress.setError("Wrong email format!");
                 }
                 else{
-                    recoverUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/forgot");
-                    TransferMessage respondMessage=null;
-
-                    AsyncTask<String, Void, TransferMessage> jsonRespond =
-                            new RequestResponse<String, TransferMessage>(recoverUri, 3 ,
-                                    TransferMessage.class, getSupportFragmentManager())
-                                    .execute(etEmailAddress.getText().toString());
-                    try {
-                        respondMessage = jsonRespond.get();
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                    if(respondMessage.getMessage().equals("Recovery successfull")) {
-                        startActivity(new Intent(this, LoginActivity.class));
-                    } else {
-                        ErrorFragment ef= ErrorFragment.newError(respondMessage==null?"Request error!":respondMessage.getMessage());
-                        ef.show(fragmentManager, "Intratuin");
-                    }
+                    //TODO
                 }
 
                 break;

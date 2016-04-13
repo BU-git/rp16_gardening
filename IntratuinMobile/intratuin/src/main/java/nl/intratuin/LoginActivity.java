@@ -212,7 +212,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     ef.show(getSupportFragmentManager(), "Intratuin");
                 }
                 if(respondMessage.getMessage().equals("Login is successful")) {
-                    startActivity(new Intent(LoginActivity.this, SearchActivity.class));
+                    //startActivity(new Intent(LoginActivity.this, SearchActivity.class));
                 }
             }
 
@@ -258,7 +258,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                         TransferMessage.class, getSupportFragmentManager()).execute(crd);
                         respondMessage = jsonRespond.get();
                         if(respondMessage.getMessage().equals("Login is successful")) {
-                            startActivity(new Intent(this, SearchActivity.class));
+                            //startActivity(new Intent(this, SearchActivity.class));
                         } else {
                             ErrorFragment ef= ErrorFragment.newError(respondMessage==null?"Request error!":respondMessage.getMessage());
                             ef.show(fragmentManager, "Intratuin");
