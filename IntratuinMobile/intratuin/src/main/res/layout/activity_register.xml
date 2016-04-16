@@ -5,382 +5,273 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-<RelativeLayout
-    android:id="@+id/rlRegister"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/gradient"
-    android:orientation="vertical"
-    tools:context="nl.intratuin.RegisterActivity">
-
-    <ImageView
-        android:id="@+id/ivIntratuin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="#FFFFFF"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/logo"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
-        <requestFocus/>
-    </ImageView>
-
-    <EditText
-        android:id="@+id/etFirstName"
+    <RelativeLayout
+        android:id="@+id/rlRegister"
         android:layout_width="fill_parent"
-        android:layout_marginLeft="50dp"
-        android:background="@drawable/textedit"
-        android:hint="@string/firstname"
-        android:maxLength="100"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="30dp"
-        android:layout_below="@+id/ivIntratuin"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/ivIntratuin"
-        android:layout_alignEnd="@+id/ivIntratuin"
-        android:inputType="textNoSuggestions|textCapWords"
-        android:paddingLeft="10dp"
-        android:textColor="@color/textColor"
-        android:textColorHint="@color/textColorHint"
-        android:textSize="14dp"
-        android:layout_height="22dp"
-        android:paddingRight="10dp" />
+        android:layout_height="fill_parent"
+        android:background="@drawable/gradient"
+        android:orientation="vertical"
+        tools:context="nl.intratuin.RegisterActivity">
 
-    <EditText
-        android:id="@+id/etTussen"
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="15dp"
-        android:hint="@string/tuss"
-        android:background="@drawable/textedit"
-        android:layout_below="@+id/etFirstName"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:inputType="text"
-        android:maxLength="10"
-        android:paddingLeft="10dp"
-        android:textColor="@color/textColor"
-        android:textColorHint="@color/textColorHint"
-        android:textSize="14dp"
-        android:layout_height="22dp"
-        android:paddingRight="10dp" />
-
-    <EditText
-        android:id="@+id/etLastName"
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/textedit"
-        android:ems="10"
-        android:hint="@string/lastname"
-        android:layout_below="@+id/etTussen"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:inputType="textNoSuggestions|textCapWords"
-        android:maxLength="100"
-        android:paddingLeft="10dp"
-        android:textColor="@color/textColor"
-        android:textColorHint="@color/textColorHint"
-        android:textSize="14dp"
-        android:layout_height="22dp"
-        android:paddingRight="10dp"  />
-
-
-    <Button
-        android:id="@+id/bSignUp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_action"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="15dp"
-        android:text="@string/signup"
-        android:layout_toRightOf="@+id/tvResult"
-        android:layout_below="@+id/etRePassword"
-        android:layout_alignRight="@+id/cbShowRePassword"
-        android:layout_alignEnd="@+id/cbShowRePassword"
-        android:textStyle="bold" />
-
-    <RadioGroup
-        android:id="@+id/rgGender"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/etLastName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <RadioButton
-            android:id="@+id/rbMale"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/ivIntratuin"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="62dp"
-            android:text="@string/male"
-            android:layout_alignTop="@+id/tvFN"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="62dp"
-            android:checked="true"
-            android:buttonTint="#ffffff"
-            android:textColor="#ffffff" />
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="30dp"
+            android:background="#FFFFFF"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:src="@drawable/logo">
 
-        <RadioButton
-            android:id="@+id/rbFemale"
+            <requestFocus />
+        </ImageView>
+
+        <EditText
+            android:id="@+id/etFirstName"
+            android:layout_width="fill_parent"
+            android:layout_height="22dp"
+            android:layout_alignEnd="@+id/ivIntratuin"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignRight="@+id/ivIntratuin"
+            android:layout_below="@+id/ivIntratuin"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/textedit"
+            android:hint="@string/firstname"
+            android:inputType="textNoSuggestions|textCapWords"
+            android:maxLength="100"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@color/textColor"
+            android:textColorHint="@color/textColorHint"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/etTussen"
+            android:layout_width="fill_parent"
+            android:layout_height="22dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/etFirstName"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/textedit"
+            android:hint="@string/tuss"
+            android:inputType="text"
+            android:maxLength="10"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@color/textColor"
+            android:textColorHint="@color/textColorHint"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/etLastName"
+            android:layout_width="fill_parent"
+            android:layout_height="22dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/etTussen"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/textedit"
+            android:ems="10"
+            android:hint="@string/lastname"
+            android:inputType="textNoSuggestions|textCapWords"
+            android:maxLength="100"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@color/textColor"
+            android:textColorHint="@color/textColorHint"
+            android:textSize="14dp" />
+
+
+        <RadioGroup
+            android:id="@+id/rgGender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/female"
-            android:layout_below="@+id/etFirstName"
-            android:layout_alignLeft="@+id/rbMale"
-            android:layout_alignStart="@+id/rbMale"
-            android:buttonTint="#ffffff"
-            android:textColor="#ffffff" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/etLastName"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/rbMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/tvFN"
+                android:layout_marginEnd="62dp"
+                android:layout_marginRight="62dp"
+                android:buttonTint="#ffffff"
+                android:checked="true"
+                android:text="@string/male"
+                android:textColor="#ffffff" />
 
-    <TextView
-        android:id="@+id/tvResult"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+            <RadioButton
+                android:id="@+id/rbFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/rbMale"
+                android:layout_alignStart="@+id/rbMale"
+                android:layout_below="@+id/etFirstName"
+                android:buttonTint="#ffffff"
+                android:text="@string/female"
+                android:textColor="#ffffff" />
 
-    <EditText
-        android:id="@+id/etEmail"
-        android:layout_width="match_parent"
-        android:background="@drawable/textedit"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="15dp"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        android:hint="@string/email"
-        android:layout_below="@+id/etBirthday"
-        android:maxLength="60"
-        android:elegantTextHeight="false"
-        android:allowUndo="false"
-        android:paddingLeft="10dp"
-        android:textColor="@color/textColor"
-        android:textColorHint="@color/textColorHint"
-        android:textSize="14dp"
-        android:layout_height="22dp"
-        android:paddingRight="10dp"  />
+        </RadioGroup>
 
-    <EditText
-        android:id="@+id/etCity"
-        android:layout_width="fill_parent"
-        android:background="@drawable/textedit"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:ems="10"
-        android:hint="@string/city"
-        android:layout_below="@+id/etPhone"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:inputType="textNoSuggestions|textCapWords"
-        android:maxLength="60"
-        android:paddingLeft="10dp"
-        android:textColor="@color/textColor"
-        android:textColorHint="@color/textColorHint"
-        android:textSize="14dp"
-        android:layout_height="22dp"
-        android:paddingRight="10dp"  />
+        <TextView
+            android:id="@+id/tvResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
 
-    <EditText
-        android:id="@+id/etStreet"
-        android:layout_width="fill_parent"
-        android:background="@drawable/textedit"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        android:ems="10"
-        android:hint="@string/street"
-        android:layout_below="@+id/etCity"
-        android:layout_toLeftOf="@+id/etHouse"
-        android:maxLength="60"
-        android:inputType="textNoSuggestions|textCapWords"
-        android:layout_alignLeft="@+id/etCity"
-        android:layout_alignStart="@+id/etCity"
-        android:paddingLeft="10dp"
-        android:textColor="@color/textColor"
-        android:textColorHint="@color/textColorHint"
-        android:textSize="14dp"
-        android:layout_height="22dp"
-        android:paddingRight="10dp"  />
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:layout_below="@+id/rgGender"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="15dp"
+            android:allowUndo="false"
+            android:background="@drawable/textedit"
+            android:elegantTextHeight="false"
+            android:ems="10"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:maxLength="60"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@color/textColor"
+            android:textColorHint="@color/textColorHint"
+            android:textSize="14dp" />
 
-    <EditText
-        android:id="@+id/etHouse"
-        android:layout_width="60dp"
-        android:background="@drawable/textedit"
-        android:layout_marginTop="15dp"
-        android:ems="10"
-        android:hint="@string/house"
-        android:layout_below="@+id/etCity"
-        android:inputType="textNoSuggestions|text"
-        android:maxLength="8"
-        android:layout_alignRight="@+id/etCity"
-        android:layout_alignEnd="@+id/etCity"
-        android:paddingLeft="5dp"
-        android:textColor="@color/textColor"
-        android:textColorHint="@color/textColorHint"
-        android:textSize="14dp"
-        android:layout_height="22dp"
-        android:paddingRight="10dp"  />
+        <LinearLayout
+            android:id="@+id/llPasswords"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignLeft="@+id/etEmail"
+            android:layout_alignRight="@+id/etEmail"
+            android:layout_below="@+id/etEmail"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/etPostcode"
-        android:layout_width="fill_parent"
-        android:background="@drawable/textedit"
-        android:layout_marginTop="15dp"
-        android:ems="10"
-        android:hint="@string/post"
-        android:layout_below="@+id/etHouse"
-        android:inputType="textNoSuggestions|text"
-        android:maxLength="10"
-        android:layout_alignLeft="@+id/etStreet"
-        android:layout_alignStart="@+id/etStreet"
-        android:layout_alignRight="@+id/etHouse"
-        android:layout_alignEnd="@+id/etHouse"
-        android:paddingLeft="10dp"
-        android:textColor="@color/textColor"
-        android:textColorHint="@color/textColorHint"
-        android:textSize="14dp"
-        android:layout_height="22dp"
-        android:paddingRight="10dp"  />
+            <LinearLayout
+                android:id="@+id/llPasswordsFirstTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="match_parent"
-        android:background="@drawable/textedit"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="15dp"
-        android:ems="10"
-        android:hint="@string/pass"
-        android:layout_toStartOf="@+id/cbShowPassword"
-        android:layout_toLeftOf="@+id/cbShowPassword"
-        android:inputType="textPassword"
-        android:maxLength="15"
-        android:layout_below="@+id/etPostcode"
-        android:layout_alignLeft="@+id/etPostcode"
-        android:paddingLeft="10dp"
-        android:textColor="@color/textColor"
-        android:textColorHint="@color/textColorHint"
-        android:textSize="14dp"
-        android:layout_height="22dp"
-        android:paddingRight="10dp"  />
+                <EditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="22dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/textedit"
+                    android:hint="@string/pass"
+                    android:inputType="textPassword"
+                    android:maxLength="15"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/textColor"
+                    android:textColorHint="@color/textColorHint"
+                    android:textSize="14dp" />
 
-    <EditText
-        android:id="@+id/etRePassword"
-        android:layout_width="match_parent"
-        android:background="@drawable/textedit"
-        android:layout_marginTop="15dp"
-        android:ems="10"
-        android:hint="@string/repass"
-        android:layout_below="@+id/etPassword"
-        android:maxLength="15"
-        android:inputType="textPassword"
-        android:layout_alignLeft="@+id/etPassword"
-        android:layout_alignStart="@+id/etPassword"
-        android:layout_alignRight="@+id/etPassword"
-        android:layout_alignEnd="@+id/etPassword"
-        android:paddingLeft="10dp"
-        android:textColor="@color/textColor"
-        android:textColorHint="@color/textColorHint"
-        android:textSize="14dp"
-        android:layout_height="22dp"
-        android:paddingRight="10dp"  />
+                <CheckBox
+                    android:id="@+id/cbShowPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:buttonTint="#ffffff"
+                    android:text="@string/show"
+                    android:textColor="#ffffff" />
+            </LinearLayout>
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/show"
-        android:id="@+id/cbShowPassword"
-        android:buttonTint="#ffffff"
-        android:textColor="#ffffff"
-        android:layout_below="@+id/etPostcode"
-        android:layout_alignRight="@+id/etPostcode" />
+            <LinearLayout
+                android:id="@+id/llPasswordsSecondTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/show"
-        android:id="@+id/cbShowRePassword"
-        android:layout_below="@+id/etPassword"
-        android:textColor="#ffffff"
-        android:buttonTint="#ffffff"
-        android:layout_alignLeft="@+id/cbShowPassword"
-        android:layout_alignStart="@+id/cbShowPassword"
-        android:layout_alignRight="@+id/etPostcode"
-        android:layout_alignEnd="@+id/etPostcode" />
+                <EditText
+                    android:id="@+id/etRePassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="22dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/textedit"
+                    android:hint="@string/pass"
+                    android:inputType="textPassword"
+                    android:maxLength="15"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/textColor"
+                    android:textColorHint="@color/textColorHint"
+                    android:textSize="14dp" />
 
-    <Button
-        android:id="@+id/bCancel"
-        android:background="@drawable/button_action"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="5dp"
-        android:text="@string/cancel"
-        android:layout_below="@+id/etRePassword"
-        android:layout_toLeftOf="@+id/bSignUp"
-        android:layout_alignLeft="@+id/etRePassword"
-        android:layout_alignStart="@+id/etRePassword" />
+                <CheckBox
+                    android:id="@+id/cbShowRePassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:buttonTint="#ffffff"
+                    android:text="@string/show"
+                    android:textColor="#ffffff" />
 
-    <EditText
-        android:id="@+id/etPhone"
-        android:layout_width="match_parent"
-        android:background="@drawable/textedit"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="15dp"
-        android:ems="10"
-        android:inputType="number|text"
-        android:hint="@string/phone"
-        android:layout_below="@+id/etEmail"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:maxLength="20"
-        android:paddingLeft="10dp"
-        android:textColor="@color/textColor"
-        android:textColorHint="@color/textColorHint"
-        android:textSize="14dp"
-        android:layout_height="22dp"
-        android:paddingRight="10dp"  />
+            </LinearLayout>
 
-    <EditText
-        android:id="@+id/etBirthday"
-        android:layout_width="fill_parent"
-        android:background="@drawable/textedit"
-        android:ems="10"
-        android:hint="@string/birthday"
-        android:maxLength="10"
-        android:layout_below="@+id/rgGender"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="50dp"
-        android:paddingLeft="10dp"
-        android:textColor="@color/textColor"
-        android:textColorHint="@color/textColorHint"
-        android:editable="false"
-        android:textSize="14dp"
-        android:layout_height="22dp"
-        android:paddingRight="10dp"
-        android:cursorVisible="false"
-        android:inputType="none"/>
+            <LinearLayout
+                android:id="@+id/llButtons"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/bSignUp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/button_action"
+                    android:text="@string/signup"
+                    android:textStyle="bold"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    />
+
+                <Button
+                    android:id="@+id/bCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/button_action"
+                    android:layout_weight="1"
+                    android:text="@string/cancel" />
+
+            </LinearLayout>
 
 
-</RelativeLayout>
+        </LinearLayout>
+
+
+
+
+    </RelativeLayout>
 </ScrollView>
