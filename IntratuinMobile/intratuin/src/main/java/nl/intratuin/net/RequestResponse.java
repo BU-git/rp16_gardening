@@ -56,7 +56,7 @@ public class RequestResponse<T, V> extends AsyncTask<T, Void, V> {
             ErrorFragment ef= ErrorFragment.newError(msg==null?"Request error!":msg.toString());
             //if(msg!=null && msg.getClass()==TransferMessage.class &&
             //        msg.toString().indexOf("success")==-1)
-            if(msg!=null && msg.getClass()==TransferMessage.class)
+            if(msg==null || (msg!=null && msg.getClass()==TransferMessage.class))
                 ef.show(fragmentManager, "Intratuin");
     }
 }
