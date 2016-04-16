@@ -113,9 +113,8 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ibBarcode:
-                Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-                intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-                startActivityForResult(intent, 0);
+                Intent scannerIntent = new Intent(this, ScannerActivity.class);
+                startActivity(scannerIntent);
                 break;
 
             case R.id.ibMan:
@@ -125,25 +124,6 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
             case R.id.ibBusket:
 
                 break;
-        }
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
-                String contents = intent.getStringExtra("SCAN_RESULT");
-                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-                // Handle successful scan
-                Toast toast = Toast.makeText(this, "Content:" + contents + " Format:" + format , Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.TOP, 25, 400);
-                toast.show();
-            } else if (resultCode == RESULT_CANCELED) {
-                // Handle cancel
-                Toast toast = Toast.makeText(this, "Scan was Cancelled!", Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.TOP, 25, 400);
-                toast.show();
-
-            }
         }
     }
 }

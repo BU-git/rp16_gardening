@@ -40,7 +40,9 @@ android {
 
 repositories {
     mavenCentral()
-    jcenter()
+    flatDir{
+        dirs 'scandit'
+    }
 }
 
 dependencies {
@@ -52,8 +54,7 @@ dependencies {
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
-    compile 'com.google.zxing:core:3.2.1'
+    compile(name:'ScanditBarcodeScanner', ext:'aar')
     compile('com.twitter.sdk.android:twitter:1.13.0@aar') {
         transitive = true;
     }

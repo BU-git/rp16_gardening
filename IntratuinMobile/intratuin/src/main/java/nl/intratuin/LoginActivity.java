@@ -258,10 +258,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                         TransferMessage.class, getSupportFragmentManager()).execute(crd);
                         respondMessage = jsonRespond.get();
                         if(respondMessage.getMessage().equals("Login is successful")) {
-                            //startActivity(new Intent(this, SearchActivity.class));
-                        } else {
-                            ErrorFragment ef= ErrorFragment.newError(respondMessage==null?"Request error!":respondMessage.getMessage());
-                            ef.show(fragmentManager, "Intratuin");
+                            startActivity(new Intent(this, SearchActivity.class));
                         }
                     } catch(SignatureException | InterruptedException | ExecutionException e){
                         ErrorFragment ef= ErrorFragment.newError("Password encryption error!");
