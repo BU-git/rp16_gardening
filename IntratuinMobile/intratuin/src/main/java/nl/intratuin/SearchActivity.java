@@ -47,7 +47,7 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getSupportActionBar().hide();
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_search);
 
         ibBarcode = (ImageButton) findViewById(R.id.ibBarcode);

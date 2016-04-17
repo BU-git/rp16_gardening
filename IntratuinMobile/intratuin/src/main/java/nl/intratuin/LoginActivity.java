@@ -185,7 +185,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                                 TransferMessage.class, getSupportFragmentManager()).execute(credentials);
                                 TransferMessage respondMessage = jsonRespond.get();
                                 if (respondMessage.getMessage().equals(LOGIN_SUCCESS)) {
-                                    startActivity(new Intent(LoginActivity.this, SearchActivity.class));
+                                    startActivity(new Intent(LoginActivity.this, WebActivity.class));
                                 }
                             } catch (SignatureException | InterruptedException | ExecutionException e) {
                                 ErrorFragment ef = ErrorFragment.newError("Encryption error!");
@@ -279,10 +279,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             if (respondToLogin.getAccessKey() != null) {
                                 App.getAuthManager().loginAndCache(AuthManager.PREF_CREDENTIALS, respondToLogin.getAccessKey());
                                 Toast.makeText(this, respondToLogin.getMessage() + ", your key: " + App.getAuthManager().getAccessKeyCredentials(), Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(this, SearchActivity.class));
+                                startActivity(new Intent(this, WebActivity.class));
                             } else {
                                 if (respondToLogin.getMessage().equals(LOGIN_SUCCESS))
-                                    startActivity(new Intent(this, SearchActivity.class));
+                                    startActivity(new Intent(this, WebActivity.class));
                                 else {
                                     ErrorFragment.newError(LOGIN_ERROR)
                                             .show(getSupportFragmentManager(), "Intratuin");
