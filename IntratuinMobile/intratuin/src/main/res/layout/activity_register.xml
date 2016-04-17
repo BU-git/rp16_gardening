@@ -32,7 +32,7 @@
         <EditText
             android:id="@+id/etFirstName"
             android:layout_width="fill_parent"
-            android:layout_height="22dp"
+            android:layout_height="32dp"
             android:layout_alignEnd="@+id/ivIntratuin"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -49,12 +49,12 @@
             android:paddingRight="10dp"
             android:textColor="@color/textColor"
             android:textColorHint="@color/textColorHint"
-            android:textSize="14dp" />
+            android:textSize="16dp" />
 
         <EditText
             android:id="@+id/etTussen"
             android:layout_width="fill_parent"
-            android:layout_height="22dp"
+            android:layout_height="32dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
@@ -71,12 +71,12 @@
             android:paddingRight="10dp"
             android:textColor="@color/textColor"
             android:textColorHint="@color/textColorHint"
-            android:textSize="14dp" />
+            android:textSize="16dp" />
 
         <EditText
             android:id="@+id/etLastName"
             android:layout_width="fill_parent"
-            android:layout_height="22dp"
+            android:layout_height="32dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
@@ -93,7 +93,7 @@
             android:paddingRight="10dp"
             android:textColor="@color/textColor"
             android:textColorHint="@color/textColorHint"
-            android:textSize="14dp" />
+            android:textSize="16dp" />
 
 
         <RadioGroup
@@ -144,7 +144,7 @@
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
-            android:layout_height="22dp"
+            android:layout_height="32dp"
             android:layout_below="@+id/rgGender"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
@@ -160,7 +160,7 @@
             android:paddingRight="10dp"
             android:textColor="@color/textColor"
             android:textColorHint="@color/textColorHint"
-            android:textSize="14dp" />
+            android:textSize="16dp" />
 
         <LinearLayout
             android:id="@+id/llPasswords"
@@ -180,9 +180,9 @@
                 <EditText
                     android:id="@+id/etPassword"
                     android:layout_width="wrap_content"
-                    android:layout_height="22dp"
+                    android:layout_height="32dp"
                     android:layout_marginRight="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:background="@drawable/textedit"
                     android:hint="@string/pass"
@@ -192,13 +192,13 @@
                     android:paddingRight="10dp"
                     android:textColor="@color/textColor"
                     android:textColorHint="@color/textColorHint"
-                    android:textSize="14dp" />
+                    android:textSize="16dp" />
 
                 <CheckBox
                     android:id="@+id/cbShowPassword"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="15dp"
                     android:buttonTint="#ffffff"
                     android:text="@string/show"
                     android:textColor="#ffffff" />
@@ -213,9 +213,9 @@
                 <EditText
                     android:id="@+id/etRePassword"
                     android:layout_width="wrap_content"
-                    android:layout_height="22dp"
+                    android:layout_height="32dp"
                     android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="15dp"
                     android:layout_weight="1"
                     android:background="@drawable/textedit"
                     android:hint="@string/pass"
@@ -225,13 +225,13 @@
                     android:paddingRight="10dp"
                     android:textColor="@color/textColor"
                     android:textColorHint="@color/textColorHint"
-                    android:textSize="14dp" />
+                    android:textSize="16dp" />
 
                 <CheckBox
                     android:id="@+id/cbShowRePassword"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="15dp"
                     android:buttonTint="#ffffff"
                     android:text="@string/show"
                     android:textColor="#ffffff" />

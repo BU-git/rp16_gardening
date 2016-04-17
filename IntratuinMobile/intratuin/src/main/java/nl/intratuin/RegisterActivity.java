@@ -3,12 +3,10 @@ package nl.intratuin;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -16,7 +14,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import java.net.URI;
 import java.security.SignatureException;
@@ -26,9 +23,9 @@ import java.util.regex.Pattern;
 
 import nl.intratuin.dto.Customer;
 import nl.intratuin.dto.TransferMessage;
-import nl.intratuin.handlers.DatePickerFragment;
 import nl.intratuin.handlers.ErrorFragment;
-import nl.intratuin.net.*;
+import nl.intratuin.net.RequestResponse;
+import nl.intratuin.net.UriConstructor;
 
 import static nl.intratuin.settings.Settings.sha1;
 
@@ -38,16 +35,10 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     EditText etTussen;
     EditText etLastName;
     EditText etEmail;
-    EditText etCity;
-    EditText etStreet;
-    EditText etHouse;
-    EditText etPostcode;
-    EditText etBirthday;
     EditText etPassword;
     CheckBox cbShowPassword;
     EditText etRePassword;
     CheckBox cbShowRePassword;
-    EditText etPhone;
     RadioButton rbMale;
     RadioButton rbFemale;
     Button bCancel;
@@ -117,12 +108,6 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                     cust.setTussen(etTussen.getText().toString());
                     cust.setLastName(etLastName.getText().toString());
                     cust.setEmail(etEmail.getText().toString());
-                    cust.setCity(etCity.getText().toString());
-                    cust.setStreetName(etStreet.getText().toString());
-                    cust.setHouseNumber(etHouse.getText().toString());
-                    cust.setPostalCode(etPostcode.getText().toString());
-                    cust.setBirthday(parseDate(etBirthday.getText().toString()));
-                    cust.setPhoneNumber(etPhone.getText().toString());
                     if(rbMale.isChecked())
                         cust.setGender(1);
                     else
@@ -228,116 +213,6 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
             }
         });
 
-//        etCity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (!hasFocus && etCity.getText().length()==0){
-//                    etCity.setError("City can not be blank");
-//                }
-//            }
-//        });
-//        etCity.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                etCity.setError(null);
-//            }
-//        });
-//
-//        etStreet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (!hasFocus && etStreet.getText().length() == 0) {
-//                    etStreet.setError("Street can not be blank");
-//                }
-//            }
-//        });
-//        etStreet.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                etStreet.setError(null);
-//            }
-//        });
-//
-//        etHouse.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (!hasFocus && etHouse.getText().length() == 0) {
-//                    etHouse.setError("House number can not be blank");
-//                }
-//            }
-//        });
-//        etHouse.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                etHouse.setError(null);
-//            }
-//        });
-//
-//        etPostcode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (!hasFocus && etPostcode.getText().length() == 0) {
-//                    etPostcode.setError("Postcode can not be blank");
-//                }
-//            }
-//        });
-//        etPostcode.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                etPostcode.setError(null);
-//            }
-//        });
-//
-//        etBirthday.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (!hasFocus && etBirthday.getText().length() == 0) {
-//                    etBirthday.setError("Birthday field can not be blank");
-//                }
-//            }
-//        });
-//
-//        etBirthday.setOnClickListener(this);
-//        etBirthday.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) {
-//                    etBirthday.performClick();
-//                }
-//            }
-//        });
         cbShowPassword.setOnClickListener(this);
         cbShowRePassword.setOnClickListener(this);
         bCancel.setOnClickListener(this);
@@ -382,30 +257,6 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
             res=false;
         }
 
-        if(etCity.getText().length()==0){
-            etCity.setError("City can not be blank");
-            res=false;
-        }
-
-        if(etStreet.getText().length()==0){
-            etStreet.setError("Street can not be blank");
-            res=false;
-        }
-
-        if(etHouse.getText().length()==0){
-            etHouse.setError("House can not be blank");
-            res=false;
-        }
-
-        if(etPostcode.getText().length()==0){
-            etPostcode.setError("Postcode can not be blank");
-            res=false;
-        }
-
-        if(etBirthday.getText().length()==0){
-            etBirthday.setError("Birthday can not be blank");
-            res=false;
-        }
 
         pattern = Pattern.compile(LoginActivity.PASSWORD_PATTERN);
         matcher = pattern.matcher(etPassword.getText().toString());
