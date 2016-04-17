@@ -23,7 +23,7 @@ public class DatePickerFragment extends DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         final Calendar c = Calendar.getInstance();
-        etBirthday = (EditText) getActivity().findViewById(R.id.etBirthday);
+//        etBirthday = (EditText) getActivity().findViewById(R.id.etBirthday);
         String strDate=etBirthday.getText().toString();
         int year,month,day;
         if(strDate.indexOf('/')==-1) {

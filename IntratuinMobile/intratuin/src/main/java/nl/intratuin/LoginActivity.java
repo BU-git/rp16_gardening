@@ -22,8 +22,6 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
@@ -181,6 +179,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                 credentials.setPassword(Settings.getEncryptedTwitterKey(email));
 
                                 AsyncTask<Credentials, Void, TransferMessage> jsonRespond =
+                                new RequestResponse<Credentials, TransferMessage>(twitterLoginUri, 3,
+                                        TransferMessage.class, getSupportFragmentManager()).execute(credentials);
                                         new RequestResponse<Credentials, TransferMessage>(twitterLoginUri, 3,
                                                 TransferMessage.class, getSupportFragmentManager()).execute(credentials);
                                 TransferMessage respondMessage = jsonRespond.get();
@@ -245,9 +245,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 ef.show(getSupportFragmentManager(), "Intratuin");
             }
         });
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -359,45 +356,5 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         boolean validationError = emailError || passError;
         return !validationError;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Login Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://nl.intratuin/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Login Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://nl.intratuin/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
     }
 }

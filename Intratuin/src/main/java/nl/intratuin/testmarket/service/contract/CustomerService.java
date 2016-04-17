@@ -7,6 +7,7 @@ import nl.intratuin.testmarket.entity.Customer;
 import org.springframework.social.facebook.api.User;
 
 import java.util.List;
+import java.util.Properties;
 
 public interface CustomerService {
     Customer findById(int id);

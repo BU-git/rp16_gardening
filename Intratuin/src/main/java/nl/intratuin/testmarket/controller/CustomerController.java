@@ -2,8 +2,8 @@ package nl.intratuin.testmarket.controller;
 
 import nl.intratuin.testmarket.dto.*;
 import nl.intratuin.testmarket.service.contract.AccessKeyService;
-import nl.intratuin.testmarket.service.contract.CustomerService;
 import nl.intratuin.testmarket.entity.Customer;
+import nl.intratuin.testmarket.service.contract.CustomerService;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.User;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
