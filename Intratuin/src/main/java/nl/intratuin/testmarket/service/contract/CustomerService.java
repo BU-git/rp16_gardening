@@ -1,22 +1,25 @@
 package nl.intratuin.testmarket.service.contract;
 
 import nl.intratuin.testmarket.dto.Credentials;
-import nl.intratuin.testmarket.dto.TransferMessage;
+import nl.intratuin.testmarket.dto.LoginAndCacheResult;
+import nl.intratuin.testmarket.dto.ResultLoginWithSocial;
 import nl.intratuin.testmarket.entity.Customer;
 import org.springframework.social.facebook.api.User;
 
 import java.util.List;
 
 public interface CustomerService {
-   Customer findById(int id);
+    Customer findById(int id);
 
     List<Customer> findAll();
 
-    TransferMessage addCustomer(Customer customer);
+    boolean addCustomer(Customer customer);
 
-    TransferMessage login(Credentials credentials);
+    LoginAndCacheResult login(Credentials credentials);
 
-    TransferMessage loginTwitter(Credentials credentials);
+    ResultLoginWithSocial loginTwitter(Credentials credentials);
 
-    TransferMessage loginWithFacebook(User profile);
+    ResultLoginWithSocial loginWithFacebook(User profile);
+
+    Integer getCustomerIdByFacebookProfile(User profile);
 }

@@ -79,6 +79,15 @@
 		);
 		ALTER TABLE ORDERS AUTO_INCREMENT=1;
 
+		CREATE TABLE ACCESSKEY (
+			ID INT NOT NULL AUTO_INCREMENT,
+			CUSTOMER_ID INT NOT NULL,
+			ACCESS_KEY VARCHAR(1000) NOT NULL,
+			EXPIRE_DATE DATE,
+			PRIMARY KEY (ID)
+		);
+		ALTER TABLE ORDERS AUTO_INCREMENT=1;
+
 		INSERT INTO `CATEGORY` (`CATEGORY_ID`, `CATEGORY_NAME`, `PARENT_ID`) VALUES (1, "First",null),(2,"Second",null),(3,"Third",null),(4,"Fourth",null),(5,"Fifth",null),(6,"Sixth",null),(7,"Seventh",null);
 
 		INSERT INTO `PRODUCT` (`PRODUCT_ID`,`CATEGORY_ID`,`PRODUCT_NAME`,`PRODUCT_PRICE`, `PRODUCT_IMAGE_SMALL`) VALUES (1,1,"amet, dapibus","601", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5vEWVsuw16aE__uLDzb3bbpI8ty4Bu0k50S7BOiJTAWBFf-aE"),(2,1,"sem mollis dui,","186", "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSFwVKfwYjEZf8H4mUpr8tZW_WGsuPzTi_kkGTT6UdfN04OHPINaw"),(3,1,"amet nulla. Donec","138", "http://vignette2.wikia.nocookie.net/p__/images/0/09/Joy_%28Inside_Out%29.png/revision/latest/scale-to-width-down/335?cb=20150405005253&path-prefix=protagonist"),(4,2,"egestas rhoncus. Proin","149", "http://static.splashnology.com/articles/How-to-Optimize-PNG-and-JPEG-without-Quality-Loss/cryoPNG-f0.png"),(5,2,"dui.","468", "http://pngimg.com/upload/heart_PNG705.png"),(6,3,"amet orci.","013", "http://orig07.deviantart.net/e81f/f/2012/309/a/1/tree_png_by_camelfobia-d5k1akp.png"),(7,2,"adipiscing non,","064", "http://www.printwallart.co.za/wp-content/uploads/2015/10/154908943.png"),(8,4,"blandit","601", "http://rs89.pbsrc.com/albums/k224/shukmun/Whatsapp%20Emoji/128526_zps0d043bc4.png~c200"),(9,4,"vulputate","009", "http://rs945.pbsrc.com/albums/ad300/xxx_enia/2d4e9f9cc112.png~c200"),(10,4,"hendrerit","529", "http://findicons.com/static/images/logo/logo.png");

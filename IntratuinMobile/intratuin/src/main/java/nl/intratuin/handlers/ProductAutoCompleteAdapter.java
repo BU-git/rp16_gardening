@@ -16,9 +16,11 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import nl.intratuin.R;
+import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.RequestResponseGET;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -93,7 +95,7 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
             FilterResults filterResults = new FilterResults();
 
             if (constraint != null) {
-                List<Product> retList = findProducts(constraint.toString());
+                List<Product> retList = findProducts(context, constraint.toString());
                 filterResults.values = retList;
                 filterResults.count = retList.size();
             }
@@ -107,20 +109,11 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
             }
         }
 
-        private List<Product> findProducts(String searchQuery) {
-            List<Product> productSearchResult = new ArrayList<>();
+        private List<Product> findProducts(Context context, String searchQuery) {
             String searchUri = new UriConstructor(((FragmentActivity) context).getSupportFragmentManager())
                     .makeFullURI("/product/search").toString() + "/{name}";
-
-            AsyncTask<String, Void, List<Product>> productFilterResult =
-                    new RequestResponseGET(searchUri, 1, Product[].class,
-                            ((FragmentActivity) context).getSupportFragmentManager()).execute(searchQuery);
-            try {
-                productSearchResult = productFilterResult.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-            return productSearchResult;
+            RequestResponseManager<Product[]> managerLoader = new RequestResponseManager(context, Product[].class);
+            return Arrays.asList(managerLoader.loaderFromWebService(searchUri, searchQuery));
         }
     }
 
