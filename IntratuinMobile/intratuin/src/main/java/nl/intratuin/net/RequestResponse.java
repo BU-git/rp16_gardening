@@ -33,29 +33,27 @@ public class RequestResponse<T, V> extends AsyncTask<T, Void, V> {
     }
     @Override
     protected V doInBackground(T... param) {
-        try {
-            V jsonObject=null;
-            for(int i=0; i<retry; i++) {
+        for (int i = 0; i < retry; i++) {
+            try {
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 SimpleClientHttpRequestFactory rf =
                         (SimpleClientHttpRequestFactory) restTemplate.getRequestFactory();
                 rf.setReadTimeout(Settings.getConnectionTimeout());
                 rf.setConnectTimeout(Settings.getConnectionTimeout());
-                jsonObject = restTemplate.postForObject(uri, param[0], responseType);
-                if(jsonObject!=null)
-                    break;
+                return (V) restTemplate.postForObject(uri, param[0], responseType);
+            } catch (Exception e) {
+                Log.e("Error: ", e.getMessage(), e);
             }
-            return jsonObject;
-        } catch (Exception e) {
-            return null;
         }
+        return null;
     }
+
     @Override
     protected void onPostExecute(V msg){
             ErrorFragment ef= ErrorFragment.newError(msg==null?"Request error!":msg.toString());
             if(msg!=null && msg.getClass()==TransferMessage.class &&
-                    msg.toString().indexOf("success")==-1)
-                ef.show(fragmentManager, "Intratuin");
-    }
-}
+        msg.toString().indexOf("success")==-1)
+        ef.show(fragmentManager, "Intratuin");
+        }
+        }

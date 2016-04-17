@@ -41,6 +41,7 @@ public class ProductDaoImpl implements ProductDao {
         TypedQuery<Product> queryFindProductsByCategory = em.createQuery("SELECT P FROM Product P, Category C WHERE P.categoryId = C.categoryId " +
                 "and P.categoryId = :regexp", Product.class);
         queryFindProductsByCategory.setParameter("regexp",category);
-        return queryFindProductsByCategory.getResultList();
+        List<Product> list = queryFindProductsByCategory.getResultList();
+        return list;
     }
 }

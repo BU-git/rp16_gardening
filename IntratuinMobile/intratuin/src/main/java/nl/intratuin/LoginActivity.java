@@ -5,8 +5,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
@@ -16,7 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -24,6 +22,9 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -32,6 +33,7 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
 import java.net.URI;
 import java.security.SignatureException;
 import java.util.Arrays;
@@ -42,37 +44,42 @@ import java.util.regex.Pattern;
 
 import io.fabric.sdk.android.Fabric;
 import nl.intratuin.dto.Credentials;
+import nl.intratuin.dto.LoginAndCacheResult;
 import nl.intratuin.dto.TransferAccessToken;
+import nl.intratuin.handlers.AuthManager;
+import nl.intratuin.handlers.CacheCustomerCredentials;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.Settings;
 
 import static nl.intratuin.settings.Settings.sha1;
+
 import nl.intratuin.dto.TransferMessage;
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
-    FragmentManager fragmentManager;
-    static final List<String> PERMISSIONS = Arrays.asList("email", "user_birthday", "user_hometown");
+    public static final List<String> PERMISSIONS = Arrays.asList("email");
+    public static final String LOGIN_SUCCESS = "Login is successful";
+    public static final String LOGIN_ERROR = "Sorry, your username and password are incorrect - please try again";
+
     CallbackManager callbackManager;
 
-    TextView tvInfo;
     LoginButton lbFacebook;
     TwitterLoginButton bTwitterHidden;
     Button bTwitter;
-    EditText etEmailAddress;
-    EditText etPassword;
     Button bLogin;
     Button bRegister;
     Button bForgot;
+    EditText etEmailAddress;
+    EditText etPassword;
     CheckBox cbRemember;
     CheckBox cbShow;
-
     ImageView ivIntratuin;
 
-    URI loginUri=null;
-    URI twitterLoginUri=null;
+    URI loginUri = null;
+    URI twitterLoginUri = null;
     URI facebookLoginUri = null;
+    String loginByCache;
 
     public static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -80,10 +87,17 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     public static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,15})";
     Pattern pattern;
     Matcher matcher;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CacheCustomerCredentials.cache(this); //Check cache
+
         getSupportActionBar().hide();
         TwitterAuthConfig authConfig = Settings.getTwitterConfig();
         Fabric.with(this, new Twitter(authConfig));
@@ -95,25 +109,25 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         bTwitter = (Button) findViewById(R.id.bTwitter);
         lbFacebook = (LoginButton) findViewById(R.id.bLoginFacebook);
 
-        etEmailAddress = (EditText)findViewById(R.id.etEmailAddress);
+        etEmailAddress = (EditText) findViewById(R.id.etEmailAddress);
         etEmailAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 pattern = Pattern.compile(EMAIL_PATTERN);
                 matcher = pattern.matcher(etEmailAddress.getText().toString());
-                if(!hasFocus && !matcher.matches()){
+                if (!hasFocus && !matcher.matches()) {
                     showEmailError();
                 }
             }
         });
 
-        etPassword = (EditText)findViewById(R.id.etPassword);
+        etPassword = (EditText) findViewById(R.id.etPassword);
         etPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 pattern = Pattern.compile(PASSWORD_PATTERN);
                 matcher = pattern.matcher(etPassword.getText().toString());
-                if(!hasFocus && !matcher.matches()){
+                if (!hasFocus && !matcher.matches()) {
                     showPassError();
                 }
             }
@@ -167,10 +181,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                 credentials.setPassword(Settings.getEncryptedTwitterKey(email));
 
                                 AsyncTask<Credentials, Void, TransferMessage> jsonRespond =
-                                new RequestResponse<Credentials, TransferMessage>(twitterLoginUri, 3,
-                                        TransferMessage.class, getSupportFragmentManager()).execute(credentials);
+                                        new RequestResponse<Credentials, TransferMessage>(twitterLoginUri, 3,
+                                                TransferMessage.class, getSupportFragmentManager()).execute(credentials);
                                 TransferMessage respondMessage = jsonRespond.get();
-                                if(respondMessage.getMessage().equals("Login is successful")) {
+                                if (respondMessage.getMessage().equals(LOGIN_SUCCESS)) {
                                     startActivity(new Intent(LoginActivity.this, SearchActivity.class));
                                 }
                             } catch (SignatureException | InterruptedException | ExecutionException e) {
@@ -204,30 +218,36 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 AsyncTask<TransferAccessToken, Void, TransferMessage> jsonRespond =
                         new RequestResponse<TransferAccessToken, TransferMessage>(facebookLoginUri, 3,
                                 TransferMessage.class, getSupportFragmentManager()).execute(accessToken);
-                TransferMessage respondMessage=null;
+                TransferMessage respondMessage = null;
                 try {
                     respondMessage = jsonRespond.get();
-                } catch(InterruptedException | ExecutionException e){
-                    ErrorFragment ef= ErrorFragment.newError("Error!");
+                } catch (InterruptedException | ExecutionException e) {
+                    ErrorFragment ef = ErrorFragment.newError("Error!");
                     ef.show(getSupportFragmentManager(), "Intratuin");
                 }
-                if(respondMessage.getMessage().equals("Login is successful")) {
+                if (respondMessage.getMessage().equals(LOGIN_SUCCESS)) {
+                    App.getAuthManager().loginAndCache(AuthManager.PREF_FACEBOOK, accessToken.getAccessToken());
+                    Toast.makeText(LoginActivity.this, App.getAuthManager().getAccessTokenFacebook(), Toast.LENGTH_LONG).show();
                     startActivity(new Intent(LoginActivity.this, SearchActivity.class));
                 }
             }
 
             @Override
             public void onCancel() {
-                ErrorFragment ef= ErrorFragment.newError("Login attempt canceled.");
+                ErrorFragment ef = ErrorFragment.newError("Login attempt canceled.");
                 ef.show(getSupportFragmentManager(), "Intratuin");
             }
 
             @Override
             public void onError(FacebookException error) {
-                ErrorFragment ef= ErrorFragment.newError("Login attempt failed.");
+                Log.e("API FAILED!!!!: ", error.getMessage() + "  " + error);
+                ErrorFragment ef = ErrorFragment.newError("Login attempt failed.");
                 ef.show(getSupportFragmentManager(), "Intratuin");
             }
         });
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -244,27 +264,39 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bLogin:
-                loginUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/login");
-                TransferMessage respondMessage;
+                LoginAndCacheResult respondToLogin = new LoginAndCacheResult();
+                Credentials crd = new Credentials();
+                loginUri = new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/login");
 
-                if(loginUri!=null && dataValidation()){//&& Data validation passed
-                    Credentials crd=new Credentials();
+                if (loginUri != null && dataValidation()) {//&& Data validation passed
                     crd.setEmail(etEmailAddress.getText().toString());
+                    crd.setFlagToCache(cbRemember.isChecked());
                     try {
                         crd.setPassword(sha1(etPassword.getText().toString(), crd.getEmail()));
 
-                        AsyncTask<Credentials, Void, TransferMessage> jsonRespond =
-                                new RequestResponse<Credentials, TransferMessage>(loginUri, 3 ,
-                                        TransferMessage.class, getSupportFragmentManager()).execute(crd);
-                        respondMessage = jsonRespond.get();
-                        if(respondMessage.getMessage().equals("Login is successful")) {
-                            startActivity(new Intent(this, SearchActivity.class));
+                        AsyncTask<Credentials, Void, LoginAndCacheResult> jsonRespond =
+                                new RequestResponse<Credentials, LoginAndCacheResult>(loginUri, 3,
+                                        LoginAndCacheResult.class, getSupportFragmentManager()).execute(crd);
+                        respondToLogin = jsonRespond.get();
+                        if (respondToLogin != null) {
+                            if (respondToLogin.getAccessKey() != null) {
+                                App.getAuthManager().loginAndCache(AuthManager.PREF_CREDENTIALS, respondToLogin.getAccessKey());
+                                Toast.makeText(this, respondToLogin.getMessage() + ", your key: " + App.getAuthManager().getAccessKeyCredentials(), Toast.LENGTH_LONG).show();
+                                startActivity(new Intent(this, SearchActivity.class));
+                            } else {
+                                if (respondToLogin.getMessage().equals(LOGIN_SUCCESS))
+                                    startActivity(new Intent(this, SearchActivity.class));
+                                else {
+                                    ErrorFragment.newError(LOGIN_ERROR)
+                                            .show(getSupportFragmentManager(), "Intratuin");
+                                }}
                         } else {
-                            ErrorFragment ef= ErrorFragment.newError(respondMessage==null?"Request error!":respondMessage.getMessage());
-                            ef.show(fragmentManager, "Intratuin");
+                            ErrorFragment ef = ErrorFragment.newError("Request error!");
+                            ef.show(getSupportFragmentManager(), "Intratuin");
                         }
-                    } catch(SignatureException | InterruptedException | ExecutionException e){
-                        ErrorFragment ef= ErrorFragment.newError("Password encryption error!");
+                    } catch (SignatureException | InterruptedException | ExecutionException e) {
+                        Log.e("Error", e.getMessage() + ": ", e);
+                        ErrorFragment ef = ErrorFragment.newError("Password encryption error!");
                         ef.show(getSupportFragmentManager(), "Intratuin");
                     }
                 }
@@ -281,10 +313,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 break;
 
             case R.id.cbShow:
-                if(cbShow.isChecked())
+                if (cbShow.isChecked())
                     etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                else etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    etPassword.setSelection(etPassword.length());
+                else
+                    etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                etPassword.setSelection(etPassword.length());
                 break;
 
             case R.id.ivIntratuin:
@@ -292,37 +325,79 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 startActivity(browserIntent);
                 break;
         }
+
     }
 
 
-
-    private void showEmailError(){
-        if(etEmailAddress.getText().length()==0)
+    private void showEmailError() {
+        if (etEmailAddress.getText().length() == 0)
             etEmailAddress.setError("Email can't be blank!");
         else etEmailAddress.setError("Wrong email format!");
     }
-    private void showPassError(){
-        if(etPassword.getText().length()==0)
+
+    private void showPassError() {
+        if (etPassword.getText().length() == 0)
             etPassword.setError("Password can't be blank!");
         else etPassword.setError("Password has to be 6-15 chars, at least 1 small letter, " +
                 "1 cap. letter and 1 number");
     }
-    private boolean dataValidation(){
+
+    private boolean dataValidation() {
         pattern = Pattern.compile(EMAIL_PATTERN);
         matcher = pattern.matcher(etEmailAddress.getText().toString());
         boolean emailError = !matcher.matches();
-        if(emailError){
+        if (emailError) {
             showEmailError();
         }
 
         pattern = Pattern.compile(PASSWORD_PATTERN);
         matcher = pattern.matcher(etPassword.getText().toString());
         boolean passError = !matcher.matches();
-        if(passError){
+        if (passError) {
             showPassError();
         }
 
-        boolean validationError=emailError||passError;
+        boolean validationError = emailError || passError;
         return !validationError;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Login Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://nl.intratuin/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Login Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://nl.intratuin/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 }

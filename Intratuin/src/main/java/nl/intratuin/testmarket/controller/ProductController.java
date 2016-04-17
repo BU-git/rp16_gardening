@@ -36,8 +36,7 @@ public class ProductController {
     }
 
     @RequestMapping(value = "list/byCategory/{idCategory}")
-    public List<Product> getAllByCategory(@PathVariable String idCategory) {
-        int id = Integer.parseInt(idCategory);
-        return productService.findAllByCategory(id);
+    public List<Product> getAllByCategory(@PathVariable int idCategory) {
+        return productService.findAllByCategory(idCategory);
     }
 }

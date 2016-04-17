@@ -24,7 +24,12 @@ android {
         versionName "1.0"
     }
     buildTypes {
+        debug {
+            buildConfigField "String", "API_HOME", "\"http://192.168.1.210:8080/\""
+        }
         release {
+            buildConfigField "String", "API_HOST", "\"http://128.0.169.5:8888/\""
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

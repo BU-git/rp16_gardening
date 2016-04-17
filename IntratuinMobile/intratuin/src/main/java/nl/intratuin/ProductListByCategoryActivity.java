@@ -1,22 +1,24 @@
 package nl.intratuin;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import nl.intratuin.dto.Product;
 import nl.intratuin.dto.TreeNode;
-import nl.intratuin.handlers.ManagerLoader;
 import nl.intratuin.handlers.ProductListAdapter;
+import nl.intratuin.handlers.RequestResponseManager;
+import nl.intratuin.net.RequestResponse;
+import nl.intratuin.net.UriConstructor;
 
 public class ProductListByCategoryActivity extends AppCompatActivity {
     ListView subCategoryListView;
     ListView productByCategoryListView;
-    List<Product> allProductByCategory;
     TreeNode category;
     String[] childrenName;
 
@@ -33,16 +35,13 @@ public class ProductListByCategoryActivity extends AppCompatActivity {
             category = extraCategory.getParcelable(SearchActivity.TREENODE);
         }
 
+        generateProductListByCategory("" + category.getId());
+
         childrenName = getChildrenName(category);
-        if(childrenName != null) {
-            ArrayAdapter<String> subCategoryAdapter = new ArrayAdapter<String>(this, R.layout.activity_subcategory, R.id.bsubCategory, childrenName);
+        if (childrenName != null) {
+            ArrayAdapter<String> subCategoryAdapter = new ArrayAdapter<>(this, R.layout.activity_subcategory, R.id.bsubCategory, childrenName);
             subCategoryListView.setAdapter(subCategoryAdapter);
         }
-
-        String idCategory = "" + category.getId();
-        allProductByCategory = generateProductListByCategory(idCategory);
-        ProductListAdapter productListAdapter = new ProductListAdapter(this, allProductByCategory);
-        productByCategoryListView.setAdapter(productListAdapter);
     }
 
     private String[] getChildrenName(TreeNode treeNode) {
@@ -54,16 +53,17 @@ public class ProductListByCategoryActivity extends AppCompatActivity {
             }
             return childrenName;
         }
-        return  null;
+        return null;
     }
-
-    private List<Product> generateProductListByCategory(String idCategory) {
-//        String uri = new UriConstructor(((FragmentActivity) this).getSupportFragmentManager())
-//                .makeFullURI("/product").toString() + "/list/byCategory/{idCategory}";
-        String uri = "http://192.168.1.210:8080/product/list/byCategory/{idCategory}";
-        ManagerLoader managerLoader = new ManagerLoader(this, Product[].class);
-        List<Product> allProductByCategory = managerLoader.loaderFromWebService(uri, idCategory);
-
-        return allProductByCategory;
+    private void generateProductListByCategory(String idCategory) {
+        String uri = new UriConstructor(((FragmentActivity) this).getSupportFragmentManager())
+                .makeFullURI("/product").toString() + "/list/byCategory/{idCategory}";
+//        String uri = BuildConfig.API_HOME + "product/list/byCategory/{idCategory}";
+        RequestResponseManager<Product[]> managerLoader = new RequestResponseManager<>(this, Product[].class);
+        List<Product> allProductByCategory = Arrays.asList(managerLoader.loaderFromWebService(uri, idCategory));
+        if (allProductByCategory != null) {
+            ProductListAdapter productListAdapter = new ProductListAdapter(ProductListByCategoryActivity.this, allProductByCategory);
+            productByCategoryListView.setAdapter(productListAdapter);
+        }
     }
 }
