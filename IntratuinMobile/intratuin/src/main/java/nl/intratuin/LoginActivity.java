@@ -169,39 +169,22 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 twitterLoginUri = new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/loginTwitter");
                 if (twitterLoginUri != null) {
                     final Credentials credentials = new Credentials();
-                    TwitterAuthClient authClient = new TwitterAuthClient();
-                    authClient.requestEmail(session, new Callback<String>() {
-                        @Override
-                        public void success(Result<String> result) {
-                            try {
-                                String email = result.data;
-                                credentials.setEmail(email);
-                                credentials.setPassword(Settings.getEncryptedTwitterKey(email));
-
-                                AsyncTask<Credentials, Void, TransferMessage> jsonRespond =
+                    try {
+                        credentials.setEmail(session.getAuthToken().token);
+                        credentials.setPassword(session.getAuthToken().secret);
+                        AsyncTask<Credentials, Void, TransferMessage> jsonRespond =
                                 new RequestResponse<Credentials, TransferMessage>(twitterLoginUri, 3,
                                         TransferMessage.class, getSupportFragmentManager()).execute(credentials);
-                                        new RequestResponse<Credentials, TransferMessage>(twitterLoginUri, 3,
-                                                TransferMessage.class, getSupportFragmentManager()).execute(credentials);
-                                TransferMessage respondMessage = jsonRespond.get();
-                                if (respondMessage.getMessage().equals(LOGIN_SUCCESS)) {
-                                    startActivity(new Intent(LoginActivity.this, WebActivity.class));
-                                }
-                            } catch (SignatureException | InterruptedException | ExecutionException e) {
-                                ErrorFragment ef = ErrorFragment.newError("Encryption error!");
-                                ef.show(getSupportFragmentManager(), "Intratuin");
-                            }
+                        TransferMessage respondMessage = jsonRespond.get();
+                        if (respondMessage.getMessage().equals(LOGIN_SUCCESS)) {
+                            startActivity(new Intent(LoginActivity.this, WebActivity.class));
                         }
-
-                        @Override
-                        public void failure(TwitterException exception) {
-                            ErrorFragment ef = ErrorFragment.newError("Can't get email from Twitter!");
-                            ef.show(getSupportFragmentManager(), "Intratuin");
-                        }
-                    });
+                    } catch (InterruptedException | ExecutionException e) {
+                        ErrorFragment ef = ErrorFragment.newError("Encryption error!");
+                        ef.show(getSupportFragmentManager(), "Intratuin");
+                    }
                 }
             }
-
             @Override
             public void failure(TwitterException exception) {
                 Log.d("TwitterKit", "Login with Twitter failure", exception);
@@ -287,9 +270,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                     ErrorFragment.newError(LOGIN_ERROR)
                                             .show(getSupportFragmentManager(), "Intratuin");
                                 }}
-                        } else {
-                            ErrorFragment ef = ErrorFragment.newError("Request error!");
-                            ef.show(getSupportFragmentManager(), "Intratuin");
                         }
                     } catch (SignatureException | InterruptedException | ExecutionException e) {
                         Log.e("Error", e.getMessage() + ": ", e);

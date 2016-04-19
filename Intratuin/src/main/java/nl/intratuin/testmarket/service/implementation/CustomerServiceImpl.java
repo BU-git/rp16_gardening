@@ -1,6 +1,5 @@
 package nl.intratuin.testmarket.service.implementation;
 
-import nl.intratuin.testmarket.Settings;
 import nl.intratuin.testmarket.dao.contract.AccessKeyDao;
 import nl.intratuin.testmarket.dao.contract.CustomerDao;
 import nl.intratuin.testmarket.dto.Credentials;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.security.SignatureException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
@@ -82,21 +80,13 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         @Transactional
-        public ResultLoginWithSocial loginTwitter (Credentials credentials){
-            String twitterKey = credentials.getPassword();
-            String emailToLogin = credentials.getEmail();
-            try {
-                if (!twitterKey.equals(Settings.getEncryptedTwitterKey(emailToLogin)))
-                    return ResultLoginWithSocial.WRONG;
-            } catch (SignatureException e) {
-                return ResultLoginWithSocial.ERROR;
-            }
-            Integer foundCustomerId = customerDao.findByEmail(emailToLogin);
+        public ResultLoginWithSocial loginTwitter (String email){
+            Integer foundCustomerId = customerDao.findByEmail(email);
             if (foundCustomerId != null) {
                 return ResultLoginWithSocial.SUCCESS;
             } else {
                 Customer newCustomer = new Customer();
-                newCustomer.setEmail(emailToLogin);
+                newCustomer.setEmail(email);
                 customerDao.save(newCustomer);
                 return ResultLoginWithSocial.SUCCESSREGISTER;
             }

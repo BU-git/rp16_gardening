@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import nl.intratuin.App;
-import nl.intratuin.SearchActivity;
+import nl.intratuin.WebActivity;
 import nl.intratuin.dto.LoginAndCacheResult;
 import nl.intratuin.net.UriConstructor;
 
@@ -22,7 +22,7 @@ public class CacheCustomerCredentials {
             if (loginWithCache != null) {
                 if ((loginWithCache.getAccessKey() != null)) {
                     Toast.makeText(context, loginWithCache.getMessage(), Toast.LENGTH_LONG).show();
-                    context.startActivity(new Intent(context, SearchActivity.class));
+                    context.startActivity(new Intent(context, WebActivity.class));
                 } else {
                     Toast.makeText(context, loginWithCache.getMessage(), Toast.LENGTH_LONG).show();
                     context.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)
@@ -45,7 +45,7 @@ public class CacheCustomerCredentials {
             if (loginWithCache != null) {
                 if ((loginWithCache.getAccessKey() != null)) {
                     Toast.makeText(context, loginWithCache.getMessage(), Toast.LENGTH_LONG).show();
-                    context.startActivity(new Intent(context, SearchActivity.class));
+                    context.startActivity(new Intent(context, WebActivity.class));
                 } else {
                     Toast.makeText(context, loginWithCache.getMessage(), Toast.LENGTH_LONG).show();
                     context.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)

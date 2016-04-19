@@ -5,6 +5,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.social.config.annotation.ConnectionFactoryConfigurer;
 import org.springframework.social.config.annotation.SocialConfigurer;
 import org.springframework.social.facebook.connect.FacebookConnectionFactory;
+import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 
 @Configuration
 public class SocialConfig implements SocialConfigurer {
@@ -14,6 +15,9 @@ public class SocialConfig implements SocialConfigurer {
         cfConfig.addConnectionFactory(new FacebookConnectionFactory(
                 env.getProperty("facebook.appId"),
                 env.getProperty("facebook.appSecret")));
+        cfConfig.addConnectionFactory(new TwitterConnectionFactory(
+                env.getProperty("twitter.consumerKey"),
+                env.getProperty("twitter.consumerSecret")));
     }
 
     @Override

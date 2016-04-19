@@ -1,17 +1,26 @@
 package nl.intratuin.testmarket.controller;
 
-import nl.intratuin.testmarket.dto.*;
-import nl.intratuin.testmarket.service.contract.AccessKeyService;
+import nl.intratuin.testmarket.dto.Credentials;
+import nl.intratuin.testmarket.dto.LoginAndCacheResult;
+import nl.intratuin.testmarket.dto.TransferAccessToken;
+import nl.intratuin.testmarket.dto.TransferMessage;
 import nl.intratuin.testmarket.entity.Customer;
+import nl.intratuin.testmarket.service.contract.AccessKeyService;
 import nl.intratuin.testmarket.service.contract.CustomerService;
+import org.springframework.core.env.Environment;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.User;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.inject.Inject;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 
 @RestController
 @RequestMapping("/customer/")
@@ -53,15 +62,32 @@ public class CustomerController {
     public
     @ResponseBody
     TransferMessage loginTwitter(@RequestBody Credentials credentials) {
-        switch (customerService.loginTwitter(credentials)) {
-            case SUCCESS:
-                return new TransferMessage("Login is successful");
-            case SUCCESSREGISTER:
-                return new TransferMessage("Registration and login is successful.");
-            case ERROR:
-                return new TransferMessage("Server encryption error");
-            default:
-                return new TransferMessage("Wrong Twitter key.");
+        Properties prop = new Properties();
+        try {
+            prop.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
+
+            TwitterTemplate twitterTemplate=new TwitterTemplate(prop.getProperty("twitter.consumerKey"),prop.getProperty("twitter.consumerSecret"),
+                    credentials.getEmail(),credentials.getPassword());
+            RestTemplate restTemplate = twitterTemplate.getRestTemplate();
+
+            String email;
+            try {
+                String response = restTemplate.getForObject("https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true", String.class);
+                email = response.substring(response.indexOf("\"email\":") + 9, response.lastIndexOf("\""));
+            } catch(Exception e){
+                return new TransferMessage("Twitter error.");
+            }
+            switch (customerService.loginTwitter(email)) {
+                case SUCCESS:
+                    return new TransferMessage("Login is successful");
+                case SUCCESSREGISTER:
+                    return new TransferMessage("Registration and login is successful.");
+                default:
+                    return new TransferMessage("Wrong Twitter key.");
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return new TransferMessage("Twitter error.");
         }
     }
 
@@ -119,6 +145,5 @@ public class CustomerController {
 //    public List<TransferAccessKey> checkTwitterAccessToken(@PathVariable String accessToken) {
 //        return service.findAllByCategory(idCategory);
 //    }
-
 }
 

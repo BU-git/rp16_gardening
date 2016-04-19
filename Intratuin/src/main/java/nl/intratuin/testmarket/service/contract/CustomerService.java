@@ -18,7 +18,7 @@ public interface CustomerService {
 
     LoginAndCacheResult login(Credentials credentials);
 
-    ResultLoginWithSocial loginTwitter(Credentials credentials);
+    ResultLoginWithSocial loginTwitter(String email);
 
     ResultLoginWithSocial loginWithFacebook(User profile);
 

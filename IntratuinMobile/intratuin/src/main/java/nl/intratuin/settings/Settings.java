@@ -21,7 +21,7 @@ public class Settings {
 
     private static int connectionTimeout=10000;
 
-    private static String hostLocal="192.168.1.210";//local -- depends on your computer's inner ip
+    private static String hostLocal="192.168.1.23";//local -- depends on your computer's inner ip
     private static String hostBionic="128.0.169.5";//bionic -- do not change
 
     public static boolean usingDeployed() { return useDeployed; }
@@ -48,10 +48,6 @@ public class Settings {
             throw new SignatureException("Failed to generate HMAC : " + e.getMessage());
         }
         return result.substring(0,result.length()-1);
-    }
-    public static String getEncryptedTwitterKey(String key) throws SignatureException{
-        String value=twitter_par1+twitter_par2;
-        return sha1(value,key);
     }
 
     public static int getConnectionTimeout() { return connectionTimeout; }

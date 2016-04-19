@@ -128,7 +128,8 @@
         android:id="@+id/cbRemember"
         android:backgroundTint="#ffffff"
         android:textColor="#ffffff"
-        android:buttonTint="#ffffff" />
+        android:buttonTint="#ffffff"
+        android:checked="true" />
 
     <Button
         android:id="@+id/bLogin"
