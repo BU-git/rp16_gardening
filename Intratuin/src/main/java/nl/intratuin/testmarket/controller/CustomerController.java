@@ -7,7 +7,6 @@ import nl.intratuin.testmarket.dto.TransferMessage;
 import nl.intratuin.testmarket.entity.Customer;
 import nl.intratuin.testmarket.service.contract.AccessKeyService;
 import nl.intratuin.testmarket.service.contract.CustomerService;
-import org.springframework.core.env.Environment;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.User;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.inject.Inject;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 
@@ -103,7 +100,7 @@ public class CustomerController {
             case SUCCESSREGISTER:
                 return new TransferMessage("Registration with Facebook is successful");
             default:
-                return new TransferMessage("to successfully login we need your email");
+                return new TransferMessage("We need your email to perform login");
         }
     }
 

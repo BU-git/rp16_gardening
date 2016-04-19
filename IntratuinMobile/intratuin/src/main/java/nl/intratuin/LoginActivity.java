@@ -211,7 +211,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 if (respondMessage.getMessage().equals(LOGIN_SUCCESS)) {
                     App.getAuthManager().loginAndCache(AuthManager.PREF_FACEBOOK, accessToken.getAccessToken());
                     Toast.makeText(LoginActivity.this, App.getAuthManager().getAccessTokenFacebook(), Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(LoginActivity.this, SearchActivity.class));
+                    startActivity(new Intent(LoginActivity.this, WebActivity.class));
                 }
             }
 
