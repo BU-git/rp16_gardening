@@ -29,7 +29,6 @@ import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.net.URI;
@@ -277,6 +276,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         ef.show(getSupportFragmentManager(), "Intratuin");
                     }
                 }
+
+
                 break;
 
             case R.id.bRegister:
