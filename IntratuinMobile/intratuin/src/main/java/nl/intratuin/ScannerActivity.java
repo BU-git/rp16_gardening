@@ -23,7 +23,8 @@ public class ScannerActivity extends AppCompatActivity implements ScanditSDKOnSc
         setContentView(R.layout.activity_scanner);
 
         ScanditSDKScanSettings settings = ScanditSDKScanSettings.getDefaultSettings();
-        final ScanditSDK.Symbology[] symbologies = new ScanditSDK.Symbology[] {ScanditSDK.Symbology.CODE11, ScanditSDK.Symbology.EAN13, ScanditSDK.Symbology.UPCE, ScanditSDK.Symbology.UPC12, ScanditSDK.Symbology.QR};
+        final ScanditSDK.Symbology[] symbologies = new ScanditSDK.Symbology[] {ScanditSDK.Symbology.CODE11,
+                ScanditSDK.Symbology.EAN13, ScanditSDK.Symbology.UPCE, ScanditSDK.Symbology.UPC12, ScanditSDK.Symbology.QR};
         settings.enableSymbologies(symbologies);
 
         // Instantiate the barcode picker by using the settings defined above.

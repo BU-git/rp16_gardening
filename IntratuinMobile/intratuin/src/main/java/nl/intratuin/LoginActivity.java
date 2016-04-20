@@ -32,7 +32,6 @@ import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.net.URI;
-import java.security.SignatureException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -43,16 +42,13 @@ import io.fabric.sdk.android.Fabric;
 import nl.intratuin.dto.Credentials;
 import nl.intratuin.dto.LoginAndCacheResult;
 import nl.intratuin.dto.TransferAccessToken;
+import nl.intratuin.dto.TransferMessage;
 import nl.intratuin.handlers.AuthManager;
 import nl.intratuin.handlers.CacheCustomerCredentials;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.Settings;
-
-import static nl.intratuin.settings.Settings.sha1;
-
-import nl.intratuin.dto.TransferMessage;
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
     public static final List<String> PERMISSIONS = Arrays.asList("email");
@@ -251,7 +247,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     crd.setEmail(etEmailAddress.getText().toString());
                     crd.setFlagToCache(cbRemember.isChecked());
                     try {
-                        crd.setPassword(sha1(etPassword.getText().toString(), crd.getEmail()));
+                        crd.setPassword(etPassword.getText().toString());
 
                         AsyncTask<Credentials, Void, LoginAndCacheResult> jsonRespond =
                                 new RequestResponse<Credentials, LoginAndCacheResult>(loginUri, 3,
@@ -270,7 +266,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                             .show(getSupportFragmentManager(), "Intratuin");
                                 }}
                         }
-                    } catch (SignatureException | InterruptedException | ExecutionException e) {
+                    } catch (InterruptedException | ExecutionException e) {
                         Log.e("Error", e.getMessage() + ": ", e);
                         ErrorFragment ef = ErrorFragment.newError("Password encryption error!");
                         ef.show(getSupportFragmentManager(), "Intratuin");

@@ -16,18 +16,14 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 
 import java.net.URI;
-import java.security.SignatureException;
 import java.sql.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import nl.intratuin.dto.Customer;
 import nl.intratuin.dto.TransferMessage;
-import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
-
-import static nl.intratuin.settings.Settings.sha1;
 
 public class RegisterActivity extends AppCompatActivity implements OnClickListener {
 
@@ -112,14 +108,9 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                         cust.setGender(1);
                     else
                         cust.setGender(0);
-                    try {
-                        cust.setPassword(sha1(etPassword.getText().toString(), cust.getEmail()));
-                        new RequestResponse<Customer, TransferMessage>(registerUri, 3, TransferMessage.class,
+                    cust.setPassword(etPassword.getText().toString());
+                    new RequestResponse<Customer, TransferMessage>(registerUri, 3, TransferMessage.class,
                                 getSupportFragmentManager()).execute(cust);
-                    } catch(SignatureException e){
-                        ErrorFragment ef= ErrorFragment.newError("Password encryption error!");
-                        ef.show(getSupportFragmentManager(), "Intratuin");
-                    }
                 }
                 break;
 
