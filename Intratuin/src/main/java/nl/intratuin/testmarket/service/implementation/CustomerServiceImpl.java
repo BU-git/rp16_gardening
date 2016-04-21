@@ -53,7 +53,10 @@ public class CustomerServiceImpl implements CustomerService {
         Integer foundCustomerId = customerDao.findByEmail(emailToLogin);
         if (foundCustomerId != null) {
             Customer customerToLogin = customerDao.findById(foundCustomerId);
-            if (customerToLogin.getPassword().equals(credentials.getPassword())) {
+            if (customerToLogin.getPassword()==null){
+                return new LoginAndCacheResult("Your prifile does not contain password. " +
+                        "Log in using social networks and set password in private page", null);
+            } else if (customerToLogin.getPassword().equals(credentials.getPassword())) {
                 if (!credentials.getFlagToCache()) {
                     return new LoginAndCacheResult("Login is successful", null);
                 } else {

@@ -59,6 +59,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     public static final List<String> PERMISSIONS = Arrays.asList("email");
     public static final String LOGIN_SUCCESS = "Login is successful";
     public static final String LOGIN_ERROR = "Sorry, your username and password are incorrect - please try again";
+    public static final String LOGIN_NO_PASS = "Your prifile does not contain password. " +
+            "Log in using social networks and set password in private page";
 
     CallbackManager callbackManager;
 
@@ -289,7 +291,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             } else {
                                 if (respondToLogin.getMessage().equals(LOGIN_SUCCESS))
                                     startActivity(new Intent(this, WebActivity.class));
-                                else {
+                                else if (respondToLogin.getMessage().equals(LOGIN_NO_PASS)){
+                                    ErrorFragment.newError(LOGIN_NO_PASS)
+                                            .show(getSupportFragmentManager(), "Intratuin");
+                                } else {
                                     ErrorFragment.newError(LOGIN_ERROR)
                                             .show(getSupportFragmentManager(), "Intratuin");
                                 }}
