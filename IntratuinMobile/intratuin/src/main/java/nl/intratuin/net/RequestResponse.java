@@ -4,6 +4,9 @@ import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -35,8 +38,7 @@ public class RequestResponse<T, V> extends AsyncTask<T, Void, V> {
     protected V doInBackground(T... param) {
         for (int i = 0; i < retry; i++) {
             try {
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                RestTemplate restTemplate = new RestTemplate(true);
                 SimpleClientHttpRequestFactory rf =
                         (SimpleClientHttpRequestFactory) restTemplate.getRequestFactory();
                 rf.setReadTimeout(Settings.getConnectionTimeout());

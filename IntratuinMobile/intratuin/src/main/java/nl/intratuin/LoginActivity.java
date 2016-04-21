@@ -29,11 +29,13 @@ import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
 import java.net.URI;
-import java.security.SignatureException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -42,7 +44,7 @@ import java.util.regex.Pattern;
 
 import io.fabric.sdk.android.Fabric;
 import nl.intratuin.dto.Credentials;
-import nl.intratuin.dto.LoginAndCacheResult;
+import nl.intratuin.dto.ResponseAccessToken;
 import nl.intratuin.dto.TransferAccessToken;
 import nl.intratuin.handlers.AuthManager;
 import nl.intratuin.handlers.CacheCustomerCredentials;
@@ -50,8 +52,6 @@ import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.Settings;
-
-import static nl.intratuin.settings.Settings.sha1;
 
 import nl.intratuin.dto.TransferMessage;
 
@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CacheCustomerCredentials.cache(this); //Check cache
+//        CacheCustomerCredentials.cache(this); //Check cache
 
         getSupportActionBar().hide();
         TwitterAuthConfig authConfig = Settings.getTwitterConfig();
@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         });
 
         etPassword = (EditText) findViewById(R.id.etPassword);
-        etPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+       /* etPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 pattern = Pattern.compile(PASSWORD_PATTERN);
@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     showPassError();
                 }
             }
-        });
+        });*/
 
         bLogin = (Button) findViewById(R.id.bLogin);
         bRegister = (Button) findViewById(R.id.bRegister);
@@ -244,7 +244,30 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bLogin:
-                LoginAndCacheResult respondToLogin = new LoginAndCacheResult();
+                ResponseAccessToken responseAccessToken = new ResponseAccessToken();
+
+                MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+                map.add("grant_type", "password");
+                map.add("client_id", etEmailAddress.getText().toString());
+                map.add("client_secret", etPassword.getText().toString());
+                map.add("username", etEmailAddress.getText().toString());
+                map.add("password", etPassword.getText().toString());
+//
+                try {
+                    loginUri = new URI("http://api.weorder.at/api/oauth/token");
+                    if (loginUri != null) {
+                        AsyncTask<MultiValueMap<String, String>, Void, ResponseAccessToken> jsonRespond =
+                                new RequestResponse<MultiValueMap<String, String>, ResponseAccessToken>(loginUri, 3,
+                                        ResponseAccessToken.class, getSupportFragmentManager()).execute(map);
+                        responseAccessToken = jsonRespond.get();
+                        if(responseAccessToken != null){
+                            Toast.makeText(this, responseAccessToken.getToken_type() + ", your key: " + responseAccessToken.getAccess_token(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                } catch (InterruptedException | ExecutionException | URISyntaxException e) {
+                    e.printStackTrace();
+                }
+               /* LoginAndCacheResult respondToLogin = new LoginAndCacheResult();
                 Credentials crd = new Credentials();
                 loginUri = new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/login");
 
@@ -276,7 +299,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         ErrorFragment ef = ErrorFragment.newError("Password encryption error!");
                         ef.show(getSupportFragmentManager(), "Intratuin");
                     }
-                }
+                }*/
+
                 break;
 
             case R.id.bRegister:
