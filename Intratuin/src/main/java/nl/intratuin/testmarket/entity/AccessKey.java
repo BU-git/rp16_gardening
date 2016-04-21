@@ -17,6 +17,9 @@ public class AccessKey {
     @Column(name = "ACCESS_KEY")
     private String accessKey;
 
+    @Column(name = "REFRESH_ACCESS_KEY")
+    private String refreshAccessKey;
+
     @Column(name = "EXPIRE_DATE")
     private Date expireDate;
 
