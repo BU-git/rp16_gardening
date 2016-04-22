@@ -28,4 +28,8 @@ public class ResponseAccessToken {
         public void setExpires_in(int expires_in) {
             this.expires_in = expires_in;
         }
+
+        public String toString(){
+            return access_token;
+        }
 }

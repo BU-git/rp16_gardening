@@ -1,13 +1,11 @@
 package nl.intratuin.testmarket.service.contract;
 
-import nl.intratuin.testmarket.dto.Credentials;
-import nl.intratuin.testmarket.dto.LoginAndCacheResult;
-import nl.intratuin.testmarket.dto.ResultLoginWithSocial;
+import nl.intratuin.testmarket.dto.ResponseAccessToken;
 import nl.intratuin.testmarket.entity.Customer;
 import org.springframework.social.facebook.api.User;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
-import java.util.Properties;
 
 public interface CustomerService {
     Customer findById(int id);
@@ -16,11 +14,11 @@ public interface CustomerService {
 
     boolean addCustomer(Customer customer);
 
-    LoginAndCacheResult login(Credentials credentials);
+    ResponseAccessToken login(MultiValueMap<String, String> header);
 
-    ResultLoginWithSocial loginTwitter(String email);
+    ResponseAccessToken loginTwitter(String email);
 
-    ResultLoginWithSocial loginWithFacebook(User profile);
+    ResponseAccessToken loginWithFacebook(User profile);
 
     Integer getCustomerIdByFacebookProfile(User profile);
 }

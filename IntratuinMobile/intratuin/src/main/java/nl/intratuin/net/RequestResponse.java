@@ -4,15 +4,12 @@ import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 
+import nl.intratuin.dto.ResponseAccessToken;
 import nl.intratuin.dto.TransferMessage;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.settings.Settings;
@@ -53,9 +50,9 @@ public class RequestResponse<T, V> extends AsyncTask<T, Void, V> {
 
     @Override
     protected void onPostExecute(V msg){
-            ErrorFragment ef= ErrorFragment.newError(msg==null?"Request error!":msg.toString());
-            if(msg==null || (msg!=null && msg.getClass()==TransferMessage.class &&
-                    msg.toString().indexOf("success")==-1))
-                ef.show(fragmentManager, "Intratuin");
+            //ErrorFragment ef= ErrorFragment.newError(msg==null?"Request error!":msg.toString());
+            //if(msg==null || (msg!=null && ((msg.getClass()==TransferMessage.class && msg.toString().indexOf("success")==-1) ||
+            //        (msg.getClass()==ResponseAccessToken.class && ((ResponseAccessToken)msg).getToken_type().equals("error")))))
+            //    ef.show(fragmentManager, "Intratuin");
     }
 }

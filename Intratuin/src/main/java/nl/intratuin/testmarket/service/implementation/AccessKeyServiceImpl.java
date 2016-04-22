@@ -1,6 +1,7 @@
 package nl.intratuin.testmarket.service.implementation;
 
 import nl.intratuin.testmarket.dao.contract.AccessKeyDao;
+import nl.intratuin.testmarket.entity.AccessKey;
 import nl.intratuin.testmarket.service.contract.AccessKeyService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,11 @@ public class AccessKeyServiceImpl implements AccessKeyService{
 
     public Integer getCustomerIdByAccessKey(String accessKey){
         return accessKeyDao.getCustomerIdByAccessKey(accessKey);
+    }
+
+    @Transactional
+    public void save(AccessKey accessKey){
+        accessKeyDao.save(accessKey);
     }
 }
 
