@@ -1,5 +1,6 @@
 package nl.intratuin.net;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -9,9 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 
-import nl.intratuin.dto.ResponseAccessToken;
-import nl.intratuin.dto.TransferMessage;
-import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.settings.Settings;
 
 /**
@@ -21,8 +19,9 @@ public class RequestResponse<T, V> extends AsyncTask<T, Void, V> {
     private URI uri;
     private int retry;
     Class<V> responseType;
+    Context context;
     private FragmentManager fragmentManager;
-    public RequestResponse(URI uri, int retry, Class<V> responseType, FragmentManager fragmentManager) {
+    public RequestResponse(URI uri, int retry, Class<V> responseType, FragmentManager fragmentManager, Context context) {
         super();
         this.uri=uri;
         this.responseType = responseType;
@@ -30,6 +29,7 @@ public class RequestResponse<T, V> extends AsyncTask<T, Void, V> {
             this.retry=1;
         else this.retry=retry;
         this.fragmentManager=fragmentManager;
+        this.context=context;
     }
     @Override
     protected V doInBackground(T... param) {
@@ -38,21 +38,13 @@ public class RequestResponse<T, V> extends AsyncTask<T, Void, V> {
                 RestTemplate restTemplate = new RestTemplate(true);
                 SimpleClientHttpRequestFactory rf =
                         (SimpleClientHttpRequestFactory) restTemplate.getRequestFactory();
-                rf.setReadTimeout(Settings.getConnectionTimeout());
-                rf.setConnectTimeout(Settings.getConnectionTimeout());
+                rf.setReadTimeout(Settings.getConnectionTimeout(context));
+                rf.setConnectTimeout(Settings.getConnectionTimeout(context));
                 return (V) restTemplate.postForObject(uri, param[0], responseType);
             } catch (Exception e) {
                 Log.e("Error: ", e.getMessage(), e);
             }
         }
         return null;
-    }
-
-    @Override
-    protected void onPostExecute(V msg){
-            //ErrorFragment ef= ErrorFragment.newError(msg==null?"Request error!":msg.toString());
-            //if(msg==null || (msg!=null && ((msg.getClass()==TransferMessage.class && msg.toString().indexOf("success")==-1) ||
-            //        (msg.getClass()==ResponseAccessToken.class && ((ResponseAccessToken)msg).getToken_type().equals("error")))))
-            //    ef.show(fragmentManager, "Intratuin");
     }
 }

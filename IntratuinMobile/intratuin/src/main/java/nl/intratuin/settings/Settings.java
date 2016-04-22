@@ -1,28 +1,45 @@
 package nl.intratuin.settings;
 
+import android.content.Context;
+
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+
+import nl.intratuin.R;
 
 /**
  * Created by Иван on 19.03.2016.
  */
 public class Settings {
-    // Note: Parameters should be obfuscated in your source code before shipping.
-    private static final String twitter_par1 = "CpdWZOr27su9Vduhipt3XVUgD";
-    private static final String twitter_par2 = "pcOrskD4hWcUGxi5n3nMvtL3bArhIuyj2pmiMCQ7E9jj71wH5w";
-
-    //private static boolean useDeployed = true;
     private static BuildType buildType = BuildType.DEPLOYED;
 
-    private static int connectionTimeout=10000;
-
-    private static String hostLocal="192.168.1.23";//local -- depends on your computer's inner ip
-    private static String hostBionic="128.0.169.5";//bionic -- do not change
-
-    public static BuildType getBuildType() { return buildType; }
-    public static String getHost(){ return buildType==BuildType.DEPLOYED?hostBionic:hostLocal;}
-    public static TwitterAuthConfig getTwitterConfig() {
-        return new TwitterAuthConfig(twitter_par1,twitter_par2);
+    public static BuildType getBuildType(Context context) {
+        String type=context.getString(R.string.build_type);
+        return BuildType.valueOf(type);
+    }
+    public static Mainscreen getMainscreen(Context context) {
+        String screen=context.getString(R.string.mainscreen);
+        return Mainscreen.valueOf(screen);
+    }
+    public static String getHost(Context context){
+        BuildType type=getBuildType(context);
+        switch (type){
+            case DEPLOYED:
+                return context.getString(R.string.host_deployed);
+            case API:
+                return context.getString(R.string.host_api);
+            case DEMOAPI:
+                return context.getString(R.string.host_demoapi);
+            default:
+                return context.getString(R.string.host_local);
+        }
+    }
+    public static TwitterAuthConfig getTwitterConfig(Context context) {
+        return new TwitterAuthConfig(context.getString(R.string.twitter_customer_key)
+                ,context.getString(R.string.twitter_customer_secret));
     }
 
-    public static int getConnectionTimeout() { return connectionTimeout; }
+    public static int getConnectionTimeout(Context context) {
+        String timeout=context.getString(R.string.connection_timeout);
+        return Integer.parseInt(timeout);
+    }
 }

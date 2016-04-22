@@ -1,5 +1,6 @@
 package nl.intratuin.net;
 
+import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.widget.TextView;
 
@@ -8,6 +9,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import nl.intratuin.R;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.settings.BuildType;
 import nl.intratuin.settings.Settings;
@@ -16,24 +18,114 @@ import nl.intratuin.settings.Settings;
  * Created by Иван on 25.03.2016.
  */
 public class UriConstructor {
+    private Context context;
     private FragmentManager fragmentManager;
-    public UriConstructor(FragmentManager fragmentManager){
+    public UriConstructor(Context context, FragmentManager fragmentManager){
+        this.context=context;
         this.fragmentManager=fragmentManager;
     }
-    public URI makeFullURI(String localURL){
+    public URI makeURI(String action){
         try {
-            String finLocalUrl=localURL;
-            if(Settings.getBuildType()== BuildType.DEPLOYED)
-                finLocalUrl="/Intratuin"+finLocalUrl;
-            int port=Settings.getBuildType()== BuildType.DEPLOYED?8888:8080;
-            return new URL("http", Settings.getHost(),port,finLocalUrl).toURI();
-        } catch (MalformedURLException e){
-            ErrorFragment ef= ErrorFragment.newError("Wrong URL format!");
-            ef.show(fragmentManager, "Intratuin");
-        } catch (URISyntaxException e){
-            ErrorFragment ef= ErrorFragment.newError("Wrong URI format!");
-            ef.show(fragmentManager, "Intratuin");
+            switch (action) {
+                case "login":
+                    switch (Settings.getBuildType(context)){
+                        case DEPLOYED:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_deployed))
+                                    ,"/Intratuin"+context.getString(R.string.login_server)).toURI();
+                        case API:
+                        case DEMOAPI:
+                            return new URL("http",Settings.getHost(context),context.getString(R.string.login_api)).toURI();
+                        default:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_local))
+                                    ,context.getString(R.string.login_server)).toURI();
+                    }
+                case "registration":
+                    switch (Settings.getBuildType(context)){
+                        case DEPLOYED:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_deployed))
+                                    ,"/Intratuin"+context.getString(R.string.registration_server)).toURI();
+                        case API:
+                        case DEMOAPI:
+                            return new URL("http",Settings.getHost(context),context.getString(R.string.registration_api)).toURI();
+                        default:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_local))
+                                    ,context.getString(R.string.registration_server)).toURI();
+                    }
+                case "twitterLogin":
+                    switch (Settings.getBuildType(context)){
+                        case DEPLOYED:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_deployed))
+                                    ,"/Intratuin"+context.getString(R.string.twitter_login)).toURI();
+                        case API:
+                        case DEMOAPI:
+                            return null;
+                        default:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_local))
+                                    ,context.getString(R.string.twitter_login)).toURI();
+                    }
+                case "facebookLogin":
+                    switch (Settings.getBuildType(context)){
+                        case DEPLOYED:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_deployed))
+                                    ,"/Intratuin"+context.getString(R.string.facebook_login)).toURI();
+                        case API:
+                        case DEMOAPI:
+                            return null;
+                        default:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_local))
+                                    ,context.getString(R.string.facebook_login)).toURI();
+                    }
+                case "categoryList":
+                    switch (Settings.getBuildType(context)){
+                        case DEPLOYED:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_deployed))
+                                    ,"/Intratuin"+context.getString(R.string.category_list)).toURI();
+                        case API:
+                        case DEMOAPI:
+                            return null;
+                        default:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_local))
+                                    ,context.getString(R.string.category_list)).toURI();
+                    }
+                case "productSearch":
+                    switch (Settings.getBuildType(context)){
+                        case DEPLOYED:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_deployed))
+                                    ,"/Intratuin"+context.getString(R.string.product_search)).toURI();
+                        case API:
+                        case DEMOAPI:
+                            return null;
+                        default:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_local))
+                                    ,context.getString(R.string.product_search)).toURI();
+                    }
+                default:
+                    return null;
+            }
+        } catch(MalformedURLException | URISyntaxException e){
+            return null;
         }
-        return null;
+    }
+    public URI makeURI(String action, String par){
+        try {
+            switch (action) {
+                case "productsInCategory":
+                    switch (Settings.getBuildType(context)){
+                        case DEPLOYED:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_deployed))
+                                    ,"/Intratuin"+context.getString(R.string.products_in_category)+par).toURI();
+                        case API:
+                        case DEMOAPI:
+                            return null;
+                        default:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_local))
+                                    ,context.getString(R.string.products_in_category)+par).toURI();
+                    }
+                default:
+                    return null;
+            }
+        } catch(MalformedURLException | URISyntaxException e){
+            return null;
+        }
     }
 }

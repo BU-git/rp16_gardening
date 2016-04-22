@@ -1,7 +1,42 @@
 <resources>
     <string name="app_name">Intratuin</string>
+
+    #facebook
     <string name="facebook_app_id">1720162671574425</string>
     <string name="login_facebook">Log in with Facebook</string>
+
+    #twitter
+    <string name="twitter_customer_key">CpdWZOr27su9Vduhipt3XVUgD</string>
+    <string name="twitter_customer_secret">pcOrskD4hWcUGxi5n3nMvtL3bArhIuyj2pmiMCQ7E9jj71wH5w</string>
+
+    <string name="build_type">DEPLOYED</string>
+    <string name="mainscreen">WEB</string>
+    <string name="connection_timeout">10000</string>
+
+    #hosts
+    <string name="host_local">192.168.1.23</string>
+    <string name="host_deployed">128.0.169.5</string>
+    <string name="host_api">api.weorder.at</string>
+    <string name="host_demoapi">demo.weorder.at</string>
+
+    #ports
+    <string name="port_local">8080</string>
+    <string name="port_deployed">8888</string>
+
+    #addresses
+    #login
+    <string name="login_server">/customer/login</string>
+    <string name="login_api">/api/oauth/token</string>
+    #registration
+    <string name="registration_server">/customer/add</string>
+    <string name="registration_api">/api/v1/users</string>
+    #social login
+    <string name="twitter_login">/customer/loginTwitter</string>
+    <string name="facebook_login">/customer/loginFacebook</string>
+    #other
+    <string name="products_in_category">/category/list/byCategory/</string>
+    <string name="category_list">/category/all</string>
+    <string name="product_search">/product/search/{name}</string>
 
     <string name="recover">Recover password</string>
     <string name="register">Register</string>
@@ -38,6 +73,8 @@
     <string name="search">Search...</string>
     <string name="loading">Loading</string>
     <string name="scanning">Scanning</string>
+
+
 
 
     <string-array name="size">

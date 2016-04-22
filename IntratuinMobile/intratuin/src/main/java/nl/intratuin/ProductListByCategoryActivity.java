@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,11 +57,10 @@ public class ProductListByCategoryActivity extends AppCompatActivity {
         return null;
     }
     private void generateProductListByCategory(String idCategory) {
-        String uri = new UriConstructor(((FragmentActivity) this).getSupportFragmentManager())
-                .makeFullURI("/product").toString() + "/list/byCategory/{idCategory}";
-//        String uri = BuildConfig.API_HOME + "product/list/byCategory/{idCategory}";
+        URI uri = new UriConstructor(this, getSupportFragmentManager())
+                .makeURI("productsInCategory", idCategory);
         RequestResponseManager<Product[]> managerLoader = new RequestResponseManager<>(this, Product[].class);
-        List<Product> allProductByCategory = Arrays.asList(managerLoader.loaderFromWebService(uri, idCategory));
+        List<Product> allProductByCategory = Arrays.asList(managerLoader.loaderFromWebService(uri.toString(), idCategory));
         if (allProductByCategory != null) {
             ProductListAdapter productListAdapter = new ProductListAdapter(ProductListByCategoryActivity.this, allProductByCategory);
             productByCategoryListView.setAdapter(productListAdapter);

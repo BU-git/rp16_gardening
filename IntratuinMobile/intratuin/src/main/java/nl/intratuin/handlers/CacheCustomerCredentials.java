@@ -11,10 +11,11 @@ import nl.intratuin.dto.LoginAndCacheResult;
 import nl.intratuin.net.UriConstructor;
 
 public class CacheCustomerCredentials {
+    /*
     public static void cache(Context context) {
         String accessKey = App.getAuthManager().getAccessKeyCredentials();
         if (accessKey != null) {
-            String loginByCache = new UriConstructor(((FragmentActivity) context).getSupportFragmentManager())
+            String loginByCache = new UriConstructor(context, ((FragmentActivity) context).getSupportFragmentManager())
                     .makeFullURI("/customer").toString() + "/confirmCredentialsAccessKey/{accessKey}";
 //            String loginByCache = BuildConfig.API_HOME + "customer/confirmCredentialsAccessKey/{accessKey}";
             RequestResponseManager<LoginAndCacheResult> managerLoader = new RequestResponseManager<>(context, LoginAndCacheResult.class);
@@ -59,5 +60,5 @@ public class CacheCustomerCredentials {
     }
 
     private static void twitterCache(Context context) {
-    }
+    }*/
 }

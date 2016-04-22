@@ -68,7 +68,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
 
         setListeners();
 
-        registerUri=new UriConstructor(getSupportFragmentManager()).makeFullURI("/customer/add");
+        registerUri=new UriConstructor(RegisterActivity.this, getSupportFragmentManager()).makeURI("registration");
     }
 
 
@@ -110,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                         cust.setGender(0);
                     cust.setPassword(etPassword.getText().toString());
                     new RequestResponse<Customer, TransferMessage>(registerUri, 3, TransferMessage.class,
-                                getSupportFragmentManager()).execute(cust);
+                                getSupportFragmentManager(), this).execute(cust);
                 }
                 break;
 

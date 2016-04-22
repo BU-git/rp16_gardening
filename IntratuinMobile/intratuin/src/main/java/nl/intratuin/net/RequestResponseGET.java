@@ -1,5 +1,6 @@
 package nl.intratuin.net;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -16,8 +17,9 @@ public class RequestResponseGET<T, V> extends AsyncTask<T, Void, V> {
     private int retry;
     Class<V> responseType;
     private FragmentManager fragmentManager;
+    Context context;
 
-    public RequestResponseGET(String uri, int retry, Class<V> responseType, FragmentManager fragmentManager) {
+    public RequestResponseGET(String uri, int retry, Class<V> responseType, FragmentManager fragmentManager, Context context) {
         super();
         this.uri = uri;
         this.responseType = responseType;
@@ -25,6 +27,7 @@ public class RequestResponseGET<T, V> extends AsyncTask<T, Void, V> {
             this.retry = 1;
         else this.retry = retry;
         this.fragmentManager = fragmentManager;
+        this.context=context;
     }
 
     @Override
@@ -35,8 +38,8 @@ public class RequestResponseGET<T, V> extends AsyncTask<T, Void, V> {
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 SimpleClientHttpRequestFactory rf =
                         (SimpleClientHttpRequestFactory) restTemplate.getRequestFactory();
-                rf.setReadTimeout(Settings.getConnectionTimeout());
-                rf.setConnectTimeout(Settings.getConnectionTimeout());
+                rf.setReadTimeout(Settings.getConnectionTimeout(context));
+                rf.setConnectTimeout(Settings.getConnectionTimeout(context));
                 return (V) restTemplate.getForObject(uri, responseType, param);
             } catch (Exception e) {
                 Log.e("Error: ", e.getMessage(), e);

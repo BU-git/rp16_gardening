@@ -23,7 +23,7 @@ public class RequestResponseManager<T> {
 
         AsyncTask<String, Void, T> loaderCategoryResult =
                 new RequestResponseGET(url, 1, responseType,
-                        ((FragmentActivity) context).getSupportFragmentManager()).execute(paramQuery);
+                        ((FragmentActivity) context).getSupportFragmentManager(), context).execute(paramQuery);
 
         try {
             loaderResult = loaderCategoryResult.get();

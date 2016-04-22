@@ -1,24 +1,17 @@
 package nl.intratuin;
 
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Parcelable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -87,11 +80,11 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
     }
 
     private List<TreeNode> generateCategoryHierarchy() {
-        String uri = new UriConstructor(((FragmentActivity) this).getSupportFragmentManager())
-                .makeFullURI("/category").toString() + "/all";
-//            String uri = BuildConfig.API_HOST + "category/all";
+        URI uri = new UriConstructor(this, ((FragmentActivity) this).getSupportFragmentManager())
+                .makeURI("categoryList");
+
         RequestResponseManager<Category[]> managerLoader = new RequestResponseManager(this, Category[].class);
-        List<Category> allCategory = Arrays.asList(managerLoader.loaderFromWebService(uri, null));
+        List<Category> allCategory = Arrays.asList(managerLoader.loaderFromWebService(uri.toString(), null));
 
         return buildArrTreeNode(allCategory, 0);
     }
