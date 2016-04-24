@@ -1,6 +1,8 @@
 package nl.intratuin.testmarket.entity;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ACCESSKEY")
@@ -19,9 +21,8 @@ public class AccessKey {
     @Column(name = "REFRESH_ACCESS_KEY")
     private String refreshAccessKey;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "EXPIRE_DATE")
-    private java.util.Date expireDate;
+    private Timestamp expireDate;
 
     public String getAccessKey() {
         return accessKey;
@@ -50,12 +51,12 @@ public class AccessKey {
         this.customerId = customerId;
     }
 
-    public java.util.Date getExpireDate() {
-        return expireDate;
+    public LocalDateTime getExpireDate() {
+        return expireDate.toLocalDateTime();
     }
 
-    public void setExpireDate(java.util.Date expireDate) {
-        this.expireDate = expireDate;
+    public void setExpireDate(LocalDateTime expireDate) {
+        this.expireDate = Timestamp.valueOf(expireDate);
     }
 
     public String getRefreshAccessKey() {

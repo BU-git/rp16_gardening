@@ -22,14 +22,12 @@ public class AccessKeyImpl implements AccessKeyDao {
 
     private AccessKey getNonDeprecatedKey(String accessKey){
         LocalDateTime currentDate = LocalDateTime.now();
-        Timestamp ts = new Timestamp(currentDate.getYear(),currentDate.getMonthValue(),currentDate.getDayOfMonth(),
-                currentDate.getHour(),currentDate.getMinute(),currentDate.getSecond(),0);
         TypedQuery<AccessKey> queryFindByAccessKey = em.createQuery("SELECT AK FROM AccessKey AK WHERE AK.accessKey = :regex",
                 AccessKey.class);
         queryFindByAccessKey.setParameter("regex", accessKey);
         try{
             AccessKey accessKeyEntity = queryFindByAccessKey.getSingleResult();
-            if (accessKeyEntity != null && ts.compareTo(accessKeyEntity.getExpireDate())<0) {
+            if (accessKeyEntity != null && currentDate.isBefore(accessKeyEntity.getExpireDate())) {
                 return accessKeyEntity;
             } else {
                 return null;
@@ -60,8 +58,7 @@ public class AccessKeyImpl implements AccessKeyDao {
         AccessKey keyEntity=getNonDeprecatedKey(accessToken);
         if(keyEntity!=null && keyEntity.getRefreshAccessKey()!=null && keyEntity.getRefreshAccessKey().equals(refreshToken)) {
             LocalDateTime expireLocalDate = LocalDateTime.now().plusSeconds(expire);
-            keyEntity.setExpireDate(new java.util.Date(expireLocalDate.getYear()-1900,expireLocalDate.getMonthValue()-1,expireLocalDate.getDayOfMonth(),
-                    expireLocalDate.getHour(),expireLocalDate.getMinute(),expireLocalDate.getSecond()));
+            keyEntity.setExpireDate(expireLocalDate);
             em.persist(keyEntity);
             return true;
         }

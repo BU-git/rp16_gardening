@@ -36,7 +36,7 @@
     #other
     <string name="products_in_category">/category/list/byCategory/</string>
     <string name="category_list">/category/all</string>
-    <string name="product_search">/product/search/{name}</string>
+    <string name="product_search">/product/search/</string>
 
     <string name="recover">Recover password</string>
     <string name="register">Register</string>

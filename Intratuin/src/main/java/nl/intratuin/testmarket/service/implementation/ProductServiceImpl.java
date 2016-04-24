@@ -35,4 +35,9 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findAllByCategory(int category) {
         return productDao.findAllByCategory(category);
     }
+
+    @Override
+    public int findByBarcode(long barcode) {
+        return productDao.findByBarcode(barcode);
+    }
 }
