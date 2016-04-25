@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.List;
 import nl.intratuin.dto.Category;
 import nl.intratuin.dto.Product;
 import nl.intratuin.dto.TreeNode;
+import nl.intratuin.handlers.CacheCustomerCredentials;
 import nl.intratuin.handlers.HierarchyCategoryAdapter;
 import nl.intratuin.handlers.ProductAutoCompleteAdapter;
 import nl.intratuin.handlers.RequestResponseManager;
@@ -42,6 +44,12 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_search);
+
+//show access token
+        final Bundle extra = getIntent().getExtras();
+        if (extra != null) {
+            Toast.makeText(this, "ACCESS TOKEN: " + extra.getString(CacheCustomerCredentials.ACCESS_TOKEN), Toast.LENGTH_LONG).show();
+        }
 
         ibBarcode = (ImageButton) findViewById(R.id.ibBarcode);
         ibMan = (ImageButton) findViewById(R.id.ibMan);
@@ -72,9 +80,9 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Product product = (Product) parent.getItemAtPosition(position);
 
-                Intent productPageIntent = new Intent(SearchActivity.this, ProductDetailsPageActivity.class);
-                productPageIntent.putExtra(PRODUCT_SEARCH, product);
-                startActivity(productPageIntent);
+                    Intent productPageIntent = new Intent(SearchActivity.this, ProductDetailsPageActivity.class);
+                    productPageIntent.putExtra(PRODUCT_SEARCH, product);
+                    startActivity(productPageIntent);
             }
         });
     }

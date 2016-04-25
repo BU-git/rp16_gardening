@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
+import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -13,52 +15,59 @@ import java.net.URI;
 import java.util.concurrent.ExecutionException;
 
 import nl.intratuin.App;
+import nl.intratuin.SearchActivity;
 import nl.intratuin.WebActivity;
-import nl.intratuin.dto.ResponseAccessToken;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
+import nl.intratuin.settings.Mainscreen;
+import nl.intratuin.settings.Settings;
 
 public class CacheCustomerCredentials {
+    public static final String ACCESS_TOKEN = "accessToken";
 
     public static void cache(Context context) {
         String username = App.getAuthManager().getAccessKeyUsername();
         String password = App.getAuthManager().getAccessKeyPassword();
         if (username != null && password != null) {
-            ResponseAccessToken responseAccessToken = new ResponseAccessToken();
             URI uri = new UriConstructor(context, ((FragmentActivity) context).getSupportFragmentManager()).makeURI("login");
-            MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-            map.add("grant_type", "password");
-            map.add("client_id", username);
-            map.add("client_secret", password);
-            map.add("username", username);
-            map.add("password", password);
-
-            AsyncTask<MultiValueMap<String, String>, Void, ResponseAccessToken> jsonRespond =
-                    new RequestResponse<MultiValueMap<String, String>, ResponseAccessToken>(uri, 3,
-                            ResponseAccessToken.class, ((FragmentActivity) context).getSupportFragmentManager(), context).execute(map);
-            if (jsonRespond == null) {
-                ErrorFragment ef = ErrorFragment.newError("Error! No response.");
-                ef.show(((FragmentActivity) context).getSupportFragmentManager(), "Intratuin");
-            }
             try {
-                responseAccessToken = jsonRespond.get();
-                if (responseAccessToken != null && responseAccessToken.getToken_type().equals("bearer")) {
-                    //TODO: save access token, pass it to next activity, and remove toast!
-                    Toast.makeText(context, "Cached user " + responseAccessToken.toString(), Toast.LENGTH_LONG).show();
-                    context.startActivity(new Intent(context, WebActivity.class));
+                MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+                map.add("grant_type", "password");
+                map.add("client_id", username);
+                map.add("client_secret", password);
+                map.add("username", username);
+                map.add("password", password);
+
+                AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
+                        new RequestResponse<MultiValueMap<String, String>, String>(uri, 3,
+                                String.class, ((FragmentActivity) context).getSupportFragmentManager(), context).execute(map);
+                JSONObject responseJsonObject = new JSONObject(jsonRespond.get());
+                if (responseJsonObject != null && responseJsonObject.getString("token_type").equals("bearer")) {
+                    String accessToken = responseJsonObject.getString("access_token");
+                    if (Settings.getMainscreen(context) == Mainscreen.WEB)
+                        context.startActivity(new Intent(context, WebActivity.class).putExtra(ACCESS_TOKEN, accessToken));
+                    else context.startActivity(new Intent(context, SearchActivity.class).putExtra(ACCESS_TOKEN, accessToken));
+                } else {
+                    String errorStr;
+                    if (responseJsonObject == null)
+                        errorStr = "Error! Null response!";
+                    else
+                        errorStr = "Error " + responseJsonObject.getString("code") + ": "
+                                + responseJsonObject.getString("error")
+                                + ": " + responseJsonObject.getString("error_description");
+
+                    ErrorFragment ef = ErrorFragment.newError(errorStr);
+                    ef.show(((FragmentActivity) context).getSupportFragmentManager(), "Intratuin");
+                    context.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)
+                            .edit()
+                            .clear()
+                            .commit();
                 }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+            } catch (InterruptedException | ExecutionException | JSONException e) {
+                Log.e("Error!!!!!! ", e.getMessage());
             }
-        } else {
-            Toast.makeText(context, "Error", Toast.LENGTH_LONG).show();
-            context.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)
-                    .edit()
-                    .clear()
-                    .commit();
-//            facebookCache(context);
         }
-}
+    }
 
 //private static void facebookCache(Context context){
 //        String accessToken=App.getAuthManager().getAccessTokenFacebook();
@@ -86,4 +95,4 @@ public class CacheCustomerCredentials {
 //
 //private static void twitterCache(Context context){
 //        }
-        }
+}

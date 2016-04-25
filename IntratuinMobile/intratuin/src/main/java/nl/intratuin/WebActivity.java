@@ -9,6 +9,9 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
+
+import nl.intratuin.handlers.CacheCustomerCredentials;
 
 public class WebActivity extends AppCompatActivity {
     WebView webView;
@@ -37,6 +40,13 @@ public class WebActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
+
+        //show access token
+        final Bundle extra = getIntent().getExtras();
+        if (extra != null) {
+            Toast.makeText(this, "ACCESS TOKEN: " + extra.getString(CacheCustomerCredentials.ACCESS_TOKEN), Toast.LENGTH_LONG).show();
+        }
+
         getSupportActionBar().hide();
         webView=(WebView)findViewById(R.id.webView);
         WebSettings webSettings = webView.getSettings();

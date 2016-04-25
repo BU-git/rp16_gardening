@@ -37,6 +37,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -266,12 +267,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         switch (view.getId()) {
             case R.id.bLogin:
                 JSONObject response;
-
-                if(cbRemember.isChecked()){
-                    App.getAuthManager().loginAndCache(AuthManager.PREF_USERNAME, etEmailAddress.getText().toString());
-                    App.getAuthManager().loginAndCache(AuthManager.PREF_PASSWORD, etPassword.getText().toString());
-                    Toast.makeText(LoginActivity.this, "cache username and password", Toast.LENGTH_LONG).show();
-                }
                 try {
                     loginUri = new UriConstructor(LoginActivity.this, getSupportFragmentManager()).makeURI("login");
                     if (loginUri != null && dataValidation()) {
@@ -292,6 +287,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         }
                         response = new JSONObject(jsonRespond.get());
                         if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
+                            if(cbRemember.isChecked()){
+                                App.getAuthManager().loginAndCache(AuthManager.PREF_USERNAME, etEmailAddress.getText().toString());
+                                App.getAuthManager().loginAndCache(AuthManager.PREF_PASSWORD, etPassword.getText().toString());
+                                Toast.makeText(LoginActivity.this, "cache username and password", Toast.LENGTH_LONG).show();
+                            }
                             //TODO: save access token, pass it to next activity, and remove toast!
                             Toast.makeText(LoginActivity.this, response.getString("access_token"), Toast.LENGTH_LONG).show();
                             if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
