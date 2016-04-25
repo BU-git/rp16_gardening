@@ -45,6 +45,8 @@ import io.fabric.sdk.android.Fabric;
 import nl.intratuin.dto.Credentials;
 import nl.intratuin.dto.ResponseAccessToken;
 import nl.intratuin.dto.TransferAccessToken;
+import nl.intratuin.handlers.AuthManager;
+import nl.intratuin.handlers.CacheCustomerCredentials;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
@@ -89,7 +91,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        CacheCustomerCredentials.cache(this); //Check cache
+        CacheCustomerCredentials.cache(this); //Check cache
 
         getSupportActionBar().hide();
         TwitterAuthConfig authConfig = Settings.getTwitterConfig(this);
@@ -201,12 +203,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         lbFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                String accessToken = loginResult.getAccessToken().getToken();
+                App.getAuthManager().loginAndCache(AuthManager.PREF_FACEBOOK, accessToken);
                 facebookLoginUri = new UriConstructor(LoginActivity.this, getSupportFragmentManager()).makeURI("facebookLogin");
-                TransferAccessToken accessToken = new TransferAccessToken(loginResult.getAccessToken().getToken());
+                TransferAccessToken transferAccessToken = new TransferAccessToken(accessToken);
 
                 AsyncTask<TransferAccessToken, Void, ResponseAccessToken> jsonRespond =
                         new RequestResponse<TransferAccessToken, ResponseAccessToken>(facebookLoginUri, 3,
-                                ResponseAccessToken.class, getSupportFragmentManager(), LoginActivity.this).execute(accessToken);
+                                ResponseAccessToken.class, getSupportFragmentManager(), LoginActivity.this).execute(transferAccessToken);
                 ResponseAccessToken responseAccessToken = null;
                 try {
                     responseAccessToken = jsonRespond.get();
@@ -258,6 +262,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bLogin:
+                if(cbRemember.isChecked()){
+                    App.getAuthManager().loginAndCache(AuthManager.PREF_USERNAME, etEmailAddress.getText().toString());
+                    App.getAuthManager().loginAndCache(AuthManager.PREF_PASSWORD, etPassword.getText().toString());
+                    Toast.makeText(LoginActivity.this, "cache username and password", Toast.LENGTH_LONG).show();
+                }
                 ResponseAccessToken responseAccessToken;
 //
                 try {
