@@ -14,6 +14,9 @@ public class Product {
     @Column(name = "CATEGORY_ID")
     private int categoryId;
 
+    @Column(name = "BARCODE")
+    private long barcode;
+
     @Column(name = "PRODUCT_NAME")
     private String productName;
 
@@ -61,5 +64,13 @@ public class Product {
 
     public void setProductImage(String productImage) {
         this.productImage = productImage;
+    }
+
+    public long getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(long barcode) {
+        this.barcode = barcode;
     }
 }

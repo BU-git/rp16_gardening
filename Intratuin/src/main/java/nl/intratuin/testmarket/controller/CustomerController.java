@@ -4,6 +4,7 @@ import nl.intratuin.testmarket.dto.*;
 import nl.intratuin.testmarket.entity.Customer;
 import nl.intratuin.testmarket.service.contract.AccessKeyService;
 import nl.intratuin.testmarket.service.contract.CustomerService;
+import org.json.simple.JSONObject;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.User;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
@@ -56,25 +57,37 @@ public class CustomerController {
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public
     @ResponseBody
-    TransferMessage addCustomer(@RequestBody Customer newCustomer) {
-        return customerService.addCustomer(newCustomer)
-                ? new TransferMessage("Registration is successful")
-                : new TransferMessage("Sorry, this email address is already registered, choose another.");
+    JSONObject addCustomer(@RequestBody MultiValueMap<String, String> header) {
+        return customerService.addCustomer(header);
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public
     @ResponseBody
-    ResponseAccessToken login(@RequestBody MultiValueMap<String, String> header) {
+    JSONObject login(@RequestBody MultiValueMap<String, String> header) {
         return customerService.login(header);
     }
 
     @RequestMapping(value = "loginTwitter", method = RequestMethod.POST)
     public
     @ResponseBody
-    ResponseAccessToken loginTwitter(@RequestBody Credentials credentials) {
+    JSONObject loginTwitter(@RequestBody MultiValueMap<String, String> header) {
+        if(!header.containsKey("twitter_token")){
+            JSONObject json=new JSONObject();
+            json.put("code","400");
+            json.put("error","invalid_request");
+            json.put("error_description","No twitter access token found");
+            return json;
+        }
+        if(!header.containsKey("twitter_secret")){
+            JSONObject json=new JSONObject();
+            json.put("code","400");
+            json.put("error","invalid_request");
+            json.put("error_description","No twitter token secret found");
+            return json;
+        }
         TwitterTemplate twitterTemplate=new TwitterTemplate(prop.getProperty("twitter.consumerKey"),prop.getProperty("twitter.consumerSecret"),
-                credentials.getEmail(),credentials.getPassword());
+                header.getFirst("twitter_token"),header.getFirst("twitter_secret"));
         RestTemplate restTemplate = twitterTemplate.getRestTemplate();
 
         String email;
@@ -82,10 +95,11 @@ public class CustomerController {
             String response = restTemplate.getForObject("https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true", String.class);
             email = response.substring(response.indexOf("\"email\":") + 9, response.lastIndexOf("\""));
         } catch(Exception e){
-            ResponseAccessToken token=new ResponseAccessToken();
-            token.setToken_type("error");
-            token.setAccess_token("Twitter error.");
-            return token;
+            JSONObject json=new JSONObject();
+            json.put("code","400");
+            json.put("error","invalid_request");
+            json.put("error_description","Can't get email from twitter");
+            return json;
         }
         return customerService.loginTwitter(email);
     }
@@ -93,8 +107,15 @@ public class CustomerController {
     @RequestMapping(value = "loginFacebook", method = RequestMethod.POST)
     public
     @ResponseBody
-    ResponseAccessToken loginWithFacebook(@RequestBody TransferAccessToken accessToken) {
-        Facebook facebook = new FacebookTemplate(accessToken.getAccessToken(), "IntratuinMobile", prop.getProperty("facebook.appId"));
+    JSONObject loginWithFacebook(@RequestBody MultiValueMap<String, String> header) {
+        if(!header.containsKey("facebook_token")){
+            JSONObject json=new JSONObject();
+            json.put("code","400");
+            json.put("error","invalid_request");
+            json.put("error_description","No facebook access token found");
+            return json;
+        }
+        Facebook facebook = new FacebookTemplate(header.getFirst("facebook_token"), "IntratuinMobile", prop.getProperty("facebook.appId"));
         User profile = facebook.userOperations().getUserProfile();
         return customerService.loginWithFacebook(profile);
     }

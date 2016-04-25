@@ -31,6 +31,8 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -42,15 +44,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.fabric.sdk.android.Fabric;
-import nl.intratuin.dto.Credentials;
-import nl.intratuin.dto.ResponseAccessToken;
-import nl.intratuin.dto.TransferAccessToken;
 import nl.intratuin.handlers.AuthManager;
 import nl.intratuin.handlers.CacheCustomerCredentials;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
-import nl.intratuin.settings.BuildType;
 import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;
 
@@ -159,35 +157,37 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 bTwitterHidden.performClick();
             }
         });
+
         bTwitterHidden.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
                 TwitterSession session = result.data;
                 twitterLoginUri = new UriConstructor(LoginActivity.this, getSupportFragmentManager()).makeURI("twitterLogin");
                 if (twitterLoginUri != null) {
-                    final Credentials credentials = new Credentials();
+                    MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+                    map.add("twitter_token", session.getAuthToken().token);
+                    map.add("twitter_secret", session.getAuthToken().secret);
                     try {
-                        ResponseAccessToken responseAccessToken;
-                        credentials.setEmail(session.getAuthToken().token);
-                        credentials.setPassword(session.getAuthToken().secret);
-                        AsyncTask<Credentials, Void, ResponseAccessToken> jsonRespond =
-                                new RequestResponse<Credentials, ResponseAccessToken>(twitterLoginUri, 3,
-                                        ResponseAccessToken.class, getSupportFragmentManager(), LoginActivity.this).execute(credentials);
-                        responseAccessToken = jsonRespond.get();
-                        if(responseAccessToken != null && responseAccessToken.getToken_type().equals("bearer")){
+                        JSONObject response;
+                        AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
+                                new RequestResponse<MultiValueMap<String, String>, String>(twitterLoginUri, 3,
+                                        String.class, getSupportFragmentManager(), LoginActivity.this).execute(map);
+                        response = new JSONObject(jsonRespond.get());
+                        if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                             //TODO: save access token, pass it to next activity, and remove toast!
-                            Toast.makeText(LoginActivity.this, responseAccessToken.toString(), Toast.LENGTH_LONG).show();
-                            if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB ||
-                                    Settings.getBuildType(LoginActivity.this)== BuildType.API ||
-                                    Settings.getBuildType(LoginActivity.this)== BuildType.DEMOAPI)
+                            Toast.makeText(LoginActivity.this, response.getString("access_token"), Toast.LENGTH_LONG).show();
+                            if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
                                 startActivity(new Intent(LoginActivity.this, WebActivity.class));
                             else startActivity(new Intent(LoginActivity.this, SearchActivity.class));
                         } else {
-                            ErrorFragment ef = ErrorFragment.newError("Error! "
-                                    +responseAccessToken!=null?responseAccessToken.getAccess_token():"Null token");
+                            String errorStr;
+                            if(response==null)
+                                errorStr="Error! Null response!";
+                            else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
+                            ErrorFragment ef = ErrorFragment.newError(errorStr);
                             ef.show(getSupportFragmentManager(), "Intratuin");
                         }
-                    } catch (InterruptedException | ExecutionException e) {
+                    } catch (InterruptedException | ExecutionException | JSONException e) {
                         ErrorFragment ef = ErrorFragment.newError("Encryption error!");
                         ef.show(getSupportFragmentManager(), "Intratuin");
                     }
@@ -201,33 +201,36 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         lbFacebook.setReadPermissions(PERMISSIONS);
         lbFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
             @Override
             public void onSuccess(LoginResult loginResult) {
                 String accessToken = loginResult.getAccessToken().getToken();
                 App.getAuthManager().loginAndCache(AuthManager.PREF_FACEBOOK, accessToken);
                 facebookLoginUri = new UriConstructor(LoginActivity.this, getSupportFragmentManager()).makeURI("facebookLogin");
-                TransferAccessToken transferAccessToken = new TransferAccessToken(accessToken);
+                MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+                map.add("facebook_token", loginResult.getAccessToken().getToken());
 
-                AsyncTask<TransferAccessToken, Void, ResponseAccessToken> jsonRespond =
-                        new RequestResponse<TransferAccessToken, ResponseAccessToken>(facebookLoginUri, 3,
-                                ResponseAccessToken.class, getSupportFragmentManager(), LoginActivity.this).execute(transferAccessToken);
-                ResponseAccessToken responseAccessToken = null;
+                AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
+                        new RequestResponse<MultiValueMap<String, String>, String>(facebookLoginUri, 3,
+                                String.class, getSupportFragmentManager(), LoginActivity.this).execute(map);
+                JSONObject response;
                 try {
-                    responseAccessToken = jsonRespond.get();
-                    if (responseAccessToken!=null && responseAccessToken.getToken_type().equals("bearer")) {
+                    response = new JSONObject(jsonRespond.get());
+                    if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                         //TODO: save access token, pass it to next activity, and remove toast!
-                        Toast.makeText(LoginActivity.this, responseAccessToken.toString(), Toast.LENGTH_LONG).show();
-                        if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB ||
-                                Settings.getBuildType(LoginActivity.this)== BuildType.API ||
-                                Settings.getBuildType(LoginActivity.this)== BuildType.DEMOAPI)
+                        Toast.makeText(LoginActivity.this, response.getString("access_token"), Toast.LENGTH_LONG).show();
+                        if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
                             startActivity(new Intent(LoginActivity.this, WebActivity.class));
                         else startActivity(new Intent(LoginActivity.this, SearchActivity.class));
                     } else {
-                        ErrorFragment ef = ErrorFragment.newError("Error! "
-                                +responseAccessToken!=null?responseAccessToken.getAccess_token():"Null token");
+                        String errorStr;
+                        if(response==null)
+                            errorStr="Error! Null response!";
+                        else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
+                        ErrorFragment ef = ErrorFragment.newError(errorStr);
                         ef.show(getSupportFragmentManager(), "Intratuin");
                     }
-                } catch (InterruptedException | ExecutionException e) {
+                } catch (InterruptedException | ExecutionException | JSONException e) {
                     ErrorFragment ef = ErrorFragment.newError("Error!");
                     ef.show(LoginActivity.this.getSupportFragmentManager(), "Intratuin");
                 }
@@ -262,15 +265,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bLogin:
+                JSONObject response;
+
                 if(cbRemember.isChecked()){
                     App.getAuthManager().loginAndCache(AuthManager.PREF_USERNAME, etEmailAddress.getText().toString());
                     App.getAuthManager().loginAndCache(AuthManager.PREF_PASSWORD, etPassword.getText().toString());
                     Toast.makeText(LoginActivity.this, "cache username and password", Toast.LENGTH_LONG).show();
                 }
-                ResponseAccessToken responseAccessToken;
-//
                 try {
-                    //loginUri = new URI("http://api.weorder.at/api/oauth/token");
                     loginUri = new UriConstructor(LoginActivity.this, getSupportFragmentManager()).makeURI("login");
                     if (loginUri != null && dataValidation()) {
                         MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
@@ -280,29 +282,31 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         map.add("username", etEmailAddress.getText().toString());
                         map.add("password", etPassword.getText().toString());
 
-                        AsyncTask<MultiValueMap<String, String>, Void, ResponseAccessToken> jsonRespond =
-                                new RequestResponse<MultiValueMap<String, String>, ResponseAccessToken>(loginUri, 3,
-                                        ResponseAccessToken.class, getSupportFragmentManager(), this).execute(map);
+
+                        AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
+                                new RequestResponse<MultiValueMap<String, String>, String>(loginUri, 3,
+                                        String.class, getSupportFragmentManager(), this).execute(map);
                         if(jsonRespond==null){
                             ErrorFragment ef = ErrorFragment.newError("Error! No response.");
                             ef.show(getSupportFragmentManager(), "Intratuin");
                         }
-                        responseAccessToken = jsonRespond.get();
-                        if (responseAccessToken!=null && responseAccessToken.getToken_type().equals("bearer")) {
+                        response = new JSONObject(jsonRespond.get());
+                        if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                             //TODO: save access token, pass it to next activity, and remove toast!
-                            Toast.makeText(LoginActivity.this, responseAccessToken.toString(), Toast.LENGTH_LONG).show();
-                            if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB ||
-                                    Settings.getBuildType(LoginActivity.this)== BuildType.API ||
-                                    Settings.getBuildType(LoginActivity.this)== BuildType.DEMOAPI)
+                            Toast.makeText(LoginActivity.this, response.getString("access_token"), Toast.LENGTH_LONG).show();
+                            if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
                                 startActivity(new Intent(LoginActivity.this, WebActivity.class));
                             else startActivity(new Intent(LoginActivity.this, SearchActivity.class));
                         } else {
-                            ErrorFragment ef = ErrorFragment.newError("Error! "
-                                    +responseAccessToken!=null?responseAccessToken.getAccess_token():"Null token");
+                            String errorStr;
+                            if(response==null)
+                                errorStr="Error! Null response!";
+                            else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
+                            ErrorFragment ef = ErrorFragment.newError(errorStr);
                             ef.show(getSupportFragmentManager(), "Intratuin");
                         }
                     }
-                } catch (InterruptedException | ExecutionException e) {//
+                } catch (InterruptedException | ExecutionException | JSONException e) {
                     ErrorFragment ef = ErrorFragment.newError("Error!");
                     ef.show(LoginActivity.this.getSupportFragmentManager(), "Intratuin");
                 }
@@ -331,7 +335,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 startActivity(browserIntent);
                 break;
         }
-
     }
 
 

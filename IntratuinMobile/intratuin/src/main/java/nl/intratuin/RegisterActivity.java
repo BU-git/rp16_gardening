@@ -2,6 +2,7 @@ package nl.intratuin;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -14,16 +15,24 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.net.URI;
 import java.sql.Date;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import nl.intratuin.dto.Customer;
-import nl.intratuin.dto.TransferMessage;
+import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
+import nl.intratuin.settings.Mainscreen;
+import nl.intratuin.settings.Settings;
 
 public class RegisterActivity extends AppCompatActivity implements OnClickListener {
 
@@ -45,6 +54,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     Matcher matcher;
 
     URI registerUri=null;
+    URI loginUri=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +79,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         setListeners();
 
         registerUri=new UriConstructor(RegisterActivity.this, getSupportFragmentManager()).makeURI("registration");
+        loginUri=new UriConstructor(RegisterActivity.this, getSupportFragmentManager()).makeURI("login");
     }
 
 
@@ -98,19 +109,69 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
 
             case R.id.bSignUp:
                 if(registerUri!=null && dataValidation()){//&& Data validation passed
-                    Customer cust=new Customer();
-                    cust.setId(0);
-                    cust.setFirstName(etFirstName.getText().toString());
-                    cust.setTussen(etTussen.getText().toString());
-                    cust.setLastName(etLastName.getText().toString());
-                    cust.setEmail(etEmail.getText().toString());
-                    if(rbMale.isChecked())
-                        cust.setGender(1);
-                    else
-                        cust.setGender(0);
-                    cust.setPassword(etPassword.getText().toString());
-                    new RequestResponse<Customer, TransferMessage>(registerUri, 3, TransferMessage.class,
-                                getSupportFragmentManager(), this).execute(cust);
+                    MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+                    map.add("client_id", etEmail.getText().toString());
+                    //TODO: get commented data
+                    //map.add("client_name", etFirstName.getText().toString());
+                    //map.add("client_tussen", etTussen.getText().toString());
+                    //map.add("client_famname", etLastName.getText().toString());
+                    //if(rbMale.isChecked())
+                    //    map.add("client_gender", "1");
+                    //else
+                    //    map.add("client_gender", "0");
+                    map.add("client_secret", etPassword.getText().toString());
+
+                    AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
+                            new RequestResponse<MultiValueMap<String, String>, String>(registerUri, 3,
+                                    String.class, getSupportFragmentManager(), this).execute(map);
+                    if(jsonRespond==null){
+                        ErrorFragment ef = ErrorFragment.newError("Error! No response.");
+                        ef.show(getSupportFragmentManager(), "Intratuin");
+                    }
+                    try {
+                        JSONObject response = new JSONObject(jsonRespond.get());
+                        if (response != null && response.has("id")) {
+                            map = new LinkedMultiValueMap<String, String>();
+                            map.add("grant_type", "password");
+                            map.add("client_id", etEmail.getText().toString());
+                            map.add("client_secret", etPassword.getText().toString());
+                            map.add("username", etEmail.getText().toString());
+                            map.add("password", etPassword.getText().toString());
+
+                            jsonRespond = new RequestResponse<MultiValueMap<String, String>, String>(loginUri, 3,
+                                            String.class, getSupportFragmentManager(), this).execute(map);
+                            if(jsonRespond==null){
+                                ErrorFragment ef = ErrorFragment.newError("Error! No response.");
+                                ef.show(getSupportFragmentManager(), "Intratuin");
+                            }
+                            response = new JSONObject(jsonRespond.get());
+                            if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
+                                //TODO: save access token, pass it to next activity, and remove toast!
+                                Toast.makeText(RegisterActivity.this, response.getString("access_token"), Toast.LENGTH_LONG).show();
+                                if(Settings.getMainscreen(RegisterActivity.this)== Mainscreen.WEB)
+                                    startActivity(new Intent(RegisterActivity.this, WebActivity.class));
+                                else startActivity(new Intent(RegisterActivity.this, SearchActivity.class));
+                            } else {
+                                String errorStr;
+                                if(response==null)
+                                    errorStr="Error! Null response!";
+                                else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
+                                ErrorFragment ef = ErrorFragment.newError(errorStr);
+                                ef.show(getSupportFragmentManager(), "Intratuin");
+                            }
+                        } else {
+                            String errorStr;
+                            if (response == null)
+                                errorStr = "Error! Null response!";
+                            else
+                                errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
+                            ErrorFragment ef = ErrorFragment.newError(errorStr);
+                            ef.show(getSupportFragmentManager(), "Intratuin");
+                        }
+                    } catch (InterruptedException | ExecutionException | JSONException e){
+                        ErrorFragment ef = ErrorFragment.newError("Error!");
+                        ef.show(RegisterActivity.this.getSupportFragmentManager(), "Intratuin");
+                    }
                 }
                 break;
 

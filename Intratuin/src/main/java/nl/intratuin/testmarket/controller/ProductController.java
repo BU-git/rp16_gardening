@@ -1,13 +1,12 @@
 package nl.intratuin.testmarket.controller;
 
-import nl.intratuin.testmarket.entity.Category;
 import nl.intratuin.testmarket.entity.Product;
-import nl.intratuin.testmarket.service.contract.CategoryService;
 import nl.intratuin.testmarket.service.contract.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -38,5 +37,11 @@ public class ProductController {
     @RequestMapping(value = "list/byCategory/{idCategory}")
     public List<Product> getAllByCategory(@PathVariable int idCategory) {
         return productService.findAllByCategory(idCategory);
+    }
+
+    @RequestMapping(value = "barcode/{code}")
+    public int getByBarcode(@PathVariable String code){
+        long barcode=Long.parseLong(code);
+        return productService.findByBarcode(barcode);
     }
 }

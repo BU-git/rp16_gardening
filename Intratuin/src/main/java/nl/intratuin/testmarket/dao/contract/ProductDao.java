@@ -12,4 +12,6 @@ public interface ProductDao {
     List<Product> findByName(String name);
 
     List<Product> findAllByCategory(int category);
+
+    int findByBarcode(long barcode);
 }

@@ -1,7 +1,7 @@
 package nl.intratuin.testmarket.service.contract;
 
-import nl.intratuin.testmarket.dto.ResponseAccessToken;
 import nl.intratuin.testmarket.entity.Customer;
+import org.json.simple.JSONObject;
 import org.springframework.social.facebook.api.User;
 import org.springframework.util.MultiValueMap;
 
@@ -12,13 +12,15 @@ public interface CustomerService {
 
     List<Customer> findAll();
 
-    boolean addCustomer(Customer customer);
+    JSONObject addCustomer(MultiValueMap<String, String> header);
 
-    ResponseAccessToken login(MultiValueMap<String, String> header);
+    void save(Customer customer);
 
-    ResponseAccessToken loginTwitter(String email);
+    JSONObject login(MultiValueMap<String, String> header);
 
-    ResponseAccessToken loginWithFacebook(User profile);
+    JSONObject loginTwitter(String email);
+
+    JSONObject loginWithFacebook(User profile);
 
     Integer getCustomerIdByFacebookProfile(User profile);
 }

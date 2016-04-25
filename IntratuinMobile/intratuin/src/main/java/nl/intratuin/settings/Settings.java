@@ -17,6 +17,9 @@ public class Settings {
         return BuildType.valueOf(type);
     }
     public static Mainscreen getMainscreen(Context context) {
+        BuildType type = getBuildType(context);
+        if(type==BuildType.API || type==BuildType.DEMOAPI)
+            return Mainscreen.WEB;
         String screen=context.getString(R.string.mainscreen);
         return Mainscreen.valueOf(screen);
     }

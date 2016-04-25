@@ -2,10 +2,10 @@ package nl.intratuin.testmarket.service.implementation;
 
 import nl.intratuin.testmarket.dao.contract.AccessKeyDao;
 import nl.intratuin.testmarket.dao.contract.CustomerDao;
-import nl.intratuin.testmarket.dto.ResponseAccessToken;
 import nl.intratuin.testmarket.entity.AccessKey;
 import nl.intratuin.testmarket.entity.Customer;
 import nl.intratuin.testmarket.service.contract.CustomerService;
+import org.json.simple.JSONObject;
 import org.springframework.social.facebook.api.User;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,33 +47,69 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Transactional(propagation= Propagation.REQUIRES_NEW)
-    public boolean addCustomer(Customer customer) {
+    public JSONObject addCustomer(MultiValueMap<String, String> header) {
         //Check whether is email already registered or not
-        String emailToRegister = customer.getEmail().toLowerCase();
+        JSONObject response=registerHeaderFormatCheck(header);
+        if(response.containsKey("error"))
+            return response;
+        String emailToRegister = header.getFirst("client_id").toLowerCase();
         Integer existedCustomerId = customerDao.findByEmail(emailToRegister);
 
         if (existedCustomerId != null) {
-            return false;
+            response.put("code","400");
+            response.put("error","user_exist");
+            response.put("error_description","User with this email already exists");
+            return response;
         } else {
-            customerDao.save(customer);
-            return true;
+            Customer customer = new Customer();
+            customer.setEmail(emailToRegister);
+            //TODO: get commented data
+            //customer.setFirstName(header.getFirst("client_name"));
+            //customer.setTussen(header.getFirst("client_tussen"));
+            //customer.setLastName(header.getFirst("client_famname"));
+            //customer.setGender(header.getFirst("client_gender").equals("1")?1:0);
+            customer.setPassword(header.getFirst("client_secret"));
+            save(customer);
+            response.put("id",""+customer.getId());
+            response.put("client_id",customer.getEmail());
+            return response;
         }
     }
 
+    @Transactional(propagation= Propagation.REQUIRES_NEW)
+    public void save(Customer customer){
+        customerDao.save(customer);
+    }
+
+    private JSONObject registerHeaderFormatCheck(MultiValueMap<String, String> header){
+        JSONObject response=new JSONObject();
+        String[] par_list={"client_id","client_secret"};//"client_name","client_tussen","client_famname","client_gender",
+        for(String par:par_list){
+            if(!header.containsKey(par)){
+                response.put("code","400");
+                response.put("error","invalid_registration_request");
+                response.put("error_description","Missing "+par+" parameter");
+                return response;
+            }
+        }
+        return response;
+    }
+
     @Transactional
-    public ResponseAccessToken login(MultiValueMap<String, String> header) {
-        ResponseAccessToken token=headerFormatCheck(header);
-        if(token.getToken_type().equals("error"))
-            return token;
+    public JSONObject login(MultiValueMap<String, String> header) {
+        JSONObject response=loginHeaderFormatCheck(header);
+        if(response.containsKey("error"))
+                return response;
         String emailToLogin = header.getFirst("client_id");
         Integer foundCustomerId = customerDao.findByEmail(emailToLogin);
         if (foundCustomerId != null) {
             Customer customerToLogin = customerDao.findById(foundCustomerId);
             if (customerToLogin.getPassword()==null){
-                token.setToken_type("error");
-                token.setAccess_token("Your profile does not contain password. " +
-                        "Log in using social networks and set password in private page");
-                return token;
+                response.put("code","400");
+                response.put("error","no_pass");
+                response.put("error_description","Your profile does not contain password. " +
+                                "Log in using social networks and set password in private page");
+                return response;
             } else if (customerToLogin.getPassword().equals(header.getFirst("client_secret"))) {
                 AccessKey accessKeyEntity = new AccessKey();
 
@@ -82,49 +118,58 @@ public class CustomerServiceImpl implements CustomerService {
 
                 accessKeyEntity.setCustomerId(customerToLogin.getId());
                 accessKeyEntity.setAccessKey(accessToken);
-                accessKeyEntity.setExpireDate(new java.util.Date(expireLocalDate.getYear()-1900,expireLocalDate.getMonthValue()-1,expireLocalDate.getDayOfMonth(),
-                        expireLocalDate.getHour(),expireLocalDate.getMinute(),expireLocalDate.getSecond()));
+                accessKeyEntity.setExpireDate(expireLocalDate);
 
                 accessKeyDao.save(accessKeyEntity);
 
-                token.setAccess_token(accessToken);
-                return token;
+                response.put("token_type","bearer");
+                response.put("access_token",accessToken);
+                response.put("expires_in",""+expire);
+                return response;
             } else {
-                token.setToken_type("error");
-                token.setAccess_token("Wrong email or password.");
-                return token;
+                response.put("code","400");
+                response.put("error","invalid_client");
+                response.put("error_description","Client password is invalid");
+                return response;
             }
         }else{
-            token.setToken_type("error");
-            token.setAccess_token("Wrong email or password.");
-            return token;
+            response.put("code","400");
+            response.put("error","invalid_client");
+            response.put("error_description","Client email is invalid");
+            return response;
         }
     }
 
-    private ResponseAccessToken headerFormatCheck(MultiValueMap<String, String> header){
-        ResponseAccessToken token=new ResponseAccessToken();
-        token.setToken_type("error");
+    private JSONObject loginHeaderFormatCheck(MultiValueMap<String, String> header){
+        JSONObject response=new JSONObject();
         String[] par_list={"grant_type","client_id","client_secret","username","password"};
         for(String par:par_list){
             if(!header.containsKey(par)){
-                token.setAccess_token(par+" parameter missed");
-                return token;
+                response.put("code","400");
+                response.put("error","invalid_request");
+                response.put("error_description","Missing "+par+" parameter");
+                return response;
             }
         }
         if(!header.getFirst("grant_type").equals("password")){
-            token.setAccess_token("Wrong grant_type");
-            return token;
+            response.put("code","400");
+            response.put("error","invalid_request");
+            response.put("error_description","Invalid grant_type parameter");
+            return response;
         }
         if(!header.getFirst("client_id").equals(header.getFirst("username"))){
-            token.setAccess_token("client_id and username mismatch");
-            return token;
+            response.put("code","400");
+            response.put("error","invalid_request");
+            response.put("error_description","client_id and username mismatch");
+            return response;
         }
         if(!header.getFirst("client_secret").equals(header.getFirst("password"))){
-            token.setAccess_token("client_secret and password mismatch");
-            return token;
+            response.put("code","400");
+            response.put("error","invalid_request");
+            response.put("error_description","client_secret and password mismatch");
+            return response;
         }
-        token.setToken_type("bearer");
-        return token;
+        return response;
     }
 
     private String randomString(int lenght){
@@ -137,7 +182,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Transactional
-    public ResponseAccessToken loginTwitter (String email){
+    public JSONObject loginTwitter (String email){
         Integer foundCustomerId = customerDao.findByEmail(email);
         if (foundCustomerId == null) {
             Customer newCustomer = new Customer();
@@ -145,8 +190,8 @@ public class CustomerServiceImpl implements CustomerService {
             customerDao.save(newCustomer);
             foundCustomerId=customerDao.findByEmail(email);
         }
-        ResponseAccessToken token=new ResponseAccessToken();
-        token.setToken_type("bearer");
+        JSONObject respond = new JSONObject();
+        respond.put("token_type","bearer");
         AccessKey accessKeyEntity = new AccessKey();
 
         String accessToken = randomString(40);
@@ -154,23 +199,22 @@ public class CustomerServiceImpl implements CustomerService {
 
         accessKeyEntity.setCustomerId(foundCustomerId);
         accessKeyEntity.setAccessKey(accessToken);
-        accessKeyEntity.setExpireDate(new java.util.Date(expireLocalDate.getYear()-1900,expireLocalDate.getMonthValue()-1,expireLocalDate.getDayOfMonth(),
-                expireLocalDate.getHour(),expireLocalDate.getMinute(),expireLocalDate.getSecond()));
+        accessKeyEntity.setExpireDate(expireLocalDate);
 
         accessKeyDao.save(accessKeyEntity);
 
-        token.setAccess_token(accessToken);
-        return token;
+        respond.put("access_token",accessToken);
+        respond.put("expires_in",expire);
+        return respond;
     }
 
     @Transactional
-    public ResponseAccessToken loginWithFacebook (User profile){
+    public JSONObject loginWithFacebook (User profile){
         String emailToLoginWithFacebook = profile.getEmail();
         if (emailToLoginWithFacebook != null) {
             Integer existedCustomerId = customerDao.findByEmail(emailToLoginWithFacebook);
 
-            ResponseAccessToken token=new ResponseAccessToken();
-            token.setToken_type("bearer");
+            JSONObject response=new JSONObject();
             AccessKey accessKeyEntity = new AccessKey();
 
             String accessToken = randomString(40);
@@ -180,18 +224,20 @@ public class CustomerServiceImpl implements CustomerService {
                 existedCustomerId=addWithFacebook(profile);
             accessKeyEntity.setCustomerId(existedCustomerId);
             accessKeyEntity.setAccessKey(accessToken);
-            accessKeyEntity.setExpireDate(new java.util.Date(expireLocalDate.getYear()-1900,expireLocalDate.getMonthValue()-1,expireLocalDate.getDayOfMonth(),
-                    expireLocalDate.getHour(),expireLocalDate.getMinute(),expireLocalDate.getSecond()));
+            accessKeyEntity.setExpireDate(expireLocalDate);
 
             accessKeyDao.save(accessKeyEntity);
 
-            token.setAccess_token(accessToken);
-            return token;
+            response.put("token_type","bearer");
+            response.put("access_token",accessToken);
+            response.put("expires_in",""+expire);
+            return response;
         } else {
-            ResponseAccessToken token=new ResponseAccessToken();
-            token.setToken_type("error");
-            token.setAccess_token("Unable to retrieve email");
-            return token;
+            JSONObject response=new JSONObject();
+            response.put("code","400");
+            response.put("error","invalid_request");
+            response.put("error_description","Can't get email from facebook");
+            return response;
         }
     }
 
