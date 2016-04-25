@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 
+import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.settings.Settings;
 
 /**
@@ -43,6 +44,8 @@ public class RequestResponse<T, V> extends AsyncTask<T, Void, V> {
                 return (V) restTemplate.postForObject(uri, param[0], responseType);
             } catch (Exception e) {
                 Log.e("Error: ", e.getMessage(), e);
+                ErrorFragment ef = ErrorFragment.newError("GET request error!");
+                ef.show(fragmentManager, "Intratuin");
             }
         }
         return null;

@@ -35,7 +35,6 @@ import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;
 
 public class RegisterActivity extends AppCompatActivity implements OnClickListener {
-
     EditText etFirstName;
     EditText etTussen;
     EditText etLastName;
@@ -111,10 +110,13 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                 if(registerUri!=null && dataValidation()){//&& Data validation passed
                     MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
                     map.add("client_id", etEmail.getText().toString());
-                    //TODO: get commented data
-                    //map.add("client_name", etFirstName.getText().toString());
-                    //map.add("client_tussen", etTussen.getText().toString());
-                    //map.add("client_famname", etLastName.getText().toString());
+                    String fullName=etFirstName.getText().toString()+" ";
+                    if(etTussen.getText().length()>0)
+                        fullName+=etTussen.getText().toString()+" ";
+                    fullName+=etLastName.getText().toString();
+                    map.add("name", fullName);
+                    map.add("email",etEmail.getText().toString());
+                    //TODO: get gender
                     //if(rbMale.isChecked())
                     //    map.add("client_gender", "1");
                     //else
@@ -146,11 +148,12 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                             }
                             response = new JSONObject(jsonRespond.get());
                             if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
+                                String accessKey = response.getString("access_token");
                                 //TODO: save access token, pass it to next activity, and remove toast!
                                 Toast.makeText(RegisterActivity.this, response.getString("access_token"), Toast.LENGTH_LONG).show();
                                 if(Settings.getMainscreen(RegisterActivity.this)== Mainscreen.WEB)
-                                    startActivity(new Intent(RegisterActivity.this, WebActivity.class));
-                                else startActivity(new Intent(RegisterActivity.this, SearchActivity.class));
+                                    startActivity(new Intent(RegisterActivity.this, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
+                                else startActivity(new Intent(RegisterActivity.this, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
                             } else {
                                 String errorStr;
                                 if(response==null)

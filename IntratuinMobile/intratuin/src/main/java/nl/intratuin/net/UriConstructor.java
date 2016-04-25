@@ -121,6 +121,19 @@ public class UriConstructor {
                             return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_local))
                                     ,context.getString(R.string.products_in_category)+par).toURI();
                     }
+                case "userInfo":
+                    switch (Settings.getBuildType(context)){
+                        case DEPLOYED:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_deployed))
+                                    ,"/Intratuin"+context.getString(R.string.userinfo_server)+par).toURI();
+                        case API:
+                        case DEMOAPI:
+                            return new URL("http",Settings.getHost(context)
+                                    ,context.getString(R.string.userinfo_api)+par).toURI();
+                        default:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_local))
+                                    ,context.getString(R.string.userinfo_server)+par).toURI();
+                    }
                 default:
                     return null;
             }

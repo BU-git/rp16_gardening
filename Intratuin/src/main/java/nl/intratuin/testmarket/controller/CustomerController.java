@@ -66,6 +66,11 @@ public class CustomerController {
         return customerService.findById(id);
     }
 
+    @RequestMapping(value="info", params = {"access_token"})
+    public Customer info(@RequestParam(value = "access_token") String token){
+        return customerService.findById(service.getCustomerIdByAccessKey(token));
+    }
+
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public
     @ResponseBody

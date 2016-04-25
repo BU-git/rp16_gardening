@@ -37,6 +37,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -44,6 +45,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.fabric.sdk.android.Fabric;
+import nl.intratuin.handlers.AuthManager;
+import nl.intratuin.handlers.CacheCustomerCredentials;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
@@ -52,6 +55,7 @@ import nl.intratuin.settings.Settings;
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
     public static final List<String> PERMISSIONS = Arrays.asList("email");
+    public static final String ACCESS_TOKEN = "accessToken";
 
     CallbackManager callbackManager;
 
@@ -87,7 +91,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        CacheCustomerCredentials.cache(this); //Check cache
+        CacheCustomerCredentials.cache(this); //Check cache
 
         getSupportActionBar().hide();
         TwitterAuthConfig authConfig = Settings.getTwitterConfig(this);
@@ -162,9 +166,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 TwitterSession session = result.data;
                 twitterLoginUri = new UriConstructor(LoginActivity.this, getSupportFragmentManager()).makeURI("twitterLogin");
                 if (twitterLoginUri != null) {
+                    String accessTokenTwitter = session.getAuthToken().token;
+                    String secretAccessTokenTwitter = session.getAuthToken().secret;
                     MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-                    map.add("twitter_token", session.getAuthToken().token);
-                    map.add("twitter_secret", session.getAuthToken().secret);
+                    map.add("twitter_token", accessTokenTwitter);
+                    map.add("twitter_secret", secretAccessTokenTwitter);
                     try {
                         JSONObject response;
                         AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
@@ -172,11 +178,13 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                         String.class, getSupportFragmentManager(), LoginActivity.this).execute(map);
                         response = new JSONObject(jsonRespond.get());
                         if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
-                            //TODO: save access token, pass it to next activity, and remove toast!
-                            Toast.makeText(LoginActivity.this, response.getString("access_token"), Toast.LENGTH_LONG).show();
+                            App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_ACCESS_TOKEN, accessTokenTwitter);
+                            App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_SECRET_ACCESS_TOKEN, secretAccessTokenTwitter);
+                            String accessKey = response.getString("access_token");
+
                             if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
-                                startActivity(new Intent(LoginActivity.this, WebActivity.class));
-                            else startActivity(new Intent(LoginActivity.this, SearchActivity.class));
+                                startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
+                            else startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
                         } else {
                             String errorStr;
                             if(response==null)
@@ -202,6 +210,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
             @Override
             public void onSuccess(LoginResult loginResult) {
+                String accessToken = loginResult.getAccessToken().getToken();
                 facebookLoginUri = new UriConstructor(LoginActivity.this, getSupportFragmentManager()).makeURI("facebookLogin");
                 if(facebookLoginUri!=null) {
                     MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
@@ -214,18 +223,17 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     try {
                         response = new JSONObject(jsonRespond.get());
                         if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
-                            //TODO: save access token, pass it to next activity, and remove toast!
-                            Toast.makeText(LoginActivity.this, response.getString("access_token"), Toast.LENGTH_LONG).show();
-                            if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
-                                startActivity(new Intent(LoginActivity.this, WebActivity.class));
-                            else
-                                startActivity(new Intent(LoginActivity.this, SearchActivity.class));
+                            App.getAuthManager().loginAndCache(AuthManager.PREF_FACEBOOK, accessToken);
+                            String accessKey = response.getString("access_token");
+
+                            if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
+                                startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
+                            else startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
                         } else {
                             String errorStr;
                             if (response == null)
                                 errorStr = "Error! Null response!";
-                            else
-                                errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
+                            else errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
                             ErrorFragment ef = ErrorFragment.newError(errorStr);
                             ef.show(getSupportFragmentManager(), "Intratuin");
                         }
@@ -266,7 +274,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         switch (view.getId()) {
             case R.id.bLogin:
                 JSONObject response;
-
                 try {
                     loginUri = new UriConstructor(LoginActivity.this, getSupportFragmentManager()).makeURI("login");
                     if (loginUri != null && dataValidation()) {
@@ -277,7 +284,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         map.add("username", etEmailAddress.getText().toString());
                         map.add("password", etPassword.getText().toString());
 
-
                         AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
                                 new RequestResponse<MultiValueMap<String, String>, String>(loginUri, 3,
                                         String.class, getSupportFragmentManager(), this).execute(map);
@@ -287,11 +293,16 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         }
                         response = new JSONObject(jsonRespond.get());
                         if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
-                            //TODO: save access token, pass it to next activity, and remove toast!
-                            Toast.makeText(LoginActivity.this, response.getString("access_token"), Toast.LENGTH_LONG).show();
+                            String accessKey = response.getString("access_token");
+                            if(cbRemember.isChecked()){
+                                App.getAuthManager().loginAndCache(AuthManager.PREF_USERNAME, etEmailAddress.getText().toString());
+                                App.getAuthManager().loginAndCache(AuthManager.PREF_PASSWORD, etPassword.getText().toString());
+                                Toast.makeText(LoginActivity.this, "cache username and password", Toast.LENGTH_LONG).show();
+                            }
+
                             if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
-                                startActivity(new Intent(LoginActivity.this, WebActivity.class));
-                            else startActivity(new Intent(LoginActivity.this, SearchActivity.class));
+                                startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
+                            else startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
                         } else {
                             String errorStr;
                             if(response==null)

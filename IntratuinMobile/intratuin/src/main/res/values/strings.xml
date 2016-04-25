@@ -37,6 +37,9 @@
     <string name="products_in_category">/category/list/byCategory/</string>
     <string name="category_list">/category/all</string>
     <string name="product_search">/product/search/</string>
+    #user info
+    <string name="userinfo_server">/customer/info</string>
+    <string name="userinfo_api">/api/v1/user</string>
 
     <string name="recover">Recover password</string>
     <string name="register">Register</string>
