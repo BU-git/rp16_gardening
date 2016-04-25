@@ -45,6 +45,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.fabric.sdk.android.Fabric;
+import nl.intratuin.dto.ShowObject;
 import nl.intratuin.handlers.AuthManager;
 import nl.intratuin.handlers.CacheCustomerCredentials;
 import nl.intratuin.handlers.ErrorFragment;
@@ -91,7 +92,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CacheCustomerCredentials.cache(this); //Check cache
+//        CacheCustomerCredentials.cache(this); //Check cache
 
         getSupportActionBar().hide();
         TwitterAuthConfig authConfig = Settings.getTwitterConfig(this);
@@ -235,6 +236,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         if(response==null)
                             errorStr="Error! Null response!";
                         else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
+
                         ErrorFragment ef = ErrorFragment.newError(errorStr);
                         ef.show(getSupportFragmentManager(), "Intratuin");
                     }
@@ -310,8 +312,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             if(response==null)
                                 errorStr="Error! Null response!";
                             else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
-                            ErrorFragment ef = ErrorFragment.newError(errorStr);
-                            ef.show(getSupportFragmentManager(), "Intratuin");
+                            ShowObject.showMessage(errorStr, LoginActivity.this);
+//                            ErrorFragment ef = ErrorFragment.newError(errorStr);
+//                            ef.show(getSupportFragmentManager(), "Intratuin");
                         }
                     }
                 } catch (InterruptedException | ExecutionException | JSONException e) {

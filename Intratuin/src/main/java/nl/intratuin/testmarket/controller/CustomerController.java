@@ -120,22 +120,6 @@ public class CustomerController {
         return customerService.loginWithFacebook(profile);
     }
 
-    @RequestMapping(value = "confirmCredentialsAccessKey/{accessKey}")
-    public LoginAndCacheResult checkCredentialsAccessKey(@PathVariable String accessKey) {
-        Customer customer;
-        Integer foundCustomerIdByAccessKey = service.getCustomerIdByAccessKey(accessKey);
-        if(foundCustomerIdByAccessKey != null) {
-            if(foundCustomerIdByAccessKey != -1) {
-                customer = customerService.findById(foundCustomerIdByAccessKey);
-                return new LoginAndCacheResult("Hello, " + customer.getFirstName() + " " + customer.getLastName(),
-                        accessKey);
-            } else {
-                return new LoginAndCacheResult("access key is expired", null);
-            }} else {
-            return new LoginAndCacheResult("Invalid access key", null);
-            }
-    }
-
     @RequestMapping(value = "confirmFacebookAccessKey/{accessToken}")
     public LoginAndCacheResult checkFacebookAccessToken(@PathVariable String accessToken) {
         Facebook facebook = new FacebookTemplate(accessToken, "IntratuinMobile", "1720162671574425");
