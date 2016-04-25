@@ -44,7 +44,7 @@ public class WebActivity extends AppCompatActivity {
         //show access token
         final Bundle extra = getIntent().getExtras();
         if (extra != null) {
-            Toast.makeText(this, "ACCESS TOKEN: " + extra.getString(CacheCustomerCredentials.ACCESS_TOKEN), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "TRANSFER ACCESS TOKEN: " + extra.getString(LoginActivity.ACCESS_TOKEN), Toast.LENGTH_LONG).show();
         }
 
         getSupportActionBar().hide();

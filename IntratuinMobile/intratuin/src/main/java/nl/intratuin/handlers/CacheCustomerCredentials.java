@@ -15,6 +15,7 @@ import java.net.URI;
 import java.util.concurrent.ExecutionException;
 
 import nl.intratuin.App;
+import nl.intratuin.LoginActivity;
 import nl.intratuin.SearchActivity;
 import nl.intratuin.WebActivity;
 import nl.intratuin.net.RequestResponse;
@@ -23,8 +24,6 @@ import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;
 
 public class CacheCustomerCredentials {
-    public static final String ACCESS_TOKEN = "accessToken";
-
     public static void cache(Context context) {
         String username = App.getAuthManager().getAccessKeyUsername();
         String password = App.getAuthManager().getAccessKeyPassword();
@@ -43,10 +42,10 @@ public class CacheCustomerCredentials {
                                 String.class, ((FragmentActivity) context).getSupportFragmentManager(), context).execute(map);
                 JSONObject responseJsonObject = new JSONObject(jsonRespond.get());
                 if (responseJsonObject != null && responseJsonObject.getString("token_type").equals("bearer")) {
-                    String accessToken = responseJsonObject.getString("access_token");
+                    String accessKey = responseJsonObject.getString("access_token");
                     if (Settings.getMainscreen(context) == Mainscreen.WEB)
-                        context.startActivity(new Intent(context, WebActivity.class).putExtra(ACCESS_TOKEN, accessToken));
-                    else context.startActivity(new Intent(context, SearchActivity.class).putExtra(ACCESS_TOKEN, accessToken));
+                        context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
+                    else context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
                 } else {
                     String errorStr;
                     if (responseJsonObject == null)
