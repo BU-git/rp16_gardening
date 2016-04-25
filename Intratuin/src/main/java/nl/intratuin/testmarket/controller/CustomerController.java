@@ -39,13 +39,25 @@ public class CustomerController {
         }
     }
 
+    @RequestMapping(value="testPost", method=RequestMethod.POST)
+    public String testPost(@RequestBody MultiValueMap<String, String> header){
+        if(!header.containsKey("access_token"))
+            return "No token found";
+        else return header.getFirst("access_token");
+    }
+
+    @RequestMapping(value="testGet/", params = {"access_token"})
+    public String testGet(@RequestParam(value = "access_token") String token){
+        return token;
+    }
+
     @RequestMapping("all")
     public List<Customer> getAll() {
         return customerService.findAll();
     }
 
     @RequestMapping("time")
-    public String test() {
+    public String time() {
         return LocalDateTime.now().toString();
     }
 

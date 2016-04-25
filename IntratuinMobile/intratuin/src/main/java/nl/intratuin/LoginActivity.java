@@ -203,32 +203,36 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             @Override
             public void onSuccess(LoginResult loginResult) {
                 facebookLoginUri = new UriConstructor(LoginActivity.this, getSupportFragmentManager()).makeURI("facebookLogin");
-                MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-                map.add("facebook_token", loginResult.getAccessToken().getToken());
+                if(facebookLoginUri!=null) {
+                    MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+                    map.add("facebook_token", loginResult.getAccessToken().getToken());
 
-                AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
-                        new RequestResponse<MultiValueMap<String, String>, String>(facebookLoginUri, 3,
-                                String.class, getSupportFragmentManager(), LoginActivity.this).execute(map);
-                JSONObject response;
-                try {
-                    response = new JSONObject(jsonRespond.get());
-                    if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
-                        //TODO: save access token, pass it to next activity, and remove toast!
-                        Toast.makeText(LoginActivity.this, response.getString("access_token"), Toast.LENGTH_LONG).show();
-                        if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
-                            startActivity(new Intent(LoginActivity.this, WebActivity.class));
-                        else startActivity(new Intent(LoginActivity.this, SearchActivity.class));
-                    } else {
-                        String errorStr;
-                        if(response==null)
-                            errorStr="Error! Null response!";
-                        else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
-                        ErrorFragment ef = ErrorFragment.newError(errorStr);
-                        ef.show(getSupportFragmentManager(), "Intratuin");
+                    AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
+                            new RequestResponse<MultiValueMap<String, String>, String>(facebookLoginUri, 3,
+                                    String.class, getSupportFragmentManager(), LoginActivity.this).execute(map);
+                    JSONObject response;
+                    try {
+                        response = new JSONObject(jsonRespond.get());
+                        if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
+                            //TODO: save access token, pass it to next activity, and remove toast!
+                            Toast.makeText(LoginActivity.this, response.getString("access_token"), Toast.LENGTH_LONG).show();
+                            if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
+                                startActivity(new Intent(LoginActivity.this, WebActivity.class));
+                            else
+                                startActivity(new Intent(LoginActivity.this, SearchActivity.class));
+                        } else {
+                            String errorStr;
+                            if (response == null)
+                                errorStr = "Error! Null response!";
+                            else
+                                errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
+                            ErrorFragment ef = ErrorFragment.newError(errorStr);
+                            ef.show(getSupportFragmentManager(), "Intratuin");
+                        }
+                    } catch (InterruptedException | ExecutionException | JSONException e) {
+                        ErrorFragment ef = ErrorFragment.newError("Error!");
+                        ef.show(LoginActivity.this.getSupportFragmentManager(), "Intratuin");
                     }
-                } catch (InterruptedException | ExecutionException | JSONException e) {
-                    ErrorFragment ef = ErrorFragment.newError("Error!");
-                    ef.show(LoginActivity.this.getSupportFragmentManager(), "Intratuin");
                 }
             }
 
