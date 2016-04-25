@@ -111,13 +111,14 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                 if(registerUri!=null && dataValidation()){//&& Data validation passed
                     MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
                     map.add("client_id", etEmail.getText().toString());
-                    map.add("client_name", etFirstName.getText().toString());
-                    map.add("client_tussen", etTussen.getText().toString());
-                    map.add("client_famname", etLastName.getText().toString());
-                    if(rbMale.isChecked())
-                        map.add("client_gender", "1");
-                    else
-                        map.add("client_gender", "0");
+                    //TODO: get commented data
+                    //map.add("client_name", etFirstName.getText().toString());
+                    //map.add("client_tussen", etTussen.getText().toString());
+                    //map.add("client_famname", etLastName.getText().toString());
+                    //if(rbMale.isChecked())
+                    //    map.add("client_gender", "1");
+                    //else
+                    //    map.add("client_gender", "0");
                     map.add("client_secret", etPassword.getText().toString());
 
                     AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =

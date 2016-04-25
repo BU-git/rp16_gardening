@@ -63,10 +63,11 @@ public class CustomerServiceImpl implements CustomerService {
         } else {
             Customer customer = new Customer();
             customer.setEmail(emailToRegister);
-            customer.setFirstName(header.getFirst("client_name"));
-            customer.setTussen(header.getFirst("client_tussen"));
-            customer.setLastName(header.getFirst("client_famname"));
-            customer.setGender(header.getFirst("client_gender").equals("1")?1:0);
+            //TODO: get commented data
+            //customer.setFirstName(header.getFirst("client_name"));
+            //customer.setTussen(header.getFirst("client_tussen"));
+            //customer.setLastName(header.getFirst("client_famname"));
+            //customer.setGender(header.getFirst("client_gender").equals("1")?1:0);
             customer.setPassword(header.getFirst("client_secret"));
             save(customer);
             response.put("id",""+customer.getId());
@@ -82,7 +83,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private JSONObject registerHeaderFormatCheck(MultiValueMap<String, String> header){
         JSONObject response=new JSONObject();
-        String[] par_list={"client_id","client_name","client_tussen","client_famname","client_gender","client_secret"};
+        String[] par_list={"client_id","client_secret"};//"client_name","client_tussen","client_famname","client_gender",
         for(String par:par_list){
             if(!header.containsKey(par)){
                 response.put("code","400");
