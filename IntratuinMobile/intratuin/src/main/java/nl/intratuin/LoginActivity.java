@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        CacheCustomerCredentials.cache(this); //Check cache
+        CacheCustomerCredentials.cache(this); //Check cache
 
         getSupportActionBar().hide();
         TwitterAuthConfig authConfig = Settings.getTwitterConfig(this);
