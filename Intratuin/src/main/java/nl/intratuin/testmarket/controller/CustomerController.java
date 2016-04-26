@@ -61,6 +61,11 @@ public class CustomerController {
         return customerService.addCustomer(header);
     }
 
+    @RequestMapping(value="info", params = {"access_token"})
+    public Customer info(@RequestParam(value = "access_token") String token){
+        return customerService.getCustomerByAccessKey(token);
+    }
+
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public
     @ResponseBody
@@ -119,28 +124,5 @@ public class CustomerController {
         User profile = facebook.userOperations().getUserProfile();
         return customerService.loginWithFacebook(profile);
     }
-
-    @RequestMapping(value = "confirmFacebookAccessKey/{accessToken}")
-    public LoginAndCacheResult checkFacebookAccessToken(@PathVariable String accessToken) {
-        Facebook facebook = new FacebookTemplate(accessToken, "IntratuinMobile", "1720162671574425");
-        User profile = facebook.userOperations().getUserProfile();
-        Integer existedCustomerId = customerService.getCustomerIdByFacebookProfile(profile);
-        if(existedCustomerId != null) {
-            if (existedCustomerId > 0){
-                Customer customer = customerService.findById(existedCustomerId);
-                return new LoginAndCacheResult("Hello, " + customer.getFirstName() + " " + customer.getLastName(),
-                        accessToken);
-            } else {
-                return new LoginAndCacheResult("Invalid access token", null);
-            }
-        } else {
-            return new LoginAndCacheResult("to successfully login we need your email", null);
-        }
-    }
-//
-//    @RequestMapping(value = "checkTwitterAccessToken/{accesstoken}")
-//    public List<TransferAccessKey> checkTwitterAccessToken(@PathVariable String accessToken) {
-//        return service.findAllByCategory(idCategory);
-//    }
 }
 

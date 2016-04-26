@@ -34,8 +34,7 @@ public class RequestResponseGET<T, V> extends AsyncTask<T, Void, V> {
     protected V doInBackground(T... param) {
         for (int i = 0; i < retry; i++) {
             try {
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                RestTemplate restTemplate = new RestTemplate(true);
                 SimpleClientHttpRequestFactory rf =
                         (SimpleClientHttpRequestFactory) restTemplate.getRequestFactory();
                 rf.setReadTimeout(Settings.getConnectionTimeout(context));

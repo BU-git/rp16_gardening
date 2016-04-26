@@ -241,19 +241,6 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    public Integer getCustomerIdByFacebookProfile(User profile){
-            String emailToLoginWithFacebook = profile.getEmail();
-            if (emailToLoginWithFacebook != null) {
-                Integer existedCustomerId = customerDao.findByEmail(emailToLoginWithFacebook);
-
-                return existedCustomerId != null
-                        ? existedCustomerId
-                        : -1;
-            } else {
-                return null;
-            }
-        }
-
     @Transactional
     private int addWithFacebook (User profile){
         Customer customer = new Customer();
@@ -280,5 +267,12 @@ public class CustomerServiceImpl implements CustomerService {
         }
         customerDao.save(customer);
         return customerDao.findByEmail(profile.getEmail().toLowerCase());
+    }
+
+    public Customer getCustomerByAccessKey(String accessKey) {
+        AccessKey foundAccessKeyEntity = accessKeyDao.getNonDeprecatedKey(accessKey);
+        return foundAccessKeyEntity != null
+                ? customerDao.findById(foundAccessKeyEntity.getCustomerId())
+                : null;
     }
 }
