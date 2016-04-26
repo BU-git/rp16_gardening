@@ -69,7 +69,7 @@ public class CacheCustomerCredentials {
             }
         } else {
             if (Settings.getBuildType(context) != BuildType.DEMOAPI)
-                twitterCache(context);
+                facebookCache(context);
         }
     }
 
