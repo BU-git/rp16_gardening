@@ -38,7 +38,7 @@
     <string name="info_server">/customer/info</string>
     <string name="info_api">/api/v1/user</string>
     #other
-    <string name="products_in_category">/category/list/byCategory/</string>
+    <string name="products_in_category">/product/list/byCategory/</string>
     <string name="category_list">/category/all</string>
     <string name="product_search">/product/search/</string>
 

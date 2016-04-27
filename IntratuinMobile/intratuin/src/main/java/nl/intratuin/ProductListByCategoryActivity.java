@@ -12,6 +12,7 @@ import java.util.List;
 
 import nl.intratuin.dto.Product;
 import nl.intratuin.dto.TreeNode;
+import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.handlers.ProductListAdapter;
 import nl.intratuin.handlers.RequestResponseManager;
 import nl.intratuin.net.RequestResponse;
@@ -57,10 +58,10 @@ public class ProductListByCategoryActivity extends AppCompatActivity {
         return null;
     }
     private void generateProductListByCategory(String idCategory) {
-        URI uri = new UriConstructor(this, getSupportFragmentManager())
-                .makeURI("productsInCategory", idCategory);
+        String uri = new UriConstructor(this, getSupportFragmentManager())
+                .makeURI("productsInCategory").toString()+"{idCategory}";
         RequestResponseManager<Product[]> managerLoader = new RequestResponseManager<>(this, Product[].class);
-        List<Product> allProductByCategory = Arrays.asList(managerLoader.loaderFromWebService(uri.toString(), idCategory));
+        List<Product> allProductByCategory = Arrays.asList(managerLoader.loaderFromWebService(uri, idCategory));
         if (allProductByCategory != null) {
             ProductListAdapter productListAdapter = new ProductListAdapter(ProductListByCategoryActivity.this, allProductByCategory);
             productByCategoryListView.setAdapter(productListAdapter);
