@@ -110,11 +110,11 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
             }
         }
 
-        private List<Product> findProducts(Context context, String searchQuery) {
+        private List<Product> findProducts(Context context, String name) {
             String searchUri = new UriConstructor(context, ((FragmentActivity) context).getSupportFragmentManager())
-                    .makeURI("search").toString() + "/{name}";
+                    .makeURI("search").toString() + "{name}";
             RequestResponseManager<Product[]> managerLoader = new RequestResponseManager(context, Product[].class);
-            return Arrays.asList(managerLoader.loaderFromWebService(searchUri, searchQuery));
+            return Arrays.asList(managerLoader.loaderFromWebService(searchUri, name));
         }
     }
 
@@ -132,4 +132,3 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
         }
     }
 }
-

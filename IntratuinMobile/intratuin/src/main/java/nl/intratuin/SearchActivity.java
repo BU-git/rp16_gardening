@@ -12,6 +12,9 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +24,7 @@ import nl.intratuin.dto.Category;
 import nl.intratuin.dto.Product;
 import nl.intratuin.dto.TreeNode;
 import nl.intratuin.handlers.CacheCustomerCredentials;
+import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.handlers.HierarchyCategoryAdapter;
 import nl.intratuin.handlers.ProductAutoCompleteAdapter;
 import nl.intratuin.handlers.RequestResponseManager;
@@ -29,6 +33,8 @@ import nl.intratuin.net.UriConstructor;
 public class SearchActivity extends AppCompatActivity implements OnClickListener {
     public static final String PRODUCT_SEARCH = "productSearch";
     public static final String TREENODE = "TreeNode";
+
+    String access_token;
 
     private HierarchyCategoryAdapter categoryAdapter;
     private ListView categoryListView;
@@ -42,49 +48,85 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
-        setContentView(R.layout.activity_search);
-
-//show access token
         final Bundle extra = getIntent().getExtras();
         if (extra != null) {
-            Toast.makeText(this, "TRANSFER ACCESS TOKEN: " + extra.getString(LoginActivity.ACCESS_TOKEN), Toast.LENGTH_LONG).show();
+            access_token=extra.getString(LoginActivity.ACCESS_TOKEN);
         }
+        if(access_token!=null) {
+            getSupportActionBar().hide();
+            setContentView(R.layout.activity_search);
 
-        ibBarcode = (ImageButton) findViewById(R.id.ibBarcode);
-        ibMan = (ImageButton) findViewById(R.id.ibMan);
-        ibBusket = (ImageButton) findViewById(R.id.ibBusket);
-        categoryListView = (ListView) findViewById(R.id.categoryListView);
+            ibBarcode = (ImageButton) findViewById(R.id.ibBarcode);
+            ibMan = (ImageButton) findViewById(R.id.ibMan);
+            ibBusket = (ImageButton) findViewById(R.id.ibBusket);
+            categoryListView = (ListView) findViewById(R.id.categoryListView);
 
-        ibBarcode.setOnClickListener(this);
-        ibMan.setOnClickListener(this);
-        ibBusket.setOnClickListener(this);
+            ibBarcode.setOnClickListener(this);
+            ibMan.setOnClickListener(this);
+            ibBusket.setOnClickListener(this);
 
-        treeCategory = generateCategoryHierarchy();//all categories
-        categoryAdapter = new HierarchyCategoryAdapter(this, treeCategory);
-        categoryListView.setAdapter(categoryAdapter);
+            treeCategory = generateCategoryHierarchy();//all categories
+            categoryAdapter = new HierarchyCategoryAdapter(this, treeCategory);
+            categoryListView.setAdapter(categoryAdapter);
 
-        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-                categoryAdapter.clickOnCategory(position);
-            }
-        });
+            categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+                    categoryAdapter.clickOnCategory(position);
+                }
+            });
 
-        ProductAutoCompleteAdapter searchAdapter = new ProductAutoCompleteAdapter(this);
-        AutoCompleteTextView autoCompleteTV = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
-        autoCompleteTV.setThreshold(3);
-        autoCompleteTV.setAdapter(searchAdapter);
-        autoCompleteTV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Product product = (Product) parent.getItemAtPosition(position);
+            ProductAutoCompleteAdapter searchAdapter = new ProductAutoCompleteAdapter(this);
+            AutoCompleteTextView autoCompleteTV = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+            autoCompleteTV.setThreshold(3);
+            autoCompleteTV.setAdapter(searchAdapter);
+            autoCompleteTV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Product product = (Product) parent.getItemAtPosition(position);
 
                     Intent productPageIntent = new Intent(SearchActivity.this, ProductDetailsPageActivity.class);
                     productPageIntent.putExtra(PRODUCT_SEARCH, product);
                     startActivity(productPageIntent);
+                }
+            });
+
+            //show user login
+            String name = "anonymous";
+            try {
+                String userInfoUri = new UriConstructor(SearchActivity.this, getSupportFragmentManager()).makeURI("userInfo").toString();
+                userInfoUri+="?access_token={access_token}";
+                if (userInfoUri != null) {
+                    RequestResponseManager<String> managerLoader = new RequestResponseManager(this, String.class);
+                    String jsonRespond = managerLoader.loaderFromWebService(userInfoUri, access_token);
+                    JSONObject response = new JSONObject(jsonRespond);
+                    if (response != null && response.has("user_id")) {
+                        //Toast.makeText(WebActivity.this, "Customer: " + response.getString("name"), Toast.LENGTH_LONG).show();
+                        if (response.has("name") && response.getString("name").length()>0)
+                            name = response.getString("name");
+                        else name = response.getString("client_id");//name = response.getString("client_id");
+                    } else {
+                        String errorStr;
+                        if (response == null)
+                            errorStr = "Error! Null response!";
+                        else errorStr = "Error"+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
+                        ErrorFragment ef = ErrorFragment.newError(errorStr);
+                        ef.show(getSupportFragmentManager(), "Intratuin");
+                        startActivity(new Intent(SearchActivity.this, LoginActivity.class));
+                    }
+                }
+            } catch (JSONException e) {
+                ErrorFragment ef = ErrorFragment.newError("Can't get user info!");
+                ef.show(getSupportFragmentManager(), "Intratuin");
+                startActivity(new Intent(SearchActivity.this, LoginActivity.class));
             }
-        });
+
+            Toast.makeText(this, "Logged as " + name, Toast.LENGTH_LONG).show();
+        } else {
+            ErrorFragment ef = ErrorFragment.newError("No access token found!");
+            ef.show(getSupportFragmentManager(), "Intratuin");
+            startActivity(new Intent(SearchActivity.this, LoginActivity.class));
+        }
     }
 
     private List<TreeNode> generateCategoryHierarchy() {

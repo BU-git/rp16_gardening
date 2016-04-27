@@ -1,6 +1,5 @@
 package nl.intratuin.testmarket.controller;
 
-import nl.intratuin.testmarket.dto.*;
 import nl.intratuin.testmarket.entity.Customer;
 import nl.intratuin.testmarket.service.contract.AccessKeyService;
 import nl.intratuin.testmarket.service.contract.CustomerService;
@@ -39,13 +38,25 @@ public class CustomerController {
         }
     }
 
+    @RequestMapping(value="testPost", method=RequestMethod.POST)
+    public String testPost(@RequestBody MultiValueMap<String, String> header){
+        if(!header.containsKey("access_token"))
+            return "No token found";
+        else return header.getFirst("access_token");
+    }
+
+    @RequestMapping(value="testGet/", params = {"access_token"})
+    public String testGet(@RequestParam(value = "access_token") String token){
+        return token;
+    }
+
     @RequestMapping("all")
     public List<Customer> getAll() {
         return customerService.findAll();
     }
 
     @RequestMapping("time")
-    public String test() {
+    public String time() {
         return LocalDateTime.now().toString();
     }
 
@@ -62,8 +73,40 @@ public class CustomerController {
     }
 
     @RequestMapping(value="info", params = {"access_token"})
-    public Customer info(@RequestParam(value = "access_token") String token){
-        return customerService.getCustomerByAccessKey(token);
+    public Object info(@RequestParam(value = "access_token") String token){
+        Customer c=customerService.getCustomerByAccessKey(token);
+        if(c!=null) {
+            JSONObject r = new JSONObject();
+            r.put("user_id",""+c.getId());
+            String name=getCustomerName(c);
+            r.put("name",name);
+            r.put("client_id",c.getEmail());
+            r.put("email",c.getEmail());
+            return r;
+        }else{
+            JSONObject e=new JSONObject();
+            e.put("code","403");
+            e.put("error","forbidden");
+            e.put("error_description","Token you provided is invalid or deprecated");
+            return e;
+        }
+    }
+
+    private String getCustomerName(Customer c){
+        String res="";
+        if(c.getFirstName()!=null && c.getFirstName().length()>0) {
+            res += c.getFirstName();
+            if((c.getTussen()!=null && c.getTussen().length()>0) || (c.getLastName()!=null && c.getLastName().length()>0))
+                res+=" ";
+        }
+        if(c.getTussen()!=null && c.getTussen().length()>0){
+            res += c.getTussen();
+            if(c.getLastName()!=null && c.getLastName().length()>0)
+                res += " ";
+        }
+        if(c.getLastName()!=null && c.getLastName().length()>0)
+            res += c.getLastName();
+        return res;
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)

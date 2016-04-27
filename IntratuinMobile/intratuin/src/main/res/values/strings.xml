@@ -9,8 +9,9 @@
     <string name="twitter_customer_key">CpdWZOr27su9Vduhipt3XVUgD</string>
     <string name="twitter_customer_secret">pcOrskD4hWcUGxi5n3nMvtL3bArhIuyj2pmiMCQ7E9jj71wH5w</string>
 
-    <string name="build_type">API</string>
-    <string name="mainscreen">WEB</string>
+    #build types: LOCAL, DEPLOYED, API, DEMOAPI; mainscreens: WEB, SEARCH. If build_type=API/DEMOAPI mainscreen is always WEB
+    <string name="build_type">DEPLOYED</string>
+    <string name="mainscreen">SEARCH</string>
     <string name="connection_timeout">10000</string>
 
     #hosts
@@ -33,8 +34,11 @@
     #social login
     <string name="twitter_login">/customer/loginTwitter</string>
     <string name="facebook_login">/customer/loginFacebook</string>
+    #get user by access token
+    <string name="info_server">/customer/info</string>
+    <string name="info_api">/api/v1/user</string>
     #other
-    <string name="products_in_category">/category/list/byCategory/</string>
+    <string name="products_in_category">/product/list/byCategory/</string>
     <string name="category_list">/category/all</string>
     <string name="product_search">/product/search/</string>
 

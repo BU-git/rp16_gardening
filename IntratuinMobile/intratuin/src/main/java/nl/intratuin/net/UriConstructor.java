@@ -99,27 +99,41 @@ public class UriConstructor {
                             return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_local))
                                     ,context.getString(R.string.product_search)).toURI();
                     }
-                default:
-                    return null;
-            }
-        } catch(MalformedURLException | URISyntaxException e){
-            return null;
-        }
-    }
-    public URI makeURI(String action, String par){
-        try {
-            switch (action) {
-                case "productsInCategory":
+                case "userInfo":
                     switch (Settings.getBuildType(context)){
                         case DEPLOYED:
                             return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_deployed))
-                                    ,"/Intratuin"+context.getString(R.string.products_in_category)+par).toURI();
+                                    ,"/Intratuin"+context.getString(R.string.info_server)).toURI();
+                        case API:
+                        case DEMOAPI:
+                            return new URL("http",Settings.getHost(context), context.getString(R.string.info_api)).toURI();
+                        default:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_local))
+                                    ,context.getString(R.string.info_server)).toURI();
+                    }
+                case "search"://product search by name beginning
+                    switch (Settings.getBuildType(context)){
+                        case DEPLOYED:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_deployed))
+                                    ,"/Intratuin"+context.getString(R.string.product_search)).toURI();
                         case API:
                         case DEMOAPI:
                             return null;
                         default:
                             return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_local))
-                                    ,context.getString(R.string.products_in_category)+par).toURI();
+                                    ,context.getString(R.string.product_search)).toURI();
+                    }
+                case "productsInCategory":
+                    switch (Settings.getBuildType(context)){
+                        case DEPLOYED:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_deployed))
+                                    ,"/Intratuin"+context.getString(R.string.products_in_category)).toURI();
+                        case API:
+                        case DEMOAPI:
+                            return null;
+                        default:
+                            return new URL("http",Settings.getHost(context),Integer.parseInt(context.getString(R.string.port_local))
+                                    ,context.getString(R.string.products_in_category)).toURI();
                     }
                 default:
                     return null;

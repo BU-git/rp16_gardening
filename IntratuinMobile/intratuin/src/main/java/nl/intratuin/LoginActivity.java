@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -181,8 +180,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_ACCESS_TOKEN, accessTokenTwitter);
                             App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_SECRET_ACCESS_TOKEN, secretAccessTokenTwitter);
                             String accessKey = response.getString("access_token");
-                            //TODO: save access token, pass it to next activity, and remove toast!
-                            Toast.makeText(LoginActivity.this, accessKey, Toast.LENGTH_LONG).show();
+
                             if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
                                 startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
                             else startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
@@ -213,35 +211,36 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             public void onSuccess(LoginResult loginResult) {
                 String accessToken = loginResult.getAccessToken().getToken();
                 facebookLoginUri = new UriConstructor(LoginActivity.this, getSupportFragmentManager()).makeURI("facebookLogin");
-                MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-                map.add("facebook_token", loginResult.getAccessToken().getToken());
+                if(facebookLoginUri!=null) {
+                    MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+                    map.add("facebook_token", loginResult.getAccessToken().getToken());
 
-                AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
-                        new RequestResponse<MultiValueMap<String, String>, String>(facebookLoginUri, 3,
-                                String.class, getSupportFragmentManager(), LoginActivity.this).execute(map);
-                JSONObject response;
-                try {
-                    response = new JSONObject(jsonRespond.get());
-                    if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
-                        App.getAuthManager().loginAndCache(AuthManager.PREF_FACEBOOK, accessToken);
-                        String accessKey = response.getString("access_token");
-                        //TODO: save access token, pass it to next activity, and remove toast!
-                        Toast.makeText(LoginActivity.this, accessKey, Toast.LENGTH_LONG).show();
-                        if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
-                            startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
-                        else startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
-                    } else {
-                        String errorStr;
-                        if(response==null)
-                            errorStr="Error! Null response!";
-                        else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
+                    AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
+                            new RequestResponse<MultiValueMap<String, String>, String>(facebookLoginUri, 3,
+                                    String.class, getSupportFragmentManager(), LoginActivity.this).execute(map);
+                    JSONObject response;
+                    try {
+                        response = new JSONObject(jsonRespond.get());
+                        if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
+                            App.getAuthManager().loginAndCache(AuthManager.PREF_FACEBOOK, accessToken);
+                            String accessKey = response.getString("access_token");
 
-                        ErrorFragment ef = ErrorFragment.newError(errorStr);
-                        ef.show(getSupportFragmentManager(), "Intratuin");
+                            if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
+                                startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
+                            else startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
+                        } else {
+                            String errorStr;
+                            if (response == null)
+                                errorStr = "Error! Null response!";
+                            else
+                                errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
+                            ErrorFragment ef = ErrorFragment.newError(errorStr);
+                            ef.show(getSupportFragmentManager(), "Intratuin");
+                        }
+                    } catch (InterruptedException | ExecutionException | JSONException e) {
+                        ErrorFragment ef = ErrorFragment.newError("Error!");
+                        ef.show(LoginActivity.this.getSupportFragmentManager(), "Intratuin");
                     }
-                } catch (InterruptedException | ExecutionException | JSONException e) {
-                    ErrorFragment ef = ErrorFragment.newError("Error!");
-                    ef.show(LoginActivity.this.getSupportFragmentManager(), "Intratuin");
                 }
             }
 
@@ -299,10 +298,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             if(cbRemember.isChecked()){
                                 App.getAuthManager().loginAndCache(AuthManager.PREF_USERNAME, etEmailAddress.getText().toString());
                                 App.getAuthManager().loginAndCache(AuthManager.PREF_PASSWORD, etPassword.getText().toString());
-                                Toast.makeText(LoginActivity.this, "cache username and password", Toast.LENGTH_LONG).show();
+                                //Toast.makeText(LoginActivity.this, "cache username and password", Toast.LENGTH_LONG).show();
                             }
-                            //TODO: save access token, pass it to next activity, and remove toast!
-                            Toast.makeText(LoginActivity.this, accessKey, Toast.LENGTH_LONG).show();
+
                             if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
                                 startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
                             else startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));

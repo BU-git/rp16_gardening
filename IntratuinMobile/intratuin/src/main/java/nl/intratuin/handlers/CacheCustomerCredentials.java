@@ -46,8 +46,7 @@ public class CacheCustomerCredentials {
                     String accessKey = responseJsonObject.getString("access_token");
                     if (Settings.getMainscreen(context) == Mainscreen.WEB)
                         context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
-                    else
-                        context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
+                    else context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
                 } else {
                     String errorStr;
                     if (responseJsonObject == null)
@@ -68,7 +67,7 @@ public class CacheCustomerCredentials {
                 Log.e("Error!!!!!! ", e.getMessage());
             }
         } else {
-            if (Settings.getBuildType(context) != BuildType.DEMOAPI)
+            if (Settings.getBuildType(context) == BuildType.LOCAL || Settings.getBuildType(context) == BuildType.DEPLOYED)
                 facebookCache(context);
         }
     }
@@ -85,7 +84,7 @@ public class CacheCustomerCredentials {
             try {
                 JSONObject responseJsonObject = new JSONObject(jsonRespond.get());
 
-                if (responseJsonObject != null && responseJsonObject.getString("token_type").equals("bearer")) {
+                if (responseJsonObject != null && responseJsonObject.has("token_type") && responseJsonObject.getString("token_type").equals("bearer")) {
                     String accessKey = responseJsonObject.getString("access_token");
                     if (Settings.getMainscreen(context) == Mainscreen.WEB)
                         context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
@@ -128,7 +127,7 @@ public class CacheCustomerCredentials {
                         new RequestResponse<MultiValueMap<String, String>, String>(uri, 3,
                                 String.class, ((FragmentActivity) context).getSupportFragmentManager(), context).execute(map);
                 JSONObject responseJsonObject = new JSONObject(jsonRespond.get());
-                if (responseJsonObject != null && responseJsonObject.getString("token_type").equals("bearer")) {
+                if (responseJsonObject != null && responseJsonObject.has("token_type") && responseJsonObject.getString("token_type").equals("bearer")) {
                     String accessKey = responseJsonObject.getString("access_token");
                     if (Settings.getMainscreen(context) == Mainscreen.WEB)
                         context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
