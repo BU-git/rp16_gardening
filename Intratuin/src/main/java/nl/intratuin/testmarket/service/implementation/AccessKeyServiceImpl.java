@@ -12,11 +12,6 @@ import javax.inject.Named;
 public class AccessKeyServiceImpl implements AccessKeyService{
     @Inject
     private AccessKeyDao accessKeyDao;
-
-    public Integer getCustomerIdByAccessKey(String accessKey){
-        return accessKeyDao.getCustomerIdByAccessKey(accessKey);
-    }
-
     @Transactional
     public void save(AccessKey accessKey){
         accessKeyDao.save(accessKey);

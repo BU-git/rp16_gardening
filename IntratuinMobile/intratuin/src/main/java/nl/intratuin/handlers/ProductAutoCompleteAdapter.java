@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import nl.intratuin.BuildConfig;
 import nl.intratuin.R;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.RequestResponseGET;
@@ -111,7 +112,7 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
 
         private List<Product> findProducts(Context context, String searchQuery) {
             String searchUri = new UriConstructor(context, ((FragmentActivity) context).getSupportFragmentManager())
-                    .makeURI("productSearch").toString() + "/{name}";
+                    .makeURI("search").toString() + "/{name}";
             RequestResponseManager<Product[]> managerLoader = new RequestResponseManager(context, Product[].class);
             return Arrays.asList(managerLoader.loaderFromWebService(searchUri, searchQuery));
         }

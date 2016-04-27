@@ -63,10 +63,15 @@ public class CustomerServiceImpl implements CustomerService {
         } else {
             Customer customer = new Customer();
             customer.setEmail(emailToRegister);
-            //TODO: get commented data
-            //customer.setFirstName(header.getFirst("client_name"));
-            //customer.setTussen(header.getFirst("client_tussen"));
-            //customer.setLastName(header.getFirst("client_famname"));
+            String[] name=header.getFirst("name").split(" ");
+            customer.setFirstName(name[0]);
+            if(name.length==2)
+                customer.setLastName(name[1]);
+            else{
+                customer.setTussen(name[1]);
+                customer.setLastName(name[2]);
+            }
+            //TODO: get gender
             //customer.setGender(header.getFirst("client_gender").equals("1")?1:0);
             customer.setPassword(header.getFirst("client_secret"));
             save(customer);
@@ -83,7 +88,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private JSONObject registerHeaderFormatCheck(MultiValueMap<String, String> header){
         JSONObject response=new JSONObject();
-        String[] par_list={"client_id","client_secret"};//"client_name","client_tussen","client_famname","client_gender",
+        String[] par_list={"client_id","client_secret","name"};//"client_gender",
         for(String par:par_list){
             if(!header.containsKey(par)){
                 response.put("code","400");
@@ -129,13 +134,13 @@ public class CustomerServiceImpl implements CustomerService {
             } else {
                 response.put("code","400");
                 response.put("error","invalid_client");
-                response.put("error_description","Client password is invalid");
+                response.put("error_description","Client credentials are invalid");
                 return response;
             }
         }else{
             response.put("code","400");
             response.put("error","invalid_client");
-            response.put("error_description","Client email is invalid");
+            response.put("error_description","Client credentials are invalid");
             return response;
         }
     }
@@ -241,19 +246,6 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    public Integer getCustomerIdByFacebookProfile(User profile){
-            String emailToLoginWithFacebook = profile.getEmail();
-            if (emailToLoginWithFacebook != null) {
-                Integer existedCustomerId = customerDao.findByEmail(emailToLoginWithFacebook);
-
-                return existedCustomerId != null
-                        ? existedCustomerId
-                        : -1;
-            } else {
-                return null;
-            }
-        }
-
     @Transactional
     private int addWithFacebook (User profile){
         Customer customer = new Customer();
@@ -280,5 +272,12 @@ public class CustomerServiceImpl implements CustomerService {
         }
         customerDao.save(customer);
         return customerDao.findByEmail(profile.getEmail().toLowerCase());
+    }
+
+    public Customer getCustomerByAccessKey(String accessKey) {
+        AccessKey foundAccessKeyEntity = accessKeyDao.getNonDeprecatedKey(accessKey);
+        return foundAccessKeyEntity != null
+                ? customerDao.findById(foundAccessKeyEntity.getCustomerId())
+                : null;
     }
 }

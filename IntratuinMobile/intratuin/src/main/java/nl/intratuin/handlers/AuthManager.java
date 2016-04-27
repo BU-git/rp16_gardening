@@ -7,9 +7,11 @@ import android.support.annotation.NonNull;
 public class AuthManager {
     public static final String PREF_FILENAME = "auth";
 
-    public static final String PREF_CREDENTIALS = "access key: credentials";
+    public static final String PREF_USERNAME = "access key: username";
+    public static final String PREF_PASSWORD = "access key: password";
     public static final String PREF_FACEBOOK= "access token: facebook";
-    public static final String PREF_TWITTER = "access key: twitter";
+    public static final String PREF_TWITTER_ACCESS_TOKEN = "access token: twitter";
+    public static final String PREF_TWITTER_SECRET_ACCESS_TOKEN = "secret access key: twitter";
 
     private final SharedPreferences pref;
 
@@ -28,10 +30,18 @@ public class AuthManager {
     }
 
     public String getAccessTokenTwitter() {
-        return pref.getString(PREF_TWITTER, null);
+        return pref.getString(PREF_TWITTER_ACCESS_TOKEN, null);
     }
 
-    public String getAccessKeyCredentials() {
-        return pref.getString(PREF_CREDENTIALS, null);
+    public String getSecretAccessTokenTwitter() {
+        return pref.getString(PREF_TWITTER_SECRET_ACCESS_TOKEN, null);
+    }
+
+    public String getAccessKeyUsername() {
+        return pref.getString(PREF_USERNAME, null);
+    }
+
+    public String getAccessKeyPassword() {
+        return pref.getString(PREF_PASSWORD, null);
     }
 }

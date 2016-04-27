@@ -20,7 +20,7 @@ public class AccessKeyImpl implements AccessKeyDao {
         em.persist(accessKey);
     }
 
-    private AccessKey getNonDeprecatedKey(String accessKey){
+    public AccessKey getNonDeprecatedKey(String accessKey){
         LocalDateTime currentDate = LocalDateTime.now();
         TypedQuery<AccessKey> queryFindByAccessKey = em.createQuery("SELECT AK FROM AccessKey AK WHERE AK.accessKey = :regex",
                 AccessKey.class);
@@ -35,13 +35,6 @@ public class AccessKeyImpl implements AccessKeyDao {
         } catch (Exception e) {
             System.out.print(e.getMessage());}
         return null;
-    }
-
-    public Integer getCustomerIdByAccessKey(String accessKey) {
-        AccessKey keyEntity=getNonDeprecatedKey(accessKey);
-        if(keyEntity!=null)
-            return keyEntity.getCustomerId();
-        return -1;
     }
 
     public boolean addRefreshToken(String accessToken, String refreshToken){

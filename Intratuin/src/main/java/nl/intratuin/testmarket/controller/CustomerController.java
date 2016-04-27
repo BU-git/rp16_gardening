@@ -1,6 +1,5 @@
 package nl.intratuin.testmarket.controller;
 
-import nl.intratuin.testmarket.dto.*;
 import nl.intratuin.testmarket.entity.Customer;
 import nl.intratuin.testmarket.service.contract.AccessKeyService;
 import nl.intratuin.testmarket.service.contract.CustomerService;
@@ -73,6 +72,43 @@ public class CustomerController {
         return customerService.addCustomer(header);
     }
 
+    @RequestMapping(value="info", params = {"access_token"})
+    public Object info(@RequestParam(value = "access_token") String token){
+        Customer c=customerService.getCustomerByAccessKey(token);
+        if(c!=null) {
+            JSONObject r = new JSONObject();
+            r.put("user_id",""+c.getId());
+            String name=getCustomerName(c);
+            r.put("name",name);
+            r.put("client_id",c.getEmail());
+            r.put("email",c.getEmail());
+            return r;
+        }else{
+            JSONObject e=new JSONObject();
+            e.put("code","403");
+            e.put("error","forbidden");
+            e.put("error_description","Token you provided is invalid or deprecated");
+            return e;
+        }
+    }
+
+    private String getCustomerName(Customer c){
+        String res="";
+        if(c.getFirstName()!=null && c.getFirstName().length()>0) {
+            res += c.getFirstName();
+            if((c.getTussen()!=null && c.getTussen().length()>0) || (c.getLastName()!=null && c.getLastName().length()>0))
+                res+=" ";
+        }
+        if(c.getTussen()!=null && c.getTussen().length()>0){
+            res += c.getTussen();
+            if(c.getLastName()!=null && c.getLastName().length()>0)
+                res += " ";
+        }
+        if(c.getLastName()!=null && c.getLastName().length()>0)
+            res += c.getLastName();
+        return res;
+    }
+
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public
     @ResponseBody
@@ -131,44 +167,5 @@ public class CustomerController {
         User profile = facebook.userOperations().getUserProfile();
         return customerService.loginWithFacebook(profile);
     }
-
-    @RequestMapping(value = "confirmCredentialsAccessKey/{accessKey}")
-    public LoginAndCacheResult checkCredentialsAccessKey(@PathVariable String accessKey) {
-        Customer customer;
-        Integer foundCustomerIdByAccessKey = service.getCustomerIdByAccessKey(accessKey);
-        if(foundCustomerIdByAccessKey != null) {
-            if(foundCustomerIdByAccessKey != -1) {
-                customer = customerService.findById(foundCustomerIdByAccessKey);
-                return new LoginAndCacheResult("Hello, " + customer.getFirstName() + " " + customer.getLastName(),
-                        accessKey);
-            } else {
-                return new LoginAndCacheResult("access key is expired", null);
-            }} else {
-            return new LoginAndCacheResult("Invalid access key", null);
-            }
-    }
-
-    @RequestMapping(value = "confirmFacebookAccessKey/{accessToken}")
-    public LoginAndCacheResult checkFacebookAccessToken(@PathVariable String accessToken) {
-        Facebook facebook = new FacebookTemplate(accessToken, "IntratuinMobile", "1720162671574425");
-        User profile = facebook.userOperations().getUserProfile();
-        Integer existedCustomerId = customerService.getCustomerIdByFacebookProfile(profile);
-        if(existedCustomerId != null) {
-            if (existedCustomerId > 0){
-                Customer customer = customerService.findById(existedCustomerId);
-                return new LoginAndCacheResult("Hello, " + customer.getFirstName() + " " + customer.getLastName(),
-                        accessToken);
-            } else {
-                return new LoginAndCacheResult("Invalid access token", null);
-            }
-        } else {
-            return new LoginAndCacheResult("to successfully login we need your email", null);
-        }
-    }
-//
-//    @RequestMapping(value = "checkTwitterAccessToken/{accesstoken}")
-//    public List<TransferAccessKey> checkTwitterAccessToken(@PathVariable String accessToken) {
-//        return service.findAllByCategory(idCategory);
-//    }
 }
 

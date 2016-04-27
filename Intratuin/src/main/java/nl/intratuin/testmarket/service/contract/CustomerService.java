@@ -22,5 +22,5 @@ public interface CustomerService {
 
     JSONObject loginWithFacebook(User profile);
 
-    Integer getCustomerIdByFacebookProfile(User profile);
+    Customer getCustomerByAccessKey(String accessKey);
 }
