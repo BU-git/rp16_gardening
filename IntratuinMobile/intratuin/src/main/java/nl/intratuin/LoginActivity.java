@@ -37,7 +37,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -45,7 +44,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.fabric.sdk.android.Fabric;
-import nl.intratuin.dto.ShowObject;
+import nl.intratuin.dto.ShowManagerImpl;
 import nl.intratuin.handlers.AuthManager;
 import nl.intratuin.handlers.CacheCustomerCredentials;
 import nl.intratuin.handlers.ErrorFragment;
@@ -312,9 +311,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             if(response==null)
                                 errorStr="Error! Null response!";
                             else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
-                            ShowObject.showMessage(errorStr, LoginActivity.this);
-//                            ErrorFragment ef = ErrorFragment.newError(errorStr);
-//                            ef.show(getSupportFragmentManager(), "Intratuin");
+                            App.getShowManager().showMessage(errorStr);
                         }
                     }
                 } catch (InterruptedException | ExecutionException | JSONException e) {

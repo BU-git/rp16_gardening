@@ -4,9 +4,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
-public class ShowObject {
+public class ShowManagerImpl implements ShowManager{
+    private Context context;
 
-    public static void showMessage(String message, Context context) {
+    public ShowManagerImpl (Context context) {
+        this.context = context;
+    }
+
+    @Override
+    public void showMessage(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Intratuin")
                 .setMessage(message)
@@ -19,6 +25,5 @@ public class ShowObject {
                         });
         AlertDialog alert = builder.create();
         alert.show();
-
     }
 }
