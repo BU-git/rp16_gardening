@@ -17,7 +17,7 @@ public class App extends Application {
         super.onCreate();
         sInstance = this;
         authManager = new AuthManager(this);
-        showManager = new ShowManagerImpl(this);
+        showManager = new ShowManagerImpl();
 
     }
 

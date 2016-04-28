@@ -58,9 +58,8 @@ public class ProductListByCategoryActivity extends AppCompatActivity {
         return null;
     }
     private void generateProductListByCategory(String idCategory) {
-        String uri = new UriConstructor(this, getSupportFragmentManager())
-                .makeURI("productsInCategory").toString()+"{idCategory}";
-        RequestResponseManager<Product[]> managerLoader = new RequestResponseManager<>(this, Product[].class);
+        String uri = new UriConstructor(this).makeURI("productsInCategory").toString()+"{idCategory}";
+        RequestResponseManager<Product[]> managerLoader = new RequestResponseManager<>(this, App.getShowManager(), Product[].class);
         List<Product> allProductByCategory = Arrays.asList(managerLoader.loaderFromWebService(uri, idCategory));
         if (allProductByCategory != null) {
             ProductListAdapter productListAdapter = new ProductListAdapter(ProductListByCategoryActivity.this, allProductByCategory);

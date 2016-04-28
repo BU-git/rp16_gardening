@@ -2,7 +2,6 @@ package nl.intratuin.net;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
-import android.widget.TextView;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -10,8 +9,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import nl.intratuin.R;
-import nl.intratuin.handlers.ErrorFragment;
-import nl.intratuin.settings.BuildType;
 import nl.intratuin.settings.Settings;
 
 /**
@@ -19,10 +16,8 @@ import nl.intratuin.settings.Settings;
  */
 public class UriConstructor {
     private Context context;
-    private FragmentManager fragmentManager;
-    public UriConstructor(Context context, FragmentManager fragmentManager){
+    public UriConstructor(Context context){
         this.context=context;
-        this.fragmentManager=fragmentManager;
     }
     public URI makeURI(String action){
         try {
