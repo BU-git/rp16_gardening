@@ -10,8 +10,6 @@ import nl.intratuin.R;
  * Created by Иван on 19.03.2016.
  */
 public class Settings {
-    private static BuildType buildType = BuildType.DEPLOYED;
-
     public static BuildType getBuildType(Context context) {
         String type=context.getString(R.string.build_type);
         return BuildType.valueOf(type);

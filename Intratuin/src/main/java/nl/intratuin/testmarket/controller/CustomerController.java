@@ -73,7 +73,7 @@ public class CustomerController {
     }
 
     @RequestMapping(value="info", params = {"access_token"})
-    public Object info(@RequestParam(value = "access_token") String token){
+    public JSONObject info(@RequestParam(value = "access_token") String token){
         Customer c=customerService.getCustomerByAccessKey(token);
         if(c!=null) {
             JSONObject r = new JSONObject();
