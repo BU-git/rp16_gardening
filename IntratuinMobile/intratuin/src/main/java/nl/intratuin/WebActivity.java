@@ -14,6 +14,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import nl.intratuin.handlers.AuthManager;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.handlers.RequestResponseManager;
 import nl.intratuin.net.UriConstructor;
@@ -31,10 +32,17 @@ public class WebActivity extends AppCompatActivity {
             "<body>\n" +
             "    Dummy page.\n" +
             "    <input type=\"button\" value=\"Scanner\" onClick=\"showAndroidScanner()\" />\n" +
-            "\n" +
+            "\n" + "<br/>" +
             "    <script type=\"text/javascript\">\n" +
             "        function showAndroidScanner() {\n" +
             "            Android.ShowScanner();\n" +
+            "        }\n" +
+            "    </script>\n" +
+            "   <input type=\"button\" value=\"Logout\" onClick=\"logout()\" />\n" +
+            "\n" + "<br/>" +
+            "    <script type=\"text/javascript\">\n" +
+            "        function logout() {\n" +
+            "            Android.Logout();\n" +
             "        }\n" +
             "    </script>\n" +
             "</body>\n" +
@@ -124,6 +132,17 @@ public class WebActivity extends AppCompatActivity {
         @JavascriptInterface
         public void ShowScanner(){
             startActivity(new Intent(WebActivity.this, ScannerActivity.class));
+        }
+
+        @JavascriptInterface
+        public void Logout(){
+            WebActivity.this.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)
+                    .edit()
+                    .clear()
+                    .commit();
+            Intent loginIntent = new Intent(WebActivity.this, LoginActivity.class);
+            loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(loginIntent);
         }
     }
 }
