@@ -84,6 +84,7 @@ public class Product implements Parcelable {
         out.writeDouble(productPrice);
     }
 
+    
     public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>(){
         public Product createFromParcel(Parcel in){
             return new Product(in);
