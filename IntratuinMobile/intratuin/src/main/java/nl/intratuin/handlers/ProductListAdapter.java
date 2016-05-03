@@ -9,37 +9,78 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import nl.intratuin.R;
 import nl.intratuin.dto.Product;
 
-public class ProductListAdapter extends BaseAdapter{
+/**
+ * Class {@code ProductListAdapter} is used for creating list of products.
+ *
+ * @see BaseAdapter
+ */
+public class ProductListAdapter extends BaseAdapter {
     private List<Product> productList;
     private LayoutInflater inflater;
-    Context context;
+    private Context context;
 
+    /**
+     * Instantiates a new Product list adapter.
+     *
+     * @param context     the context
+     * @param productList the product list
+     */
     public ProductListAdapter(Context context, List<Product> productList) {
         this.context = context;
         this.productList = productList;
         inflater = LayoutInflater.from(context);
     }
 
+    /**
+     * Get count of {@code Product}
+     *
+     * @return count of {@code Product}
+     * @see BaseAdapter
+     */
     @Override
     public int getCount() {
         return productList.size();
     }
 
+    /**
+     * Get a specific {@code Product}
+     *
+     * @param position position in array
+     * @return a specific {@code Product}
+     * @see BaseAdapter
+     */
     @Override
     public Object getItem(int position) {
         return productList.get(position);
     }
 
+    /**
+     * Return {@code Product} id
+     *
+     * @param position
+     * @return {@code Product} id
+     * @see BaseAdapter
+     */
     @Override
     public long getItemId(int position) {
         return position;
     }
 
+    /**
+     * Get a View that displays the {@code Product} at the specified position, with some image changes
+     *
+     * @param position    specific position
+     * @param convertView the old view to reuse
+     * @param parent      the parent to attach
+     * @return View with specified position
+     * @see BaseAdapter
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -62,12 +103,21 @@ public class ProductListAdapter extends BaseAdapter{
         return convertView;
     }
 
+    /**
+     * Class for simplify holding a product view
+     */
+    //let's make ViewHolder as a usual class
     private static class ViewHolder {
-        TextView productName;
-        TextView productPrice;
-        TextView currency_eur;
-        ImageView productImage;
+        private TextView productName;
+        private TextView productPrice;
+        private TextView currency_eur;
+        private ImageView productImage;
 
+        /**
+         * Instantiates a new View holder.
+         *
+         * @param v the view
+         */
         ViewHolder(View v) {
             productName = (TextView) v.findViewById(R.id.productName__byCategory);
             productImage = (ImageView) v.findViewById(R.id.productImage_byCategory);

@@ -6,7 +6,20 @@ import android.content.DialogInterface;
 
 import nl.intratuin.R;
 
-public class ShowManagerImpl implements ShowManager{
+/**
+ * The standard ShowManager implementation with "Intratuin" title
+ *
+ * @see ShowManager
+ */
+public class ShowManagerImpl implements ShowManager {
+
+    /**
+     * Show an alert message.
+     *
+     * @param message
+     * @param context
+     * @see ShowManager
+     */
     @Override
     public void showMessage(String message, Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

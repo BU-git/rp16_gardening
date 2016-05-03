@@ -11,9 +11,20 @@ import com.squareup.picasso.Picasso;
 
 import nl.intratuin.dto.Product;
 
+/**
+ * The class {@code ProductDetailsPageActivity} is used to provide logic on Product Detail Page Activity
+ *
+ * @see AppCompatActivity
+ */
 public class ProductDetailsPageActivity extends AppCompatActivity {
-    Product productBySearch;
+    private Product productBySearch;
 
+    /**
+     * Provide logic when activity created. Mapping field, setting and resizing images.
+     *
+     * @param savedInstanceState
+     */
+    //break this method for few less
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +59,7 @@ public class ProductDetailsPageActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sSize.setAdapter(adapter);
 
+        //aaaaaa, what's that?
         Picasso.with(this)
                 .load(getIntent().getExtras().getString("productImage"))
                 .resize(80, 80)

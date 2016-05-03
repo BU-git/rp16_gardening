@@ -15,8 +15,15 @@ import nl.intratuin.RegisterActivity;
 import java.sql.Date;
 import java.util.Calendar;
 
+/**
+ * The type Date picker fragment.
+ */
+//Why we don't use this class?
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
+    /**
+     * The Et birthday.
+     */
     EditText etBirthday;
 
     @Override
@@ -24,17 +31,17 @@ public class DatePickerFragment extends DialogFragment
 
         final Calendar c = Calendar.getInstance();
 //        etBirthday = (EditText) getActivity().findViewById(R.id.etBirthday);
-        String strDate=etBirthday.getText().toString();
-        int year,month,day;
-        if(strDate.indexOf('/')==-1) {
+        String strDate = etBirthday.getText().toString();
+        int year, month, day;
+        if (strDate.indexOf('/') == -1) {
             year = c.get(Calendar.YEAR);
             month = c.get(Calendar.MONTH);
             day = c.get(Calendar.DAY_OF_MONTH);
         } else {
             Date dt = RegisterActivity.parseDate(strDate);
-            year=dt.getYear()+1900;
-            month=dt.getMonth();
-            day=dt.getDate();
+            year = dt.getYear() + 1900;
+            month = dt.getMonth();
+            day = dt.getDate();
         }
 
         Dialog picker = new DatePickerDialog(getActivity(), this,
@@ -43,10 +50,11 @@ public class DatePickerFragment extends DialogFragment
 
         return picker;
     }
+
     @Override
     public void onStart() {
         super.onStart();
-        Button nButton =  ((AlertDialog) getDialog())
+        Button nButton = ((AlertDialog) getDialog())
                 .getButton(DialogInterface.BUTTON_POSITIVE);
         nButton.setText(getResources().getString(R.string.ready));
 

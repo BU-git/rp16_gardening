@@ -2,24 +2,35 @@ package nl.intratuin.net;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
 
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import nl.intratuin.dto.ShowManager;
-import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.settings.Settings;
 
+/**
+ * The type Request response get.
+ *
+ * @param <T> the type parameter
+ * @param <V> the type parameter
+ */
 public class RequestResponseGET<T, V> extends AsyncTask<T, Void, V> {
     private String uri;
     private int retry;
-    Class<V> responseType;
+    private Class<V> responseType;
     private ShowManager showManager;
-    Context context;
+    private Context context;
 
+    /**
+     * Instantiates a new Request response get.
+     *
+     * @param uri          the uri
+     * @param retry        the retry
+     * @param responseType the response type
+     * @param showManager  the show manager
+     * @param context      the context
+     */
     public RequestResponseGET(String uri, int retry, Class<V> responseType, ShowManager showManager, Context context) {
         super();
         this.uri = uri;
@@ -28,9 +39,14 @@ public class RequestResponseGET<T, V> extends AsyncTask<T, Void, V> {
             this.retry = 1;
         else this.retry = retry;
         this.showManager = showManager;
-        this.context=context;
+        this.context = context;
     }
 
+    /**
+     * Connection to web service with number of tries
+     * @param param
+     * @return
+     */
     @Override
     protected V doInBackground(T... param) {
         for (int i = 0; i < retry; i++) {

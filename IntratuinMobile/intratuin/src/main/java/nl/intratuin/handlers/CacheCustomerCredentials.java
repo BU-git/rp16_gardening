@@ -24,7 +24,18 @@ import nl.intratuin.settings.BuildType;
 import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;
 
+/**
+ * Class {@code Cache customer} uses for check users credentials(include Facebook and Twitter credentials),
+ * and to save user's credentials in cache.
+ */
 public class CacheCustomerCredentials {
+    /**
+     * Checking cache and start Web Activity
+     * or start Facebook/Twitter cache handlers
+     *
+     * @param context the context
+     */
+    //why cache -> facebookCache -> twitterCache?
     public static void cache(Context context) {
         String username = App.getAuthManager().getAccessKeyUsername();
         String password = App.getAuthManager().getAccessKeyPassword();
@@ -46,7 +57,8 @@ public class CacheCustomerCredentials {
                     String accessKey = responseJsonObject.getString("access_token");
                     if (Settings.getMainscreen(context) == Mainscreen.WEB)
                         context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
-                    else context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
+                    else
+                        context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
                     ((FragmentActivity) context).finish();
                 } else {
                     String errorStr;
@@ -72,6 +84,11 @@ public class CacheCustomerCredentials {
         }
     }
 
+    /**
+     * Facebook check handler
+     *
+     * @param context
+     */
     private static void facebookCache(Context context) {
         String accessToken = App.getAuthManager().getAccessTokenFacebook();
         if (accessToken != null) {
@@ -113,6 +130,11 @@ public class CacheCustomerCredentials {
             twitterCache(context);
     }
 
+    /**
+     * Twitter cache handler
+     *
+     * @param context
+     */
     private static void twitterCache(Context context) {
         String accessToken = App.getAuthManager().getAccessTokenTwitter();
         String secretAccessToken = App.getAuthManager().getSecretAccessTokenTwitter();

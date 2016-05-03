@@ -1,29 +1,36 @@
 package nl.intratuin;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
 import nl.intratuin.dto.Product;
 import nl.intratuin.dto.TreeNode;
-import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.handlers.ProductListAdapter;
 import nl.intratuin.handlers.RequestResponseManager;
-import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
 
+/**
+ * The class {@code ProductListByCategoryActivity} is used to provide Product list logic
+ *
+ * @see AppCompatActivity
+ */
 public class ProductListByCategoryActivity extends AppCompatActivity {
-    ListView subCategoryListView;
-    ListView productByCategoryListView;
-    TreeNode category;
-    String[] childrenName;
+    private ListView subCategoryListView;
+    private ListView productByCategoryListView;
+    private TreeNode category;
+    private String[] childrenName;
 
+
+    /**
+     * Provide logic when activity created. Mapping field, getting product by categories.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +53,12 @@ public class ProductListByCategoryActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Returns name of sub-TreeNodes
+     *
+     * @param treeNode
+     * @return name of subcategories
+     */
     private String[] getChildrenName(TreeNode treeNode) {
         List<TreeNode> children = treeNode.getChildren();
         String[] childrenName = new String[children.size()];
@@ -57,8 +70,14 @@ public class ProductListByCategoryActivity extends AppCompatActivity {
         }
         return null;
     }
+
+    /**
+     * Generating product list in specific category
+     *
+     * @param idCategory
+     */
     private void generateProductListByCategory(String idCategory) {
-        String uri = new UriConstructor(this).makeURI("productsInCategory").toString()+"{idCategory}";
+        String uri = new UriConstructor(this).makeURI("productsInCategory").toString() + "{idCategory}";
         RequestResponseManager<Product[]> managerLoader = new RequestResponseManager<>(this, App.getShowManager(), Product[].class);
         List<Product> allProductByCategory = Arrays.asList(managerLoader.loaderFromWebService(uri, idCategory));
         if (allProductByCategory != null) {
