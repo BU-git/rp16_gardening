@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 
 import nl.intratuin.App;
 import nl.intratuin.LoginActivity;
+import nl.intratuin.manager.AuthManager;
 import nl.intratuin.SearchActivity;
 import nl.intratuin.WebActivity;
 import nl.intratuin.net.RequestResponse;

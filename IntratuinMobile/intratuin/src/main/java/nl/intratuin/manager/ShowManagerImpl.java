@@ -1,9 +1,10 @@
-package nl.intratuin.dto;
+package nl.intratuin.manager;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
+import nl.intratuin.manager.contract.ShowManager;
 import nl.intratuin.R;
 
 /**

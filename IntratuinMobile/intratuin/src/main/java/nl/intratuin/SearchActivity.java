@@ -25,8 +25,9 @@ import nl.intratuin.dto.TreeNode;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.handlers.HierarchyCategoryAdapter;
 import nl.intratuin.handlers.ProductAutoCompleteAdapter;
-import nl.intratuin.handlers.RequestResponseManager;
+import nl.intratuin.manager.RequestResponseManager;
 import nl.intratuin.net.UriConstructor;
+import nl.intratuin.settings.ToolBarActivity;
 
 /**
  * The class {@code SearchActivity} is used to provide logic on Search Activity
@@ -35,17 +36,18 @@ import nl.intratuin.net.UriConstructor;
  * @see AppCompatActivity
  * @see OnClickListener
  */
-public class SearchActivity extends AppCompatActivity implements OnClickListener {
+public class SearchActivity extends ToolBarActivity implements OnClickListener {
     /**
      * The constant PRODUCT_SEARCH is used as a key to pass Product parameter to {@code SearchActivity}
      */
-    public static final String PRODUCT_SEARCH = "productSearch";
+    public static final String PRODUCT = "product";
     /**
      * The constant TREENODE is used as a key to pass TreeNode parameter to {@code ProductListByCategoryActivity}
      */
     public static final String TREENODE = "TreeNode";
 
     private String access_token;
+    private String customerName;
 
     private HierarchyCategoryAdapter categoryAdapter;
     private ListView categoryListView;
@@ -63,15 +65,13 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
     //break this method for few less
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_search);
         super.onCreate(savedInstanceState);
         final Bundle extra = getIntent().getExtras();
         if (extra != null) {
             access_token = extra.getString(LoginActivity.ACCESS_TOKEN);
         }
         if (access_token != null) {
-            getSupportActionBar().hide();
-            setContentView(R.layout.activity_search);
-
             ibBarcode = (ImageButton) findViewById(R.id.ibBarcode);
             ibMan = (ImageButton) findViewById(R.id.ibMan);
             ibBusket = (ImageButton) findViewById(R.id.ibBusket);
@@ -102,13 +102,11 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
                     Product product = (Product) parent.getItemAtPosition(position);
 
                     Intent productPageIntent = new Intent(SearchActivity.this, ProductDetailsPageActivity.class);
-                    productPageIntent.putExtra(PRODUCT_SEARCH, product);
+                    productPageIntent.putExtra(PRODUCT, product);
                     startActivity(productPageIntent);
                 }
             });
 
-            //show user login
-            //???
             String name = "anonymous";
             try {
                 String userInfoUri = new UriConstructor(SearchActivity.this).makeURI("userInfo").toString();
@@ -118,11 +116,10 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
                     String jsonRespond = managerLoader.loaderFromWebService(userInfoUri, access_token);
                     JSONObject response = new JSONObject(jsonRespond);
                     if (response != null && response.has("user_id")) {
-                        //Toast.makeText(WebActivity.this, "Customer: " + response.getString("name"), Toast.LENGTH_LONG).show();
-                        if (response.has("name") && response.getString("name").length() > 0)
+                        if (response.has("name") && response.getString("name").length() > 0) {
                             name = response.getString("name");
-                        else
-                            name = response.getString("client_id");//name = response.getString("client_id");
+                        } else
+                            name = response.getString("client_id");
                     } else {
                         String errorStr;
                         if (response == null)
@@ -139,8 +136,7 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
                 ef.show(getSupportFragmentManager(), "Intratuin");
                 startActivity(new Intent(SearchActivity.this, LoginActivity.class));
             }
-
-            Toast.makeText(this, "Logged as " + name, Toast.LENGTH_LONG).show();
+            profileItem = name;
         } else {
             ErrorFragment ef = ErrorFragment.newError("No access token found!");
             ef.show(getSupportFragmentManager(), "Intratuin");
@@ -150,6 +146,7 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
 
     /**
      * Generate hierarchy of categories
+     *
      * @return the list of Category as TreeNode
      */
     private List<TreeNode> generateCategoryHierarchy() {
@@ -182,6 +179,7 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
 
     /**
      * Provide logic for clicking buttons.
+     *
      * @param view
      */
     @Override

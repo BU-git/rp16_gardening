@@ -2,8 +2,8 @@ package nl.intratuin;
 
 import android.app.Application;
 
-import nl.intratuin.dto.ShowManagerImpl;
-import nl.intratuin.handlers.AuthManager;
+import nl.intratuin.manager.ShowManagerImpl;
+import nl.intratuin.manager.AuthManager;
 
 /**
  * Class {@code Category} is a base class to work with authorisation and showing alerts

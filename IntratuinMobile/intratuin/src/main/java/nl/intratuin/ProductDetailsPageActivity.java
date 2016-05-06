@@ -10,13 +10,14 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import nl.intratuin.dto.Product;
+import nl.intratuin.settings.ToolBarActivity;
 
 /**
  * The class {@code ProductDetailsPageActivity} is used to provide logic on Product Detail Page Activity
  *
  * @see AppCompatActivity
  */
-public class ProductDetailsPageActivity extends AppCompatActivity {
+public class ProductDetailsPageActivity extends ToolBarActivity {
     private Product productBySearch;
 
     /**
@@ -27,9 +28,8 @@ public class ProductDetailsPageActivity extends AppCompatActivity {
     //break this method for few less
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_page);
-        getSupportActionBar().hide();
+        super.onCreate(savedInstanceState);
 
         TextView tvProductName = (TextView) findViewById(R.id.tvProductName);
         ImageView ivProductImage = (ImageView) findViewById(R.id.ivProductImage);
@@ -42,7 +42,7 @@ public class ProductDetailsPageActivity extends AppCompatActivity {
 
         final Bundle extra = getIntent().getExtras();
         if (extra != null) {
-            productBySearch = extra.getParcelable(SearchActivity.PRODUCT_SEARCH);
+            productBySearch = extra.getParcelable(SearchActivity.PRODUCT);
         }
 
         tvProductName.setText(productBySearch.getProductName());
@@ -60,6 +60,7 @@ public class ProductDetailsPageActivity extends AppCompatActivity {
         sSize.setAdapter(adapter);
 
         //aaaaaa, what's that?
+        //it's magic, don't touch
         Picasso.with(this)
                 .load(getIntent().getExtras().getString("productImage"))
                 .resize(80, 80)

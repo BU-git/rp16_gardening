@@ -4,10 +4,11 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ACC351</color>
     <color name="colorControlNormal">#AAAAAA</color>
-    <color name="textColor">#5C6725</color>
+    <color name="textColor">#005A36</color>
     <color name="textColorHint">#333333</color>
     <color name="twitter_pressed">#687781</color>
     <color name="hint_search">#caed7f</color>
+    <color name="colorToolbar">#1c2801</color>
     <color name="product_background">#e7eae7</color>
 </resources>
 

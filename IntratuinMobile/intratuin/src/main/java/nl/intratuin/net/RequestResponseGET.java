@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
-import nl.intratuin.dto.ShowManager;
+import nl.intratuin.manager.contract.ShowManager;
 import nl.intratuin.settings.Settings;
 
 /**

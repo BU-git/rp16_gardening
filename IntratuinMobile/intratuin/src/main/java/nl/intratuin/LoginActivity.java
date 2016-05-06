@@ -43,7 +43,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.fabric.sdk.android.Fabric;
-import nl.intratuin.handlers.AuthManager;
+import nl.intratuin.manager.AuthManager;
 import nl.intratuin.handlers.CacheCustomerCredentials;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         super.onCreate(savedInstanceState);
         CacheCustomerCredentials.cache(this); //Check cache
 
-        getSupportActionBar().hide();
+        getSupportActionBar();
         TwitterAuthConfig authConfig = Settings.getTwitterConfig(this);
         Fabric.with(this, new Twitter(authConfig));
         FacebookSdk.sdkInitialize(this.getApplicationContext());

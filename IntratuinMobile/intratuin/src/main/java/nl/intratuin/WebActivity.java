@@ -14,8 +14,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import nl.intratuin.handlers.AuthManager;
-import nl.intratuin.handlers.RequestResponseManager;
+import nl.intratuin.manager.AuthManager;
+import nl.intratuin.manager.RequestResponseManager;
 import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.BuildType;
 import nl.intratuin.settings.Settings;
@@ -71,7 +71,6 @@ public class WebActivity extends AppCompatActivity {
         if (access_token != null) {
             setContentView(R.layout.activity_web);
 
-            getSupportActionBar().hide();
             webView = (WebView) findViewById(R.id.webView);
             WebSettings webSettings = webView.getSettings();
             webSettings.setJavaScriptEnabled(true);

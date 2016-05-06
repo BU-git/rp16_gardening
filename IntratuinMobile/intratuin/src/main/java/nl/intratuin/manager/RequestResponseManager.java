@@ -1,11 +1,11 @@
-package nl.intratuin.handlers;
+package nl.intratuin.manager;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
 import java.util.concurrent.ExecutionException;
 
-import nl.intratuin.dto.ShowManager;
+import nl.intratuin.manager.contract.ShowManager;
 import nl.intratuin.net.RequestResponseGET;
 
 

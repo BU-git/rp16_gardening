@@ -19,6 +19,7 @@ import java.util.List;
 import nl.intratuin.App;
 import nl.intratuin.R;
 import nl.intratuin.dto.Product;
+import nl.intratuin.manager.RequestResponseManager;
 import nl.intratuin.net.UriConstructor;
 
 

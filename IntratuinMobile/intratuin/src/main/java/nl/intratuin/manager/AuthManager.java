@@ -1,4 +1,4 @@
-package nl.intratuin.handlers;
+package nl.intratuin.manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;

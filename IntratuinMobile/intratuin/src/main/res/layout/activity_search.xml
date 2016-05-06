@@ -8,6 +8,10 @@
     android:fillViewport="true"
     tools:context="nl.intratuin.RegisterActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
+
     <AutoCompleteTextView
         android:id="@+id/autoCompleteTextView"
         android:layout_width="match_parent"
@@ -28,7 +32,7 @@
     </AutoCompleteTextView>
     <!--android:searchIcon="@drawable/search_icon"-->
 
-    <ImageView
+   <!-- <ImageView
         android:id="@+id/ivIntratuin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,9 +44,9 @@
         android:focusableInTouchMode="true"
         android:src="@drawable/logo">
 
-        <!--What is this?-->
+        &lt;!&ndash;What is this?&ndash;&gt;
         <requestFocus />
-    </ImageView>
+    </ImageView>-->
 
 
     <!-- Need to resize category_picture.png -->

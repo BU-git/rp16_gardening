@@ -1,4 +1,4 @@
-package nl.intratuin.dto;
+package nl.intratuin.manager.contract;
 
 import android.content.Context;
 

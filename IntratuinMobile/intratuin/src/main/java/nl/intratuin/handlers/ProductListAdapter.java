@@ -1,19 +1,24 @@
 package nl.intratuin.handlers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import nl.intratuin.ProductListByCategoryActivity;
 import nl.intratuin.R;
+import nl.intratuin.SearchActivity;
 import nl.intratuin.dto.Product;
+import nl.intratuin.dto.TreeNode;
 
 /**
  * Class {@code ProductListAdapter} is used for creating list of products.
@@ -69,7 +74,7 @@ public class ProductListAdapter extends BaseAdapter {
      */
     @Override
     public long getItemId(int position) {
-        return position;
+        return productList.get(position).getProductId();
     }
 
     /**
@@ -92,7 +97,7 @@ public class ProductListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        final Product product = (Product) this.getItem(position);
+        final Product product = productList.get(position);
         holder.productName.setText(product.getProductName());
         holder.productPrice.setText("" + product.getProductPrice());
         Picasso.with(context)
