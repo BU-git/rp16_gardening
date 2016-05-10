@@ -13,6 +13,15 @@ public class Product implements Parcelable {
     private double productPrice;
     private String productImage;
     private int categoryId;
+    private long barcode;
+
+    public long getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(long barcode) {
+        this.barcode = barcode;
+    }
 
     public Product(){}
 

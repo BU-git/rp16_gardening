@@ -94,10 +94,10 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
             //show user login
             String name = "anonymous";
             try {
-                String userInfoUri = new UriConstructor(SearchActivity.this, getSupportFragmentManager()).makeURI("userInfo").toString();
+                String userInfoUri = new UriConstructor(SearchActivity.this).makeURI("userInfo").toString();
                 userInfoUri+="?access_token={access_token}";
                 if (userInfoUri != null) {
-                    RequestResponseManager<String> managerLoader = new RequestResponseManager(this, String.class);
+                    RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);
                     String jsonRespond = managerLoader.loaderFromWebService(userInfoUri, access_token);
                     JSONObject response = new JSONObject(jsonRespond);
                     if (response != null && response.has("user_id")) {
@@ -130,10 +130,9 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
     }
 
     private List<TreeNode> generateCategoryHierarchy() {
-        URI uri = new UriConstructor(this, ((FragmentActivity) this).getSupportFragmentManager())
-                .makeURI("categoryList");
+        URI uri = new UriConstructor(this).makeURI("categoryList");
 
-        RequestResponseManager<Category[]> managerLoader = new RequestResponseManager(this, Category[].class);
+        RequestResponseManager<Category[]> managerLoader = new RequestResponseManager(this, App.getShowManager(), Category[].class);
         List<Category> allCategory = Arrays.asList(managerLoader.loaderFromWebService(uri.toString(), null));
 
         return buildArrTreeNode(allCategory, 0);
@@ -160,11 +159,9 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
                 break;
 
             case R.id.ibMan:
-
                 break;
 
             case R.id.ibBusket:
-
                 break;
         }
     }

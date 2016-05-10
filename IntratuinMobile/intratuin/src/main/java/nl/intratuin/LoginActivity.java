@@ -43,7 +43,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.fabric.sdk.android.Fabric;
-import nl.intratuin.dto.ShowObject;
+import nl.intratuin.dto.ShowManagerImpl;
 import nl.intratuin.handlers.AuthManager;
 import nl.intratuin.handlers.CacheCustomerCredentials;
 import nl.intratuin.handlers.ErrorFragment;
@@ -163,18 +163,18 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             @Override
             public void success(Result<TwitterSession> result) {
                 TwitterSession session = result.data;
-                twitterLoginUri = new UriConstructor(LoginActivity.this, getSupportFragmentManager()).makeURI("twitterLogin");
+                twitterLoginUri = new UriConstructor(LoginActivity.this).makeURI("twitterLogin");
                 if (twitterLoginUri != null) {
                     String accessTokenTwitter = session.getAuthToken().token;
                     String secretAccessTokenTwitter = session.getAuthToken().secret;
-                    MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+                    MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
                     map.add("twitter_token", accessTokenTwitter);
                     map.add("twitter_secret", secretAccessTokenTwitter);
                     try {
                         JSONObject response;
                         AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
                                 new RequestResponse<MultiValueMap<String, String>, String>(twitterLoginUri, 3,
-                                        String.class, getSupportFragmentManager(), LoginActivity.this).execute(map);
+                                        String.class, App.getShowManager(), LoginActivity.this).execute(map);
                         response = new JSONObject(jsonRespond.get());
                         if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                             App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_ACCESS_TOKEN, accessTokenTwitter);
@@ -184,17 +184,16 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
                                 startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
                             else startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
+                            finish();
                         } else {
                             String errorStr;
                             if(response==null)
                                 errorStr="Error! Null response!";
                             else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
-                            ErrorFragment ef = ErrorFragment.newError(errorStr);
-                            ef.show(getSupportFragmentManager(), "Intratuin");
+                            App.getShowManager().showMessage(errorStr, LoginActivity.this);
                         }
                     } catch (InterruptedException | ExecutionException | JSONException e) {
-                        ErrorFragment ef = ErrorFragment.newError("Encryption error!");
-                        ef.show(getSupportFragmentManager(), "Intratuin");
+                        App.getShowManager().showMessage("Encryption error!", LoginActivity.this);
                     }
                 }
             }
@@ -210,14 +209,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             @Override
             public void onSuccess(LoginResult loginResult) {
                 String accessToken = loginResult.getAccessToken().getToken();
-                facebookLoginUri = new UriConstructor(LoginActivity.this, getSupportFragmentManager()).makeURI("facebookLogin");
+                facebookLoginUri = new UriConstructor(LoginActivity.this).makeURI("facebookLogin");
                 if(facebookLoginUri!=null) {
                     MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
                     map.add("facebook_token", loginResult.getAccessToken().getToken());
 
                     AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
                             new RequestResponse<MultiValueMap<String, String>, String>(facebookLoginUri, 3,
-                                    String.class, getSupportFragmentManager(), LoginActivity.this).execute(map);
+                                    String.class, App.getShowManager(), LoginActivity.this).execute(map);
                     JSONObject response;
                     try {
                         response = new JSONObject(jsonRespond.get());
@@ -228,33 +227,29 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
                                 startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
                             else startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
+                            finish();
                         } else {
                             String errorStr;
                             if (response == null)
                                 errorStr = "Error! Null response!";
                             else
                                 errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
-                            ErrorFragment ef = ErrorFragment.newError(errorStr);
-                            ef.show(getSupportFragmentManager(), "Intratuin");
+                            App.getShowManager().showMessage(errorStr, LoginActivity.this);
                         }
                     } catch (InterruptedException | ExecutionException | JSONException e) {
-                        ErrorFragment ef = ErrorFragment.newError("Error!");
-                        ef.show(LoginActivity.this.getSupportFragmentManager(), "Intratuin");
+                        App.getShowManager().showMessage("Error: " + e.getMessage(), LoginActivity.this);
                     }
                 }
             }
 
             @Override
             public void onCancel() {
-                ErrorFragment ef = ErrorFragment.newError("Login attempt canceled.");
-                ef.show(getSupportFragmentManager(), "Intratuin");
+                App.getShowManager().showMessage("Login attempt canceled.", LoginActivity.this);
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.e("API FAILED!!!!: ", error.getMessage() + "  " + error);
-                ErrorFragment ef = ErrorFragment.newError("Login attempt failed.");
-                ef.show(getSupportFragmentManager(), "Intratuin");
+                App.getShowManager().showMessage("Login attempt failed. " + error.getMessage(), LoginActivity.this);
             }
         });
     }
@@ -275,7 +270,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             case R.id.bLogin:
                 JSONObject response;
                 try {
-                    loginUri = new UriConstructor(LoginActivity.this, getSupportFragmentManager()).makeURI("login");
+                    loginUri = new UriConstructor(LoginActivity.this).makeURI("login");
                     if (loginUri != null && dataValidation()) {
                         MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
                         map.add("grant_type", "password");
@@ -287,10 +282,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
                         AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
                                 new RequestResponse<MultiValueMap<String, String>, String>(loginUri, 3,
-                                        String.class, getSupportFragmentManager(), this).execute(map);
+                                        String.class, App.getShowManager(), this).execute(map);
                         if(jsonRespond==null){
-                            ErrorFragment ef = ErrorFragment.newError("Error! No response.");
-                            ef.show(getSupportFragmentManager(), "Intratuin");
+                            App.getShowManager().showMessage("Error! No response.", LoginActivity.this);
                         }
                         response = new JSONObject(jsonRespond.get());
                         if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
@@ -298,23 +292,23 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             if(cbRemember.isChecked()){
                                 App.getAuthManager().loginAndCache(AuthManager.PREF_USERNAME, etEmailAddress.getText().toString());
                                 App.getAuthManager().loginAndCache(AuthManager.PREF_PASSWORD, etPassword.getText().toString());
-                                //Toast.makeText(LoginActivity.this, "cache username and password", Toast.LENGTH_LONG).show();
                             }
 
                             if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
                                 startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
                             else startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
+                            finish();
                         } else {
                             String errorStr;
                             if(response==null)
                                 errorStr="Error! Null response!";
                             else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
-                            ShowObject.showMessage(errorStr, LoginActivity.this);
+
+                            App.getShowManager().showMessage(errorStr, LoginActivity.this);
                         }
                     }
                 } catch (InterruptedException | ExecutionException | JSONException e) {
-                    ErrorFragment ef = ErrorFragment.newError("Error!");
-                    ef.show(LoginActivity.this.getSupportFragmentManager(), "Intratuin");
+                    App.getShowManager().showMessage("Error!!! " + e.getMessage(), LoginActivity.this);
                 }
                 break;
 

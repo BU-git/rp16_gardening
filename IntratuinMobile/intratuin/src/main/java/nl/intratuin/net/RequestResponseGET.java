@@ -9,6 +9,7 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import nl.intratuin.dto.ShowManager;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.settings.Settings;
 
@@ -16,17 +17,17 @@ public class RequestResponseGET<T, V> extends AsyncTask<T, Void, V> {
     private String uri;
     private int retry;
     Class<V> responseType;
-    private FragmentManager fragmentManager;
+    private ShowManager showManager;
     Context context;
 
-    public RequestResponseGET(String uri, int retry, Class<V> responseType, FragmentManager fragmentManager, Context context) {
+    public RequestResponseGET(String uri, int retry, Class<V> responseType, ShowManager showManager, Context context) {
         super();
         this.uri = uri;
         this.responseType = responseType;
         if (retry < 1)
             this.retry = 1;
         else this.retry = retry;
-        this.fragmentManager = fragmentManager;
+        this.showManager = showManager;
         this.context=context;
     }
 
@@ -41,9 +42,7 @@ public class RequestResponseGET<T, V> extends AsyncTask<T, Void, V> {
                 rf.setConnectTimeout(Settings.getConnectionTimeout(context));
                 return (V) restTemplate.getForObject(uri, responseType, param);
             } catch (Exception e) {
-                Log.e("Error: ", e.getMessage(), e);
-                ErrorFragment ef = ErrorFragment.newError("GET request error!");
-                ef.show(fragmentManager, "Intratuin");
+                showManager.showMessage("Error: " + e.getMessage(), context);
             }
         }
         return null;

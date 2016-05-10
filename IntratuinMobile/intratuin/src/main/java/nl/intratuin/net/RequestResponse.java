@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 
+import nl.intratuin.dto.ShowManager;
 import nl.intratuin.settings.Settings;
 
 /**
@@ -20,15 +21,15 @@ public class RequestResponse<T, V> extends AsyncTask<T, Void, V> {
     private int retry;
     Class<V> responseType;
     Context context;
-    private FragmentManager fragmentManager;
-    public RequestResponse(URI uri, int retry, Class<V> responseType, FragmentManager fragmentManager, Context context) {
+    private ShowManager showManager;
+    public RequestResponse(URI uri, int retry, Class<V> responseType, ShowManager showManager, Context context) {
         super();
         this.uri=uri;
         this.responseType = responseType;
         if(retry<1)
             this.retry=1;
         else this.retry=retry;
-        this.fragmentManager=fragmentManager;
+        this.showManager=showManager;
         this.context=context;
     }
     @Override
@@ -42,7 +43,7 @@ public class RequestResponse<T, V> extends AsyncTask<T, Void, V> {
                 rf.setConnectTimeout(Settings.getConnectionTimeout(context));
                 return (V) restTemplate.postForObject(uri, param[0], responseType);
             } catch (Exception e) {
-                Log.e("Error: ", e.getMessage(), e);
+                showManager.showMessage("Error!!!" + e.getMessage(), context);
             }
         }
         return null;

@@ -43,6 +43,7 @@ public class WebActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         final Bundle extra = getIntent().getExtras();
         if (extra != null) {
             access_token=extra.getString(LoginActivity.ACCESS_TOKEN);
@@ -68,14 +69,13 @@ public class WebActivity extends AppCompatActivity {
             //show user login
             String name = "anonymous";
             try {
-                String userInfoUri = new UriConstructor(WebActivity.this, getSupportFragmentManager()).makeURI("userInfo").toString();
+                String userInfoUri = new UriConstructor(WebActivity.this).makeURI("userInfo").toString();
                 userInfoUri+="?access_token={access_token}";
                 if (userInfoUri != null) {
-                    RequestResponseManager<String> managerLoader = new RequestResponseManager(this, String.class);
+                    RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);
                     String jsonRespond = managerLoader.loaderFromWebService(userInfoUri, access_token);
                     JSONObject response = new JSONObject(jsonRespond);
                     if (response != null && response.has("user_id")) {
-                        //Toast.makeText(WebActivity.this, "Customer: " + response.getString("name"), Toast.LENGTH_LONG).show();
                         if (response.has("name") && response.getString("name").length()>0)
                             name = response.getString("name");
                         else name = response.getString("client_id");//name = response.getString("client_id");
@@ -84,21 +84,18 @@ public class WebActivity extends AppCompatActivity {
                         if (response == null)
                             errorStr = "Error! Null response!";
                         else errorStr = "Error"+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
-                        ErrorFragment ef = ErrorFragment.newError(errorStr);
-                        ef.show(getSupportFragmentManager(), "Intratuin");
+                        App.getShowManager().showMessage(errorStr, WebActivity.this);
                         startActivity(new Intent(WebActivity.this, LoginActivity.class));
                     }
                 }
             } catch (JSONException e) {
-                ErrorFragment ef = ErrorFragment.newError("Can't get user info!");
-                ef.show(getSupportFragmentManager(), "Intratuin");
+                App.getShowManager().showMessage("Can't get user info!", WebActivity.this);
                 startActivity(new Intent(WebActivity.this, LoginActivity.class));
             }
 
             Toast.makeText(this, "Logged as " + name, Toast.LENGTH_LONG).show();
         } else {
-            ErrorFragment ef = ErrorFragment.newError("No access token found!");
-            ef.show(getSupportFragmentManager(), "Intratuin");
+            App.getShowManager().showMessage("No access token found!", WebActivity.this);
             startActivity(new Intent(WebActivity.this, LoginActivity.class));
         }
     }

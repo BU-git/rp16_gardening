@@ -29,7 +29,7 @@ public class CacheCustomerCredentials {
         String username = App.getAuthManager().getAccessKeyUsername();
         String password = App.getAuthManager().getAccessKeyPassword();
         if (username != null && password != null) {
-            URI uri = new UriConstructor(context, ((FragmentActivity) context).getSupportFragmentManager()).makeURI("login");
+            URI uri = new UriConstructor(context).makeURI("login");
             try {
                 MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
                 map.add("grant_type", "password");
@@ -40,13 +40,14 @@ public class CacheCustomerCredentials {
 
                 AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
                         new RequestResponse<MultiValueMap<String, String>, String>(uri, 3,
-                                String.class, ((FragmentActivity) context).getSupportFragmentManager(), context).execute(map);
+                                String.class, App.getShowManager(), context).execute(map);
                 JSONObject responseJsonObject = new JSONObject(jsonRespond.get());
                 if (responseJsonObject != null && responseJsonObject.getString("token_type").equals("bearer")) {
                     String accessKey = responseJsonObject.getString("access_token");
                     if (Settings.getMainscreen(context) == Mainscreen.WEB)
                         context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
                     else context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
+                    ((FragmentActivity) context).finish();
                 } else {
                     String errorStr;
                     if (responseJsonObject == null)
@@ -56,8 +57,7 @@ public class CacheCustomerCredentials {
                                 + responseJsonObject.getString("error")
                                 + ": " + responseJsonObject.getString("error_description");
 
-                    ErrorFragment ef = ErrorFragment.newError(errorStr);
-                    ef.show(((FragmentActivity) context).getSupportFragmentManager(), "Intratuin");
+                    App.getShowManager().showMessage(errorStr, context);
                     context.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)
                             .edit()
                             .clear()
@@ -75,12 +75,12 @@ public class CacheCustomerCredentials {
     private static void facebookCache(Context context) {
         String accessToken = App.getAuthManager().getAccessTokenFacebook();
         if (accessToken != null) {
-            URI uri = new UriConstructor(context, ((FragmentActivity) context).getSupportFragmentManager()).makeURI("facebookLogin");
+            URI uri = new UriConstructor(context).makeURI("facebookLogin");
             MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
             map.add("facebook_token", accessToken);
             AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
                     new RequestResponse<MultiValueMap<String, String>, String>(uri, 3,
-                            String.class, ((FragmentActivity) context).getSupportFragmentManager(), context).execute(map);
+                            String.class, App.getShowManager(), context).execute(map);
             try {
                 JSONObject responseJsonObject = new JSONObject(jsonRespond.get());
 
@@ -90,6 +90,7 @@ public class CacheCustomerCredentials {
                         context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
                     else
                         context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
+                    ((FragmentActivity) context).finish();
                 } else {
                     String errorStr;
                     if (responseJsonObject == null)
@@ -99,8 +100,7 @@ public class CacheCustomerCredentials {
                                 + responseJsonObject.getString("error")
                                 + ": " + responseJsonObject.getString("error_description");
 
-                    ErrorFragment ef = ErrorFragment.newError(errorStr);
-                    ef.show(((FragmentActivity) context).getSupportFragmentManager(), "Intratuin");
+                    App.getShowManager().showMessage(errorStr, context);
                     context.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)
                             .edit()
                             .clear()
@@ -117,7 +117,7 @@ public class CacheCustomerCredentials {
         String accessToken = App.getAuthManager().getAccessTokenTwitter();
         String secretAccessToken = App.getAuthManager().getSecretAccessTokenTwitter();
         if (accessToken != null && secretAccessToken != null) {
-            URI uri = new UriConstructor(context, ((FragmentActivity) context).getSupportFragmentManager()).makeURI("twitterLogin");
+            URI uri = new UriConstructor(context).makeURI("twitterLogin");
             try {
                 MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
                 map.add("twitter_token", accessToken);
@@ -125,7 +125,7 @@ public class CacheCustomerCredentials {
 
                 AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
                         new RequestResponse<MultiValueMap<String, String>, String>(uri, 3,
-                                String.class, ((FragmentActivity) context).getSupportFragmentManager(), context).execute(map);
+                                String.class, App.getShowManager(), context).execute(map);
                 JSONObject responseJsonObject = new JSONObject(jsonRespond.get());
                 if (responseJsonObject != null && responseJsonObject.has("token_type") && responseJsonObject.getString("token_type").equals("bearer")) {
                     String accessKey = responseJsonObject.getString("access_token");
@@ -141,9 +141,9 @@ public class CacheCustomerCredentials {
                         errorStr = "Error " + responseJsonObject.getString("code") + ": "
                                 + responseJsonObject.getString("error")
                                 + ": " + responseJsonObject.getString("error_description");
+                    ((FragmentActivity) context).finish();
 
-                    ErrorFragment ef = ErrorFragment.newError(errorStr);
-                    ef.show(((FragmentActivity) context).getSupportFragmentManager(), "Intratuin");
+                    App.getShowManager().showMessage(errorStr, context);
                     context.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)
                             .edit()
                             .clear()

@@ -4,11 +4,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
-public class ShowObject {
+import nl.intratuin.R;
 
-    public static void showMessage(String message, Context context) {
+public class ShowManagerImpl implements ShowManager{
+    @Override
+    public void showMessage(String message, Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Intratuin")
+        builder.setTitle(R.string.app_name)
                 .setMessage(message)
                 .setCancelable(false)
                 .setNegativeButton("ОК",
@@ -19,6 +21,5 @@ public class ShowObject {
                         });
         AlertDialog alert = builder.create();
         alert.show();
-
     }
 }

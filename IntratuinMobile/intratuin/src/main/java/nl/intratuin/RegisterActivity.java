@@ -1,9 +1,13 @@
 package nl.intratuin;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
@@ -77,12 +81,13 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
 
         setListeners();
 
-        registerUri=new UriConstructor(RegisterActivity.this, getSupportFragmentManager()).makeURI("registration");
-        loginUri=new UriConstructor(RegisterActivity.this, getSupportFragmentManager()).makeURI("login");
+        registerUri=new UriConstructor(RegisterActivity.this).makeURI("registration");
+        loginUri=new UriConstructor(RegisterActivity.this).makeURI("login");
     }
 
 
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -125,10 +130,9 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
 
                     AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
                             new RequestResponse<MultiValueMap<String, String>, String>(registerUri, 3,
-                                    String.class, getSupportFragmentManager(), this).execute(map);
+                                    String.class,  App.getShowManager(), this).execute(map);
                     if(jsonRespond==null){
-                        ErrorFragment ef = ErrorFragment.newError("Error! No response.");
-                        ef.show(getSupportFragmentManager(), "Intratuin");
+                        App.getShowManager().showMessage("Error! No response.", RegisterActivity.this);
                     }
                     try {
                         JSONObject response = new JSONObject(jsonRespond.get());
@@ -141,10 +145,9 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                             map.add("password", etPassword.getText().toString());
 
                             jsonRespond = new RequestResponse<MultiValueMap<String, String>, String>(loginUri, 3,
-                                            String.class, getSupportFragmentManager(), this).execute(map);
+                                            String.class,  App.getShowManager(), this).execute(map);
                             if(jsonRespond==null){
-                                ErrorFragment ef = ErrorFragment.newError("Error! No response.");
-                                ef.show(getSupportFragmentManager(), "Intratuin");
+                                App.getShowManager().showMessage("Error! No response.", RegisterActivity.this);
                             }
                             response = new JSONObject(jsonRespond.get());
                             if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
@@ -152,13 +155,13 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                                 if(Settings.getMainscreen(RegisterActivity.this)== Mainscreen.WEB)
                                     startActivity(new Intent(RegisterActivity.this, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, response.getString("access_token")));
                                 else startActivity(new Intent(RegisterActivity.this, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, response.getString("access_token")));
+                                finishAffinity();
                             } else {
                                 String errorStr;
                                 if(response==null)
                                     errorStr="Error! Null response!";
                                 else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
-                                ErrorFragment ef = ErrorFragment.newError(errorStr);
-                                ef.show(getSupportFragmentManager(), "Intratuin");
+                                App.getShowManager().showMessage(errorStr, RegisterActivity.this);
                             }
                         } else {
                             String errorStr;
@@ -166,12 +169,10 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                                 errorStr = "Error! Null response!";
                             else
                                 errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
-                            ErrorFragment ef = ErrorFragment.newError(errorStr);
-                            ef.show(getSupportFragmentManager(), "Intratuin");
+                            App.getShowManager().showMessage(errorStr, RegisterActivity.this);
                         }
                     } catch (InterruptedException | ExecutionException | JSONException e){
-                        ErrorFragment ef = ErrorFragment.newError("Error!");
-                        ef.show(RegisterActivity.this.getSupportFragmentManager(), "Intratuin");
+                        App.getShowManager().showMessage("Error! " + e.getMessage(), RegisterActivity.this);
                     }
                 }
                 break;
