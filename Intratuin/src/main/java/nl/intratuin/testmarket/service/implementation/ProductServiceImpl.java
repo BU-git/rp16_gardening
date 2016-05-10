@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int findByBarcode(long barcode) {
+    public Product findByBarcode(long barcode) {
         return productDao.findByBarcode(barcode);
     }
 }

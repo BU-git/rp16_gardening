@@ -13,5 +13,5 @@ public interface ProductDao {
 
     List<Product> findAllByCategory(int category);
 
-    int findByBarcode(long barcode);
+    Product findByBarcode(long barcode);
 }
