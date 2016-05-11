@@ -43,56 +43,79 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.fabric.sdk.android.Fabric;
-import nl.intratuin.dto.ShowManagerImpl;
-import nl.intratuin.handlers.AuthManager;
+import nl.intratuin.manager.AuthManager;
 import nl.intratuin.handlers.CacheCustomerCredentials;
-import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;
 
+/**
+ * The class {@code LoginActivity} is used to provide logic on Login Activity
+ * Activity, where user can log in, go to "restore password" activity or go to "register activity"
+ *
+ * @see AppCompatActivity
+ * @see OnClickListener
+ */
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
-    public static final List<String> PERMISSIONS = Arrays.asList("email");
+    /**
+     * The constant FACEBOOK_PERMISSIONS is used for permission to get some info from FB account
+     */
+    public static final List<String> FACEBOOK_PERMISSIONS = Arrays.asList("email");
+    /**
+     * The constant ACCESS_TOKEN is used for accessing to new activities with info about user
+     */
     public static final String ACCESS_TOKEN = "accessToken";
 
-    CallbackManager callbackManager;
-
-    LoginButton lbFacebook;
-    TwitterLoginButton bTwitterHidden;
-    Button bTwitter;
-    Button bLogin;
-    Button bRegister;
-    Button bForgot;
-    EditText etEmailAddress;
-    EditText etPassword;
-    CheckBox cbRemember;
-    CheckBox cbShow;
-    ImageView ivIntratuin;
-
-    URI loginUri = null;
-    URI twitterLoginUri = null;
-    URI facebookLoginUri = null;
-    String loginByCache;
-
+    /**
+     * The constant EMAIL_PATTERN is used for validation user email
+     */
     public static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    /**
+     * The constant PASSWORD_PATTERN is used for validation user password
+     */
     public static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,15})";
-    Pattern pattern;
-    Matcher matcher;
+
+    private CallbackManager callbackManager;
+    private LoginButton lbFacebook;
+    private TwitterLoginButton bTwitterHidden;
+    private Button bTwitter;
+    private Button bLogin;
+    private Button bRegister;
+    private Button bForgot;
+    private EditText etEmailAddress;
+    private EditText etPassword;
+    private CheckBox cbRemember;
+    private CheckBox cbShow;
+
+    private ImageView ivIntratuin;
+    private URI loginUri = null;
+    private URI twitterLoginUri = null;
+    private URI facebookLoginUri = null;
+
+    private String loginByCache;
+    private Pattern pattern;
+    private Matcher matcher;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
 
+    /**
+     * Provide logic when activity created. Mapping field, callbacks to social networks.
+     *
+     * @param savedInstanceState
+     */
+    //break this method for few less
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CacheCustomerCredentials.cache(this); //Check cache
 
-        getSupportActionBar().hide();
+        getSupportActionBar();
         TwitterAuthConfig authConfig = Settings.getTwitterConfig(this);
         Fabric.with(this, new Twitter(authConfig));
         FacebookSdk.sdkInitialize(this.getApplicationContext());
@@ -176,20 +199,22 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                                 new RequestResponse<MultiValueMap<String, String>, String>(twitterLoginUri, 3,
                                         String.class, App.getShowManager(), LoginActivity.this).execute(map);
                         response = new JSONObject(jsonRespond.get());
-                        if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
+                        if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                             App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_ACCESS_TOKEN, accessTokenTwitter);
                             App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_SECRET_ACCESS_TOKEN, secretAccessTokenTwitter);
                             String accessKey = response.getString("access_token");
 
-                            if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
+                            if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
                                 startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
-                            else startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
+                            else
+                                startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
                             finish();
                         } else {
                             String errorStr;
-                            if(response==null)
-                                errorStr="Error! Null response!";
-                            else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
+                            if (response == null)
+                                errorStr = "Error! Null response!";
+                            else
+                                errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
                             App.getShowManager().showMessage(errorStr, LoginActivity.this);
                         }
                     } catch (InterruptedException | ExecutionException | JSONException e) {
@@ -197,20 +222,21 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     }
                 }
             }
+
             @Override
             public void failure(TwitterException exception) {
                 Log.d("TwitterKit", "Login with Twitter failure", exception);
             }
         });
 
-        lbFacebook.setReadPermissions(PERMISSIONS);
+        lbFacebook.setReadPermissions(FACEBOOK_PERMISSIONS);
         lbFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
             @Override
             public void onSuccess(LoginResult loginResult) {
                 String accessToken = loginResult.getAccessToken().getToken();
                 facebookLoginUri = new UriConstructor(LoginActivity.this).makeURI("facebookLogin");
-                if(facebookLoginUri!=null) {
+                if (facebookLoginUri != null) {
                     MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
                     map.add("facebook_token", loginResult.getAccessToken().getToken());
 
@@ -226,7 +252,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
                             if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
                                 startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
-                            else startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
+                            else
+                                startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
                             finish();
                         } else {
                             String errorStr;
@@ -255,6 +282,15 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     }
 
 
+    /**
+     * Dispatch incoming result to the correct fragment.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     * @see android.support.v4.app.FragmentActivity
+     */
+    //i don't understand what's going on here
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -264,7 +300,13 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         bTwitterHidden.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Provided logic by clicking different buttons
+     *
+     * @param view current View
+     */
     @Override
+    //break this method for few less
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bLogin:
@@ -283,26 +325,29 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
                                 new RequestResponse<MultiValueMap<String, String>, String>(loginUri, 3,
                                         String.class, App.getShowManager(), this).execute(map);
-                        if(jsonRespond==null){
+                        if (jsonRespond == null) {
                             App.getShowManager().showMessage("Error! No response.", LoginActivity.this);
                         }
                         response = new JSONObject(jsonRespond.get());
-                        if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
+                        if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                             String accessKey = response.getString("access_token");
-                            if(cbRemember.isChecked()){
+                            if (cbRemember.isChecked()) {
                                 App.getAuthManager().loginAndCache(AuthManager.PREF_USERNAME, etEmailAddress.getText().toString());
                                 App.getAuthManager().loginAndCache(AuthManager.PREF_PASSWORD, etPassword.getText().toString());
                             }
 
-                            if(Settings.getMainscreen(LoginActivity.this)== Mainscreen.WEB)
+                            if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
                                 startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
-                            else startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
+                            else
+                                startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
                             finish();
                         } else {
                             String errorStr;
-                            if(response==null)
-                                errorStr="Error! Null response!";
-                            else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
+
+                            if (response == null)
+                                errorStr = "Error! Null response!";
+                            else
+                                errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
 
                             App.getShowManager().showMessage(errorStr, LoginActivity.this);
                         }
@@ -337,13 +382,19 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         }
     }
 
-
+    /**
+     * Shows email validation error
+     */
     private void showEmailError() {
         if (etEmailAddress.getText().length() == 0)
             etEmailAddress.setError("Email can't be blank!");
         else etEmailAddress.setError("Wrong email format!");
     }
 
+
+    /**
+     * Shows password validation error
+     */
     private void showPassError() {
         if (etPassword.getText().length() == 0)
             etPassword.setError("Password can't be blank!");
@@ -351,6 +402,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 "1 cap. letter and 1 number");
     }
 
+    /**
+     * Validation email and password
+     *
+     * @return result of data validation(true if all OK)
+     */
     private boolean dataValidation() {
         pattern = Pattern.compile(EMAIL_PATTERN);
         matcher = pattern.matcher(etEmailAddress.getText().toString());

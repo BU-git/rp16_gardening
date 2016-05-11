@@ -1,9 +1,6 @@
 package nl.intratuin.handlers;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,23 +12,23 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import nl.intratuin.App;
-import nl.intratuin.BuildConfig;
-import nl.intratuin.R;
-import nl.intratuin.net.RequestResponse;
-import nl.intratuin.net.RequestResponseGET;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
+import nl.intratuin.App;
 import nl.intratuin.R;
 import nl.intratuin.dto.Product;
-import nl.intratuin.net.RequestResponseGET;
+import nl.intratuin.manager.RequestResponseManager;
 import nl.intratuin.net.UriConstructor;
 
 
+/**
+ * Class {@code ProductAutoCompleteAdapter} is helping construct correct AutoCompleteTextView.
+ *
+ * @see BaseAdapter
+ * @see Filterable
+ */
 public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterable {
 
     private final Context context;
@@ -39,26 +36,60 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
     private Filter filter;
 
 
+    /**
+     * Instantiates a new Product auto complete adapter.
+     *
+     * @param context the context
+     */
     public ProductAutoCompleteAdapter(Context context) {
         this.context = context;
         resultSearch = new ArrayList<>();
     }
 
+    /**
+     * Get count of {@code Product}
+     *
+     * @return count of {@code Product}
+     * @see BaseAdapter
+     */
     @Override
     public int getCount() {
         return resultSearch.size();
     }
 
+    /**
+     * Get a specific {@code Product}
+     *
+     * @param position position in array
+     * @return a specific {@code Product}
+     * @see BaseAdapter
+     */
     @Override
     public Object getItem(int position) {
         return resultSearch.get(position);
     }
 
+    /**
+     * Return {@code Product} id
+     *
+     * @param position
+     * @return {@code Product} id
+     * @see BaseAdapter
+     */
     @Override
     public long getItemId(int position) {
         return resultSearch.get(position).getProductId();
     }
 
+    /**
+     * Get a View that displays the {@code Product} at the specified position, with some image changes
+     *
+     * @param position    specific position
+     * @param convertView the old view to reuse
+     * @param parent      the parent to attach
+     * @return View with specified position
+     * @see BaseAdapter
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -82,6 +113,11 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
         return convertView;
     }
 
+    /**
+     * Return or create(if not exist) a search filter
+     *
+     * @return {@code Filter}
+     */
     @Override
     public Filter getFilter() {
         if (filter == null) {
@@ -90,8 +126,19 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
         return filter;
     }
 
+    /**
+     * Class is helping to search products in AutoCompleteTextView
+     *
+     * @see android.widget.Filter
+     */
     private class SearchFilter extends android.widget.Filter {
 
+        /**
+         * Filtering products according constraint
+         *
+         * @param constraint
+         * @return result of filtering
+         */
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults filterResults = new FilterResults();
@@ -104,6 +151,12 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
             return filterResults;
         }
 
+        /**
+         * Publish the filtering products
+         *
+         * @param constraint
+         * @param results    of filtering
+         */
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             if (results.count > 0) {
@@ -111,6 +164,13 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
             }
         }
 
+        /**
+         * Retrieve products by name
+         *
+         * @param context
+         * @param name
+         * @return list of products by name
+         */
         private List<Product> findProducts(Context context, String name) {
             String searchUri = new UriConstructor(context).makeURI("search").toString() + "{name}";
             RequestResponseManager<Product[]> managerLoader = new RequestResponseManager(context, App.getShowManager(), Product[].class);
@@ -118,12 +178,20 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
         }
     }
 
+    /**
+     * Class for simplify holding a product view
+     */
     private static class ViewHolder {
-        TextView productName;
-        TextView productPrice;
-        TextView currency_eur;
-        ImageView productImage;
+        private TextView productName;
+        private TextView productPrice;
+        private ImageView productImage;
+        private TextView currency_eur;
 
+        /**
+         * Instantiates a new View holder.
+         *
+         * @param v the current view
+         */
         ViewHolder(View v) {
             productName = (TextView) v.findViewById(R.id.productName);
             productImage = (ImageView) v.findViewById(R.id.productImage);

@@ -1,13 +1,11 @@
 package nl.intratuin;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
@@ -31,79 +29,96 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;
 
+/**
+ * The class {@code RegisterActivity} is used to provide logic on Register Activity
+ * Activity, where user can register himself in app
+ *
+ * @see AppCompatActivity
+ * @see OnClickListener
+ */
 public class RegisterActivity extends AppCompatActivity implements OnClickListener {
 
-    EditText etFirstName;
-    EditText etTussen;
-    EditText etLastName;
-    EditText etEmail;
-    EditText etPassword;
-    CheckBox cbShowPassword;
-    EditText etRePassword;
-    CheckBox cbShowRePassword;
-    RadioButton rbMale;
-    RadioButton rbFemale;
-    Button bCancel;
-    Button bSignUp;
-    ImageView ivIntratuin;
+    private EditText etFirstName;
+    private EditText etTussen;
+    private EditText etLastName;
+    private EditText etEmail;
+    private EditText etPassword;
+    private CheckBox cbShowPassword;
+    private EditText etRePassword;
+    private CheckBox cbShowRePassword;
+    private RadioButton rbMale;
+    private RadioButton rbFemale;
+    private Button bCancel;
+    private Button bSignUp;
+    private ImageView ivIntratuin;
 
-    Pattern pattern;
-    Matcher matcher;
+    private Pattern pattern;
+    private Matcher matcher;
 
-    URI registerUri=null;
-    URI loginUri=null;
+    private URI registerUri = null;
+    private URI loginUri = null;
 
+    /**
+     * Provide logic when activity created. Mapping field, set URIs.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_register);
 
-        etFirstName = (EditText)findViewById(R.id.etFirstName);
-        etTussen = (EditText)findViewById(R.id.etTussen);
-        etLastName = (EditText)findViewById(R.id.etLastName);
-        etEmail = (EditText)findViewById(R.id.etEmail);
-        etPassword = (EditText)findViewById(R.id.etPassword);
+        etFirstName = (EditText) findViewById(R.id.etFirstName);
+        etTussen = (EditText) findViewById(R.id.etTussen);
+        etLastName = (EditText) findViewById(R.id.etLastName);
+        etEmail = (EditText) findViewById(R.id.etEmail);
+        etPassword = (EditText) findViewById(R.id.etPassword);
         cbShowPassword = (CheckBox) findViewById(R.id.cbShowPassword);
-        etRePassword = (EditText)findViewById(R.id.etRePassword);
+        etRePassword = (EditText) findViewById(R.id.etRePassword);
         cbShowRePassword = (CheckBox) findViewById(R.id.cbShowRePassword);
-        rbMale = (RadioButton)findViewById(R.id.rbMale);
-        rbFemale = (RadioButton)findViewById(R.id.rbFemale);
-        bCancel = (Button)findViewById(R.id.bCancel);
-        bSignUp = (Button)findViewById(R.id.bSignUp);
+        rbMale = (RadioButton) findViewById(R.id.rbMale);
+        rbFemale = (RadioButton) findViewById(R.id.rbFemale);
+        bCancel = (Button) findViewById(R.id.bCancel);
+        bSignUp = (Button) findViewById(R.id.bSignUp);
         ivIntratuin = (ImageView) findViewById(R.id.ivIntratuin);
 
         setListeners();
 
-        registerUri=new UriConstructor(RegisterActivity.this).makeURI("registration");
-        loginUri=new UriConstructor(RegisterActivity.this).makeURI("login");
+        registerUri = new UriConstructor(RegisterActivity.this).makeURI("registration");
+        loginUri = new UriConstructor(RegisterActivity.this).makeURI("login");
     }
 
-
-
+    /**
+     * Provide logic for clicking buttons/checkboxes.
+     * Sign up when enter all data needed to register.
+     *
+     * @param view
+     */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
 
             case R.id.cbShowPassword:
-                if(cbShowPassword.isChecked())
+                if (cbShowPassword.isChecked())
                     etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                else etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    etPassword.setSelection(etPassword.length());
+                else
+                    etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                etPassword.setSelection(etPassword.length());
                 break;
 
             case R.id.cbShowRePassword:
-                if(cbShowRePassword.isChecked())
+                if (cbShowRePassword.isChecked())
                     etRePassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                else etRePassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    etRePassword.setSelection(etRePassword.length());
+                else
+                    etRePassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                etRePassword.setSelection(etRePassword.length());
                 break;
 
             case R.id.bCancel:
@@ -112,15 +127,15 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                 break;
 
             case R.id.bSignUp:
-                if(registerUri!=null && dataValidation()){//&& Data validation passed
+                if (registerUri != null && dataValidation()) {//&& Data validation passed
                     MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
                     map.add("client_id", etEmail.getText().toString());
-                    String fullName=etFirstName.getText().toString()+" ";
-                    if(etTussen.getText().length()>0)
-                        fullName+=etTussen.getText().toString()+" ";
-                    fullName+=etLastName.getText().toString();
+                    String fullName = etFirstName.getText().toString() + " ";
+                    if (etTussen.getText().length() > 0)
+                        fullName += etTussen.getText().toString() + " ";
+                    fullName += etLastName.getText().toString();
                     map.add("name", fullName);
-                    map.add("email",etEmail.getText().toString());
+                    map.add("email", etEmail.getText().toString());
                     //TODO: get gender
                     //if(rbMale.isChecked())
                     //    map.add("client_gender", "1");
@@ -130,8 +145,8 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
 
                     AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
                             new RequestResponse<MultiValueMap<String, String>, String>(registerUri, 3,
-                                    String.class,  App.getShowManager(), this).execute(map);
-                    if(jsonRespond==null){
+                                    String.class, App.getShowManager(), this).execute(map);
+                    if (jsonRespond == null) {
                         App.getShowManager().showMessage("Error! No response.", RegisterActivity.this);
                     }
                     try {
@@ -145,22 +160,24 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                             map.add("password", etPassword.getText().toString());
 
                             jsonRespond = new RequestResponse<MultiValueMap<String, String>, String>(loginUri, 3,
-                                            String.class,  App.getShowManager(), this).execute(map);
-                            if(jsonRespond==null){
+                                    String.class, App.getShowManager(), this).execute(map);
+                            if (jsonRespond == null) {
                                 App.getShowManager().showMessage("Error! No response.", RegisterActivity.this);
                             }
                             response = new JSONObject(jsonRespond.get());
-                            if (response!=null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
+                            if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
 
-                                if(Settings.getMainscreen(RegisterActivity.this)== Mainscreen.WEB)
+                                if (Settings.getMainscreen(RegisterActivity.this) == Mainscreen.WEB)
                                     startActivity(new Intent(RegisterActivity.this, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, response.getString("access_token")));
-                                else startActivity(new Intent(RegisterActivity.this, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, response.getString("access_token")));
+                                else
+                                    startActivity(new Intent(RegisterActivity.this, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, response.getString("access_token")));
                                 finishAffinity();
                             } else {
                                 String errorStr;
-                                if(response==null)
-                                    errorStr="Error! Null response!";
-                                else errorStr="Error "+response.getString("code")+": "+response.getString("error")+": "+response.getString("error_description");
+                                if (response == null)
+                                    errorStr = "Error! Null response!";
+                                else
+                                    errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
                                 App.getShowManager().showMessage(errorStr, RegisterActivity.this);
                             }
                         } else {
@@ -171,7 +188,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                                 errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
                             App.getShowManager().showMessage(errorStr, RegisterActivity.this);
                         }
-                    } catch (InterruptedException | ExecutionException | JSONException e){
+                    } catch (InterruptedException | ExecutionException | JSONException e) {
                         App.getShowManager().showMessage("Error! " + e.getMessage(), RegisterActivity.this);
                     }
                 }
@@ -184,16 +201,26 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         }
     }
 
-    public static Date parseDate(String str){
-        String[] s=str.split("/");
-        return new Date(Integer.parseInt(s[2])-1900,Integer.parseInt(s[0])-1,Integer.parseInt(s[1]));
+    /**
+     * Parse date.
+     *
+     * @param str the str
+     * @return the date
+     */
+    //wtf?))
+    public static Date parseDate(String str) {
+        String[] s = str.split("/");
+        return new Date(Integer.parseInt(s[2]) - 1900, Integer.parseInt(s[0]) - 1, Integer.parseInt(s[1]));
     }
 
-    private void setListeners(){
+    /**
+     * Setting listeners on field and buttons
+     */
+    private void setListeners() {
         etFirstName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus && etFirstName.getText().length()==0){
+                if (!hasFocus && etFirstName.getText().length() == 0) {
                     etFirstName.setError("First name can not be blank");
                 }
             }
@@ -261,7 +288,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         etRePassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus && !etPassword.getText().toString().equals(etRePassword.getText().toString())){
+                if (!hasFocus && !etPassword.getText().toString().equals(etRePassword.getText().toString())) {
                     etRePassword.setError("Your passwords are mismatches");
                 }
             }
@@ -281,47 +308,64 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
             }
         });
     }
-    private void showEmailError(){
-        if(etEmail.getText().length()==0)
-            etEmail.setError("Email can't be blank!");
-        else etEmail.setError("Wrong email format!");
-    }
-    private void showPassError(){
-        if(etPassword.getText().length()==0)
+
+    /**
+     * Shows password validation error
+     */
+    //code duplication
+    private void showPassError() {
+        if (etPassword.getText().length() == 0)
             etPassword.setError("Password can't be blank!");
         else etPassword.setError("Password has to be 6-15 chars, at least 1 small letter, " +
                 "1 cap. letter and 1 number");
     }
-    private boolean dataValidation(){
-        boolean res=true;
-        if(etFirstName.getText().length()==0){
+
+    /**
+     * Shows email validation error
+     */
+    //code duplication
+    private void showEmailError() {
+        if (etEmail.getText().length() == 0)
+            etEmail.setError("Email can't be blank!");
+        else etEmail.setError("Wrong email format!");
+    }
+
+    /**
+     * Validation email and password
+     *
+     * @return result of data validation(true if all OK)
+     */
+    //code duplication
+    private boolean dataValidation() {
+        boolean res = true;
+        if (etFirstName.getText().length() == 0) {
             etFirstName.setError("First name can not be blank");
-            res=false;
+            res = false;
         }
 
-        if(etLastName.getText().length()==0){
+        if (etLastName.getText().length() == 0) {
             etLastName.setError("Last name can not be blank");
-            res=false;
+            res = false;
         }
 
         pattern = Pattern.compile(LoginActivity.EMAIL_PATTERN);
         matcher = pattern.matcher(etEmail.getText().toString());
-        if(!matcher.matches()){
+        if (!matcher.matches()) {
             showEmailError();
-            res=false;
+            res = false;
         }
 
 
         pattern = Pattern.compile(LoginActivity.PASSWORD_PATTERN);
         matcher = pattern.matcher(etPassword.getText().toString());
-        if(!matcher.matches()){
+        if (!matcher.matches()) {
             showPassError();
-            res=false;
+            res = false;
         }
 
-        if(!etPassword.getText().toString().equals(etRePassword.getText().toString())){
+        if (!etPassword.getText().toString().equals(etRePassword.getText().toString())) {
             etRePassword.setError("Your passwords are mismatches");
-            res=false;
+            res = false;
         }
 
         return res;

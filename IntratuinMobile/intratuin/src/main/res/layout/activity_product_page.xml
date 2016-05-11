@@ -10,9 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@color/product_background"
-        android:orientation="vertical"
         tools:context="nl.intratuin.ProductDetailsPageActivity">
-
 
         <RelativeLayout
             android:orientation="horizontal"
@@ -24,18 +22,22 @@
             android:background="#ffffff"
             android:id="@+id/rlTop">
 
-            <TextView
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar"/>
+
+            <!--<TextView
                 android:id="@+id/tvProductName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:layout_below="@id/toolbar"
                 android:textSize="28dp"
                 android:layout_centerHorizontal="true"
                 android:textColor="#000000"
                 android:textStyle="bold"
                 android:layout_alignParentLeft="false"
                 android:layout_marginLeft="0dp"
-                android:layout_alignParentTop="true"
                 android:layout_marginBottom="15dp" />
 
             <ImageButton
@@ -43,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text="New Button"
                 android:id="@+id/bBack"
-                android:layout_alignParentTop="true"
+                android:layout_below="@id/toolbar"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginLeft="10dp"
@@ -56,29 +58,41 @@
                 android:layout_height="wrap_content"
                 android:text="[Home]"
                 android:id="@+id/bHome"
-                android:layout_alignParentTop="true"
+                android:layout_below="@id/toolbar"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentLeft="false"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/button_home"
                 android:background="#ffffff"
-                android:layout_marginRight="10dp" />
+                android:layout_marginRight="10dp" />-->
         </RelativeLayout>
 
+        <TextView
+            android:id="@+id/tvProductName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/rlTop"
+            android:textColor="#005A36"
+            android:textSize="28dp"
+            android:textStyle="bold"
+            android:layout_alignParentLeft="false"
+            android:layout_marginLeft="0dp"
+            android:layout_marginBottom="15dp" />
 
         <TextView android:id="@+id/tvCurrencyEur"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/tvProductName"
             android:layout_centerVertical="true"
             android:paddingLeft="15dp"
-            android:paddingTop="10dp"
             android:textColor="@color/colorAccent"
             android:text="€"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/rlTop" />
+            android:layout_alignParentLeft="true"/>
 
         <TextView android:id="@+id/tvProductPrice"
             android:layout_width="match_parent"
@@ -94,10 +108,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentTop="true"
+            android:layout_below="@id/tvProductPrice"
             android:layout_alignParentRight="false"
-            android:layout_marginTop="100dp" />
+            android:layout_marginTop="10dp" />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -108,7 +121,7 @@
             android:layout_alignParentEnd="true"
             android:src="@drawable/question"
             android:background="@color/product_background"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="15dp" />
 
         <Spinner
             android:layout_width="100dp"

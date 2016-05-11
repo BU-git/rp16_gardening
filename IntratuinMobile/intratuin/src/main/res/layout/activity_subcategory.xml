@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/gradient"
-    android:orientation="vertical"
-    android:fillViewport="true"
-    tools:context="nl.intratuin.RegisterActivity">
-
-    <Button
-        android:id="@+id/bsubCategory"
-        android:background="@drawable/button_action"
-        android:layout_height="30dp"
-        android:layout_centerHorizontal="true"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:clickable="true"
-        android:textColor="@color/textColor"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvSubCategory"
+            android:background="@drawable/button_action"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 </LinearLayout>
+
+

@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Intratuin</string>
+    <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
+    <string name="company_number">99</string>
 
     #facebook
     <string name="facebook_app_id">1720162671574425</string>

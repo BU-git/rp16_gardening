@@ -1,6 +1,11 @@
 package nl.intratuin.settings;
 
 /**
- * Created by Иван on 22.04.2016.
+ * Class {@code Mainscreen} is enumeration of views to connect.
+ *
+ * @author Ivan
+ * @since 22.04.2016.
  */
-public enum Mainscreen { SEARCH, WEB }
+public enum Mainscreen {
+    SEARCH, WEB
+}

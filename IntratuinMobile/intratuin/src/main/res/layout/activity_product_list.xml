@@ -3,7 +3,12 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient">
+        android:background="@drawable/gradient"
+    android:descendantFocusability="blocksDescendants">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
 
     <ListView
         android:id="@+id/subcategory_listView"
@@ -13,7 +18,8 @@
         android:background="#FFFFFF"
         android:divider="@color/colorAccent"
         android:dividerHeight="1px"
-        android:scrollIndicators="right" />
+        android:scrollIndicators="right"
+        android:clickable="true" />
 
     <ListView
         android:id="@+id/productOfCategory_listView"
@@ -24,4 +30,10 @@
         android:divider="@color/colorAccent"
         android:dividerHeight="1px"
         android:scrollIndicators="right" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
     </LinearLayout>

@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
-
     <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/productByCategory"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/gradient"
-        tools:context="nl.intratuin.ProductDetailsPageActivity">
+        android:background="@drawable/gradient">
 
     <ImageView android:id="@+id/productImage_byCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        />
+        android:layout_centerVertical="true"/>
 
         <TextView android:id="@+id/productName__byCategory"
             android:layout_width="match_parent"
@@ -49,4 +41,3 @@
             android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceMediumInverse"/>
 </RelativeLayout>
-    </ScrollView>
