@@ -46,10 +46,10 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public int findByBarcode(long barcode) {
+    public Product findByBarcode(long barcode) {
         TypedQuery<Product> queryFindProductByBarcode = em.createQuery("SELECT P FROM Product P WHERE P.barcode = :regexp", Product.class);
         queryFindProductByBarcode.setParameter("regexp",barcode);
         List<Product> list = queryFindProductByBarcode.getResultList();
-        return list.get(0).getProductId();
+        return list.size() == 0 ? null : list.get(0);
     }
 }
