@@ -57,7 +57,8 @@ public class UriConstructor {
                                     , "/Intratuin" + context.getString(R.string.registration_server)).toURI();
                         case API:
                         case DEMOAPI:
-                            return new URL("http", Settings.getHost(context), context.getString(R.string.registration_api)).toURI();
+                            return new URL("https", context.getString(R.string.registration_host),
+                                    context.getString(R.string.registration_relative)+context.getString(R.string.company_id)).toURI();
                         default:
                             return new URL("http", Settings.getHost(context), Integer.parseInt(context.getString(R.string.port_local))
                                     , context.getString(R.string.registration_server)).toURI();

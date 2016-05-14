@@ -71,7 +71,6 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
         setContentView(R.layout.activity_register);
 
         etFirstName = (EditText) findViewById(R.id.etFirstName);
@@ -128,20 +127,14 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
 
             case R.id.bSignUp:
                 if (registerUri != null && dataValidation()) {//&& Data validation passed
-                    MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-                    map.add("client_id", etEmail.getText().toString());
+                    MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
                     String fullName = etFirstName.getText().toString() + " ";
                     if (etTussen.getText().length() > 0)
                         fullName += etTussen.getText().toString() + " ";
                     fullName += etLastName.getText().toString();
                     map.add("name", fullName);
                     map.add("email", etEmail.getText().toString());
-                    //TODO: get gender
-                    //if(rbMale.isChecked())
-                    //    map.add("client_gender", "1");
-                    //else
-                    //    map.add("client_gender", "0");
-                    map.add("client_secret", etPassword.getText().toString());
+                    map.add("password", etPassword.getText().toString());
 
                     AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
                             new RequestResponse<MultiValueMap<String, String>, String>(registerUri, 3,
@@ -152,7 +145,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                     try {
                         JSONObject response = new JSONObject(jsonRespond.get());
                         if (response != null && response.has("id")) {
-                            map = new LinkedMultiValueMap<String, String>();
+                            map = new LinkedMultiValueMap<>();
                             map.add("grant_type", "password");
                             map.add("client_id", etEmail.getText().toString());
                             map.add("client_secret", etPassword.getText().toString());

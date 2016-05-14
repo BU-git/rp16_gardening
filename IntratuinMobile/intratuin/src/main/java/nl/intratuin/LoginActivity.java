@@ -115,7 +115,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         super.onCreate(savedInstanceState);
         CacheCustomerCredentials.cache(this); //Check cache
 
-        getSupportActionBar();
         TwitterAuthConfig authConfig = Settings.getTwitterConfig(this);
         Fabric.with(this, new Twitter(authConfig));
         FacebookSdk.sdkInitialize(this.getApplicationContext());
@@ -358,12 +357,12 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 break;
 
             case R.id.bRegister:
-                Intent registerIntent = new Intent(this, RegisterActivity.class);
+                Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(registerIntent);
                 break;
 
             case R.id.bForgot:
-                Intent recoverIntent = new Intent(this, RecoverActivity.class);
+                Intent recoverIntent = new Intent(LoginActivity.this, RecoverActivity.class);
                 startActivity(recoverIntent);
                 break;
 
