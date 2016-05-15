@@ -14,7 +14,6 @@ import nl.intratuin.R;
  */
 //rename class
 public class Settings {
-    private static BuildType buildType = BuildType.DEPLOYED;
 
     /**
      * Gets build type.
