@@ -41,48 +41,48 @@ public class CacheCustomerCredentials {
         String username = App.getAuthManager().getAccessKeyUsername();
         String password = App.getAuthManager().getAccessKeyPassword();
         if (username != null && password != null) {
-//            URI uri = new UriConstructor(context).makeURI("login");
-//            try {
-//                MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-//                map.add("grant_type", "password");
-//                map.add("client_id", username);
-//                map.add("client_secret", password);
-//                map.add("username", username);
-//                map.add("password", password);
-//
-//                AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
-//                        new RequestResponse<MultiValueMap<String, String>, String>(uri, 3,
-//                                String.class, App.getShowManager(), context).execute(map);
-//                JSONObject responseJsonObject = new JSONObject(jsonRespond.get());
-//                if (responseJsonObject != null && responseJsonObject.getString("token_type").equals("bearer")) {
-//                    String accessKey = responseJsonObject.getString("access_token");
-//                    if (Settings.getMainscreen(context) == Mainscreen.WEB)
-//                        context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
-//                    else
-//                        context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
-//                    ((FragmentActivity) context).finish();
-//                } else {
-//                    String errorStr;
-//                    if (responseJsonObject == null)
-//                        errorStr = "Error! Null response!";
-//                    else
-//                        errorStr = "Error " + responseJsonObject.getString("code") + ": "
-//                                + responseJsonObject.getString("error")
-//                                + ": " + responseJsonObject.getString("error_description");
-//
-//                    App.getShowManager().showMessage(errorStr, context);
+            URI uri = new UriConstructor(context).makeURI("login");
+            try {
+                MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+                map.add("grant_type", "password");
+                map.add("client_id", username);
+                map.add("client_secret", password);
+                map.add("username", username);
+                map.add("password", password);
+
+                AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
+                        new RequestResponse<MultiValueMap<String, String>, String>(uri, 3,
+                                String.class, App.getShowManager(), context).execute(map);
+                JSONObject responseJsonObject = new JSONObject(jsonRespond.get());
+                if (responseJsonObject != null && responseJsonObject.getString("token_type").equals("bearer")) {
+                    String accessKey = responseJsonObject.getString("access_token");
+                    if (Settings.getMainscreen(context) == Mainscreen.WEB)
+                        context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
+                    else
+                        context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, accessKey));
+                    ((FragmentActivity) context).finish();
+                } else {
+                    String errorStr;
+                    if (responseJsonObject == null)
+                        errorStr = "Error! Null response!";
+                    else
+                        errorStr = "Error " + responseJsonObject.getString("code") + ": "
+                                + responseJsonObject.getString("error")
+                                + ": " + responseJsonObject.getString("error_description");
+
+                    App.getShowManager().showMessage(errorStr, context);
                     context.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)
                             .edit()
                             .clear()
                             .commit();
                 }
-//            } catch (InterruptedException | ExecutionException | JSONException e) {
-//                Log.e("Error!!!!!! ", e.getMessage());
-//            }
-//        } else {
-//            if (Settings.getBuildType(context) == BuildType.LOCAL || Settings.getBuildType(context) == BuildType.DEPLOYED)
-//                facebookCache(context);
-//        }
+            } catch (InterruptedException | ExecutionException | JSONException e) {
+                Log.e("Error!!!!!! ", e.getMessage());
+            }
+        } else {
+            if (Settings.getBuildType(context) == BuildType.LOCAL || Settings.getBuildType(context) == BuildType.DEPLOYED)
+                facebookCache(context);
+        }
     }
 
     /**

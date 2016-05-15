@@ -132,6 +132,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                     String fullName = etFirstName.getText().toString() + " ";
                     if (etTussen.getText().length() > 0)
                         fullName += etTussen.getText().toString() + " ";
+                    fullName += etLastName.getText().toString();
                     try {
                     jsonObject.put("name", fullName);
                     jsonObject.put("email", etEmail.getText().toString());
