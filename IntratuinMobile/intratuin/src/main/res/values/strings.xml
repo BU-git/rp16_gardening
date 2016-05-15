@@ -12,7 +12,7 @@
     <string name="twitter_customer_secret">pcOrskD4hWcUGxi5n3nMvtL3bArhIuyj2pmiMCQ7E9jj71wH5w</string>
 
     #build types: LOCAL, DEPLOYED, API, DEMOAPI; mainscreens: WEB, SEARCH. If build_type=API/DEMOAPI mainscreen is always WEB
-    <string name="build_type">DEPLOYED</string>
+    <string name="build_type">LOCAL</string>
     <string name="mainscreen">SEARCH</string>
     <string name="connection_timeout">10000</string>
 
@@ -80,8 +80,14 @@
     <string name="loading">Loading</string>
     <string name="scanning">Scanning</string>
 
+    <string name="edit_title">Edit</string>
+    <string name="fingerprint">register fingerprint</string>
 
-
+    <string-array name="edit_item">
+        <item>Personal information</item>
+        <item>Email</item>
+        <item>Password</item>
+    </string-array>
 
     <string-array name="size">
         <item>Size1</item>

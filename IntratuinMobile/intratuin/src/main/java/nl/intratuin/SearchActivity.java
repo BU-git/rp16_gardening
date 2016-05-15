@@ -46,8 +46,7 @@ public class SearchActivity extends ToolBarActivity implements OnClickListener {
      */
     public static final String TREENODE = "TreeNode";
 
-    private String access_token;
-    private String customerName;
+    public static String access_token;
 
     private HierarchyCategoryAdapter categoryAdapter;
     private ListView categoryListView;

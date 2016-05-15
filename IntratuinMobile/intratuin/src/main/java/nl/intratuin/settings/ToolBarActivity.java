@@ -11,14 +11,25 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.util.Arrays;
+import java.util.List;
+
+import nl.intratuin.App;
+import nl.intratuin.BuildConfig;
 import nl.intratuin.LoginActivity;
+import nl.intratuin.ProductDetailsPageActivity;
+import nl.intratuin.ProfileActivity;
 import nl.intratuin.R;
 import nl.intratuin.SearchActivity;
+import nl.intratuin.dto.Customer;
+import nl.intratuin.dto.Product;
 import nl.intratuin.manager.AuthManager;
+import nl.intratuin.manager.RequestResponseManager;
 
 
 public class ToolBarActivity extends AppCompatActivity {
     protected static String profileItem = "Profile";
+    protected static final String CUSTOMER = "customer";
     Toolbar toolBar;
     MenuItem item;
     ImageView toolbarTitle;
@@ -53,16 +64,22 @@ public class ToolBarActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.profile):
-                Toast.makeText(ToolBarActivity.this, "Profile Page", Toast.LENGTH_LONG).show();
+                String uri = BuildConfig.API_HOME + "customer/access_token/{token}";
+                RequestResponseManager<Customer> managerLoader = new RequestResponseManager<>(this, App.getShowManager(), Customer.class);
+                Customer customerByAccessToken = managerLoader.loaderFromWebService(uri, SearchActivity.access_token);
+
+                Intent profilePageIntent = new Intent(ToolBarActivity.this, ProfileActivity.class);
+                profilePageIntent.putExtra(CUSTOMER, customerByAccessToken);
+                startActivity(profilePageIntent);
                 break;
             case (R.id.logout): {
                 ToolBarActivity.this.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)
                         .edit()
                         .clear()
                         .commit();
-                Intent loginIntent = new Intent(ToolBarActivity.this, LoginActivity.class);
-                loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(loginIntent);
+                Intent logoutIntent = new Intent(ToolBarActivity.this, LoginActivity.class);
+                logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(logoutIntent);
                 break;
             }
         }

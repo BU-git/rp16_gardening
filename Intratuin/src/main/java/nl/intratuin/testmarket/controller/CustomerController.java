@@ -1,6 +1,7 @@
 package nl.intratuin.testmarket.controller;
 
 import nl.intratuin.testmarket.entity.Customer;
+import nl.intratuin.testmarket.entity.Product;
 import nl.intratuin.testmarket.service.contract.AccessKeyService;
 import nl.intratuin.testmarket.service.contract.CustomerService;
 import org.json.simple.JSONObject;
@@ -166,6 +167,11 @@ public class CustomerController {
         Facebook facebook = new FacebookTemplate(header.getFirst("facebook_token"), "IntratuinMobile", prop.getProperty("facebook.appId"));
         User profile = facebook.userOperations().getUserProfile();
         return customerService.loginWithFacebook(profile);
+    }
+
+    @RequestMapping(value = "access_token/{token}")
+    public Customer getCustomerByAccessToken(@PathVariable String token) {
+        return customerService.getCustomerByAccessKey(token);
     }
 }
 

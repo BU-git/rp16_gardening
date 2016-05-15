@@ -1,5 +1,8 @@
 package nl.intratuin.dto;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.sql.Date;
 
 /**
@@ -8,8 +11,7 @@ import java.sql.Date;
  * @author Ivan
  * @since 19.03.2016.
  */
-//why we don't use a customer?
-public class Customer {
+public class Customer implements Parcelable {
     private int id;
 
     private String firstName;
@@ -35,6 +37,59 @@ public class Customer {
     private String postalCode;
 
     private int gender;
+
+    public Customer(){}
+
+    private Customer(Parcel in) {
+        id = in.readInt();
+        gender = in.readInt();
+        firstName = in.readString();
+        lastName = in.readString();
+        email = in.readString();
+        password = in.readString();
+        phoneNumber = in.readString();
+        city = in.readString();
+        streetName = in.readString();
+        houseNumber = in.readString();
+        postalCode = in.readString();
+        birthday = (java.sql.Date)in.readSerializable();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(id);
+        out.writeInt(gender);
+        out.writeString(firstName);
+        out.writeString(lastName);
+        out.writeString(email);
+        out.writeString(password);
+        out.writeString(phoneNumber);
+        out.writeString(city);
+        out.writeString(streetName);
+        out.writeString(houseNumber);
+        out.writeString(postalCode);
+        out.writeSerializable(birthday);
+    }
+
+    /**
+     * The constant CREATOR generates instances of {@code Product} class from a Parcel
+     *
+     * @see Parcel
+     * @see Parcelable
+     */
+    public static final Parcelable.Creator<Customer> CREATOR = new Parcelable.Creator<Customer>() {
+        public Customer createFromParcel(Parcel in) {
+            return new Customer(in);
+        }
+
+        public Customer[] newArray(int size) {
+            return new Customer[size];
+        }};
 
     /**
      * Gets id.

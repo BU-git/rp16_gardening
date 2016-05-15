@@ -10,5 +10,6 @@
     <color name="hint_search">#caed7f</color>
     <color name="colorToolbar">#1c2801</color>
     <color name="product_background">#e7eae7</color>
+    <color name="textColorLight">#BFD83F</color>
 </resources>
 
