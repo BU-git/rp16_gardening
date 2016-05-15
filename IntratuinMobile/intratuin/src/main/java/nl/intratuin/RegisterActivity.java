@@ -127,22 +127,23 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
 
             case R.id.bSignUp:
                 if (registerUri != null && dataValidation()) {//&& Data validation passed
-                    MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+                    JSONObject jsonObject = new JSONObject();
+                    MultiValueMap<String, String> map;
                     String fullName = etFirstName.getText().toString() + " ";
                     if (etTussen.getText().length() > 0)
                         fullName += etTussen.getText().toString() + " ";
-                    fullName += etLastName.getText().toString();
-                    map.add("name", fullName);
-                    map.add("email", etEmail.getText().toString());
-                    map.add("password", etPassword.getText().toString());
+                    try {
+                    jsonObject.put("name", fullName);
+                    jsonObject.put("email", etEmail.getText().toString());
+                    jsonObject.put("password", etPassword.getText().toString());
 
-                    AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
-                            new RequestResponse<MultiValueMap<String, String>, String>(registerUri, 3,
-                                    String.class, App.getShowManager(), this).execute(map);
+                    AsyncTask<String, Void, String> jsonRespond =
+                            new RequestResponse<String, String>(registerUri, 3,
+                                    String.class, App.getShowManager(), this).execute(jsonObject.toString());
                     if (jsonRespond == null) {
                         App.getShowManager().showMessage("Error! No response.", RegisterActivity.this);
                     }
-                    try {
+
                         JSONObject response = new JSONObject(jsonRespond.get());
                         if (response != null && response.has("id")) {
                             map = new LinkedMultiValueMap<>();
@@ -152,12 +153,13 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                             map.add("username", etEmail.getText().toString());
                             map.add("password", etPassword.getText().toString());
 
-                            jsonRespond = new RequestResponse<MultiValueMap<String, String>, String>(loginUri, 3,
+                            AsyncTask<MultiValueMap<String, String>, Void, String> jsonLoginRespond =
+                                    new RequestResponse<MultiValueMap<String, String>, String>(loginUri, 3,
                                     String.class, App.getShowManager(), this).execute(map);
-                            if (jsonRespond == null) {
+                            if (jsonLoginRespond == null) {
                                 App.getShowManager().showMessage("Error! No response.", RegisterActivity.this);
                             }
-                            response = new JSONObject(jsonRespond.get());
+                            response = new JSONObject(jsonLoginRespond.get());
                             if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
 
                                 if (Settings.getMainscreen(RegisterActivity.this) == Mainscreen.WEB)
