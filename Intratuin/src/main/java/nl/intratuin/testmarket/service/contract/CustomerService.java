@@ -12,7 +12,7 @@ public interface CustomerService {
 
     List<Customer> findAll();
 
-    JSONObject addCustomer(MultiValueMap<String, String> header);
+    JSONObject addCustomer(String header);
 
     void save(Customer customer);
 

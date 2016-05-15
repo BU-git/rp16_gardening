@@ -144,7 +144,6 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                     if (jsonRespond == null) {
                         App.getShowManager().showMessage("Error! No response.", RegisterActivity.this);
                     }
-
                         JSONObject response = new JSONObject(jsonRespond.get());
                         if (response != null && response.has("id")) {
                             map = new LinkedMultiValueMap<>();

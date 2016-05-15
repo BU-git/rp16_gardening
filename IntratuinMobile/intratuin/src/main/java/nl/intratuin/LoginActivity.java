@@ -323,7 +323,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
                         AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
                                 new RequestResponse<MultiValueMap<String, String>, String>(loginUri, 3,
-                                        String.class, App.getShowManager(), this).execute(map);
+                                        String.class, App.getShowManager(), LoginActivity.this).execute(map);
                         if (jsonRespond == null) {
                             App.getShowManager().showMessage("Error! No response.", LoginActivity.this);
                         }

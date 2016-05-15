@@ -39,18 +39,6 @@ public class CustomerController {
         }
     }
 
-    @RequestMapping(value="testPost", method=RequestMethod.POST)
-    public String testPost(@RequestBody MultiValueMap<String, String> header){
-        if(!header.containsKey("access_token"))
-            return "No token found";
-        else return header.getFirst("access_token");
-    }
-
-    @RequestMapping(value="testGet/", params = {"access_token"})
-    public String testGet(@RequestParam(value = "access_token") String token){
-        return token;
-    }
-
     @RequestMapping("all")
     public List<Customer> getAll() {
         return customerService.findAll();
@@ -69,27 +57,26 @@ public class CustomerController {
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public
     @ResponseBody
-    JSONObject addCustomer(@RequestBody MultiValueMap<String, String> header) {
+    JSONObject add(@RequestBody String header) {
         return customerService.addCustomer(header);
     }
 
     @RequestMapping(value="info", params = {"access_token"})
-    public JSONObject info(@RequestParam(value = "access_token") String token){
+    public String info(@RequestParam(value = "access_token") String token){
         Customer c=customerService.getCustomerByAccessKey(token);
         if(c!=null) {
             JSONObject r = new JSONObject();
-            r.put("user_id",""+c.getId());
+            r.put("id",""+c.getId());
             String name=getCustomerName(c);
             r.put("name",name);
-            r.put("client_id",c.getEmail());
             r.put("email",c.getEmail());
-            return r;
+            return "["+r.toJSONString()+"]";
         }else{
             JSONObject e=new JSONObject();
             e.put("code","403");
             e.put("error","forbidden");
             e.put("error_description","Token you provided is invalid or deprecated");
-            return e;
+            return "["+e.toJSONString()+"]";
         }
     }
 

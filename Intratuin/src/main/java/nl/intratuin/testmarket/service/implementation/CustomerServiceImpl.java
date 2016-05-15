@@ -6,6 +6,8 @@ import nl.intratuin.testmarket.entity.AccessKey;
 import nl.intratuin.testmarket.entity.Customer;
 import nl.intratuin.testmarket.service.contract.CustomerService;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.social.facebook.api.User;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,12 +49,22 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Transactional(propagation= Propagation.REQUIRES_NEW)
-    public JSONObject addCustomer(MultiValueMap<String, String> header) {
+    public JSONObject addCustomer(String header) {
+        JSONObject request;
+        try {
+            request=(JSONObject) new JSONParser().parse(header);
+        } catch (ParseException e) {
+            JSONObject response=new JSONObject();
+            response.put("code","400");
+            response.put("error","bad_request");
+            response.put("error_description","Invalid json format");
+            return response;
+        }
         //Check whether is email already registered or not
-        JSONObject response=registerHeaderFormatCheck(header);
+        JSONObject response=registerHeaderFormatCheck(request);
         if(response.containsKey("error"))
             return response;
-        String emailToRegister = header.getFirst("client_id").toLowerCase();
+        String emailToRegister = request.get("email").toString().toLowerCase();
         Integer existedCustomerId = customerDao.findByEmail(emailToRegister);
 
         if (existedCustomerId != null) {
@@ -63,7 +75,7 @@ public class CustomerServiceImpl implements CustomerService {
         } else {
             Customer customer = new Customer();
             customer.setEmail(emailToRegister);
-            String[] name=header.getFirst("name").split(" ");
+            String[] name=request.get("name").toString().split(" ");
             customer.setFirstName(name[0]);
             if(name.length==2)
                 customer.setLastName(name[1]);
@@ -73,10 +85,11 @@ public class CustomerServiceImpl implements CustomerService {
             }
             //TODO: get gender
             //customer.setGender(header.getFirst("client_gender").equals("1")?1:0);
-            customer.setPassword(header.getFirst("client_secret"));
+            customer.setPassword(request.get("password").toString());
             save(customer);
             response.put("id",""+customer.getId());
             response.put("client_id",customer.getEmail());
+            response.put("email",customer.getEmail());
             return response;
         }
     }
@@ -86,9 +99,9 @@ public class CustomerServiceImpl implements CustomerService {
         customerDao.save(customer);
     }
 
-    private JSONObject registerHeaderFormatCheck(MultiValueMap<String, String> header){
+    private JSONObject registerHeaderFormatCheck(JSONObject header){
         JSONObject response=new JSONObject();
-        String[] par_list={"client_id","client_secret","name"};//"client_gender",
+        String[] par_list={"email","password","name"};//"client_gender",
         for(String par:par_list){
             if(!header.containsKey(par)){
                 response.put("code","400");
@@ -177,11 +190,11 @@ public class CustomerServiceImpl implements CustomerService {
         return response;
     }
 
-    private String randomString(int lenght){
+    private String randomString(int length){
         Random rnd=new Random();
         String charset="0123456789abcdefghijklmnopqrstuvwxyz";
         String res="";
-        for(int i=0; i<lenght; i++)
+        for(int i=0; i<length; i++)
             res+=charset.charAt(rnd.nextInt(charset.length()));
         return res;
     }

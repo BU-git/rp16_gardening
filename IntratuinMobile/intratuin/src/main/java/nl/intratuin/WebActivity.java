@@ -82,7 +82,7 @@ public class WebActivity extends AppCompatActivity {
                 String encoding = "utf-8";
                 webView.loadDataWithBaseURL(null, dummyPage, mime, encoding, null);
             } else {
-                webView.loadUrl("http://" + Settings.getHost(WebActivity.this) + "?" + access_token);
+                webView.loadUrl("https://" + Settings.getHost(WebActivity.this) + "/?" + access_token + "#page:debtor_order");
             }
 
             //show user login
@@ -93,12 +93,13 @@ public class WebActivity extends AppCompatActivity {
                 if (userInfoUri != null) {
                     RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);
                     String jsonRespond = managerLoader.loaderFromWebService(userInfoUri, access_token);
+                    jsonRespond=jsonRespond.substring(1,jsonRespond.length()-1);
                     JSONObject response = new JSONObject(jsonRespond);
-                    if (response != null && response.has("user_id")) {
+                    if (response != null && response.has("id")) {
                         if (response.has("name") && response.getString("name").length() > 0)
                             name = response.getString("name");
                         else
-                            name = response.getString("client_id");//name = response.getString("client_id");
+                            name = response.getString("email");
                     } else {
                         String errorStr;
                         if (response == null)

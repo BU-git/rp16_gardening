@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -62,8 +63,11 @@ public class RequestResponse<T, V> extends AsyncTask<T, Void, V> {
                 rf.setReadTimeout(Settings.getConnectionTimeout(context));
                 rf.setConnectTimeout(Settings.getConnectionTimeout(context));
                 return (V) restTemplate.postForObject(uri, param[0], responseType);
+            } catch (HttpClientErrorException e) {
+                return (V) e.getResponseBodyAsString();
             } catch (Exception e) {
-                showManager.showMessage("Error!!!" + e.getMessage(), context);
+                //showManager.showMessage("Error!" + e.getMessage(), context);
+                return null;
             }
         }
         return null;
