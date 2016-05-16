@@ -64,7 +64,8 @@ public class ToolBarActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.profile):
-                String uri = BuildConfig.API_HOME + "customer/access_token/{token}";
+//                String uri = BuildConfig.API_HOME + "customer/access_token/{token}";
+                String uri = BuildConfig.API_HOST + "customer/access_token/{token}";
                 RequestResponseManager<Customer> managerLoader = new RequestResponseManager<>(this, App.getShowManager(), Customer.class);
                 Customer customerByAccessToken = managerLoader.loaderFromWebService(uri, SearchActivity.access_token);
 

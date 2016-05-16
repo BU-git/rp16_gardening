@@ -12,15 +12,14 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.net.URI;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import nl.intratuin.App;
 import nl.intratuin.LoginActivity;
-import nl.intratuin.manager.AuthManager;
+import nl.intratuin.R;
 import nl.intratuin.SearchActivity;
 import nl.intratuin.WebActivity;
+import nl.intratuin.manager.AuthManager;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.BuildType;
@@ -39,8 +38,14 @@ public class CacheCustomerCredentials {
      * @param context the context
      */
     public static void cache(Context context) {
-        String time=App.getAuthManager().getTime();
-        if(false){//TODO:check if cache is deprecated
+        long timeOfLogin = Long.parseLong(App.getAuthManager().getTime());
+        long currentTimeInMillis = System.currentTimeMillis();
+        long cachingTime = R.string.login_caching_time;
+        if ((currentTimeInMillis - timeOfLogin + cachingTime) > 0) {
+            context.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)
+                    .edit()
+                    .clear()
+                    .commit();
             return;
         }
 
