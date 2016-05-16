@@ -106,6 +106,7 @@ public class SearchActivity extends ToolBarActivity implements OnClickListener {
                 }
             });
 
+            //show user login
             String name = "anonymous";
             try {
                 String userInfoUri = new UriConstructor(SearchActivity.this).makeURI("userInfo").toString();
@@ -113,28 +114,28 @@ public class SearchActivity extends ToolBarActivity implements OnClickListener {
                 if (userInfoUri != null) {
                     RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);
                     String jsonRespond = managerLoader.loaderFromWebService(userInfoUri, access_token);
+                    jsonRespond=jsonRespond.substring(1,jsonRespond.length()-1);
                     JSONObject response = new JSONObject(jsonRespond);
-                    if (response != null && response.has("user_id")) {
-                        if (response.has("name") && response.getString("name").length() > 0) {
+                    if (response != null && response.has("id")) {
+                        if (response.has("name") && response.getString("name").length() > 0)
                             name = response.getString("name");
-                        } else
-                            name = response.getString("client_id");
+                        else
+                            name = response.getString("email");
                     } else {
                         String errorStr;
                         if (response == null)
                             errorStr = "Error! Null response!";
                         else
                             errorStr = "Error" + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
-                        ErrorFragment ef = ErrorFragment.newError(errorStr);
-                        ef.show(getSupportFragmentManager(), "Intratuin");
+                        App.getShowManager().showMessage(errorStr, SearchActivity.this);
                         startActivity(new Intent(SearchActivity.this, LoginActivity.class));
                     }
                 }
             } catch (JSONException e) {
-                ErrorFragment ef = ErrorFragment.newError("Can't get user info!");
-                ef.show(getSupportFragmentManager(), "Intratuin");
+                App.getShowManager().showMessage("Can't get user info!", SearchActivity.this);
                 startActivity(new Intent(SearchActivity.this, LoginActivity.class));
             }
+
             profileItem = name;
         } else {
             ErrorFragment ef = ErrorFragment.newError("No access token found!");
