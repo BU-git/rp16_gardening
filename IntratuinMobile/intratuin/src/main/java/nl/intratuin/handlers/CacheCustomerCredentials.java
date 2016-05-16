@@ -12,6 +12,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.net.URI;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import nl.intratuin.App;
@@ -36,8 +38,12 @@ public class CacheCustomerCredentials {
      *
      * @param context the context
      */
-    //why cache -> facebookCache -> twitterCache?
     public static void cache(Context context) {
+        String time=App.getAuthManager().getTime();
+        if(false){//TODO:check if cache is deprecated
+            return;
+        }
+
         String username = App.getAuthManager().getAccessKeyUsername();
         String password = App.getAuthManager().getAccessKeyPassword();
         if (username != null && password != null) {
@@ -77,7 +83,7 @@ public class CacheCustomerCredentials {
                             .commit();
                 }
             } catch (InterruptedException | ExecutionException | JSONException e) {
-                Log.e("Error!!!!!! ", e.getMessage());
+                Log.e("Error! ", e.getMessage());
             }
         } else {
             if (Settings.getBuildType(context) == BuildType.LOCAL || Settings.getBuildType(context) == BuildType.DEPLOYED)

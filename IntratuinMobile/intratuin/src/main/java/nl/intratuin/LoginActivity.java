@@ -121,6 +121,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_login);
 
+        if(this.getString(R.string.remember_me_default_value).equals("checked"))
+            cbRemember.setChecked(true);
+        String par=this.getString(R.string.social_login_visibility);
+        if(par.equals("none")||par.equals("twitter"))
+            lbFacebook.setVisibility(View.INVISIBLE);
+        if(par.equals("none")||par.equals("facebook"))
+            bTwitter.setVisibility(View.INVISIBLE);
+
         bTwitterHidden = (TwitterLoginButton) findViewById(R.id.bTwitterHidden);
         bTwitter = (Button) findViewById(R.id.bTwitter);
         lbFacebook = (LoginButton) findViewById(R.id.bLoginFacebook);
@@ -201,6 +209,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                             App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_ACCESS_TOKEN, accessTokenTwitter);
                             App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_SECRET_ACCESS_TOKEN, secretAccessTokenTwitter);
+                            //TODO:save current time
                             String accessKey = response.getString("access_token");
 
                             if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
@@ -247,6 +256,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         response = new JSONObject(jsonRespond.get());
                         if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                             App.getAuthManager().loginAndCache(AuthManager.PREF_FACEBOOK, accessToken);
+                            //TODO:save current time
                             String accessKey = response.getString("access_token");
 
                             if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
@@ -333,6 +343,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             if (cbRemember.isChecked()) {
                                 App.getAuthManager().loginAndCache(AuthManager.PREF_USERNAME, etEmailAddress.getText().toString());
                                 App.getAuthManager().loginAndCache(AuthManager.PREF_PASSWORD, etPassword.getText().toString());
+                                //TODO:save current time
                             }
 
                             if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)

@@ -14,7 +14,10 @@ public class AuthManager {
      * The constant PREF_FILENAME is used for authentication.
      */
     public static final String PREF_FILENAME = "auth";
-
+    /**
+     * The constant PREF_TIME hold time of caching for deprecation check
+     */
+    public static final String PREF_TIME = "time";
     /**
      * The constant PREF_USERNAME hold the "username" key for access.
      */
@@ -103,5 +106,14 @@ public class AuthManager {
      */
     public String getAccessKeyPassword() {
         return pref.getString(PREF_PASSWORD, null);
+    }
+
+    /**
+     * Gets caching time.
+     *
+     * @return caching time
+     */
+    public String getTime() {
+        return pref.getString(PREF_TIME, null);
     }
 }

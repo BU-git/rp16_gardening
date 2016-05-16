@@ -2,6 +2,22 @@
     <string name="app_name">Intratuin</string>
     <string name="company_id">99</string>
 
+    #manageable settings
+    #Default state of "Remember me" checkbox: checked/unchecked
+    <string name="remember_me_default_value">checked</string>
+    #Login caching time (in minutes)
+    <string name="login_caching_time">43200</string>
+    #Visibility of social login buttons: both/twitter/facebook/none
+    <string name="social_login_visibility">both</string>
+    #Caching API screens: on/off
+    <string name="screen_caching">on</string>
+    #Show NFC: on/off
+    <string name="nfc">on</string>
+    #Show Scandit: on/off
+    <string name="scandit">on</string>
+    #Show fingerprint login: on/off
+    <string name="fingerprint_login">on</string>
+
     #facebook
     <string name="facebook_app_id">1720162671574425</string>
     <string name="login_facebook">Log in with Facebook</string>
