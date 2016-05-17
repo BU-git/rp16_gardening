@@ -84,7 +84,8 @@ public class ScannerActivity extends AppCompatActivity implements ScanditSDKOnSc
         for (final ScanditSDKCode code : scanSession.getNewlyDecodedCodes()) {
             if (Settings.getMainscreen(ScannerActivity.this) == Mainscreen.SEARCH) {
                 Product productByBarcode = new Product();
-                String uri = BuildConfig.API_HOME + "product/barcode/{code}";
+//                String uri = BuildConfig.API_HOME + "product/barcode/{code}";
+                String uri = BuildConfig.API_HOST + "product/barcode/{code}";
                 RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);
                 String jsonRespond = managerLoader.loaderFromWebService(uri, code.getData());
                 try {

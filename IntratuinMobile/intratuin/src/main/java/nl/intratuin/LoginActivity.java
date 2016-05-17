@@ -43,8 +43,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.fabric.sdk.android.Fabric;
-import nl.intratuin.manager.AuthManager;
 import nl.intratuin.handlers.CacheCustomerCredentials;
+import nl.intratuin.manager.AuthManager;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.Mainscreen;
@@ -98,6 +98,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private String loginByCache;
     private Pattern pattern;
     private Matcher matcher;
+
+    private long tempDate;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -209,7 +212,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                             App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_ACCESS_TOKEN, accessTokenTwitter);
                             App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_SECRET_ACCESS_TOKEN, secretAccessTokenTwitter);
-                            //TODO:save current time
+                            App.getAuthManager().loginAndCache(AuthManager.PREF_TIME, String.valueOf(System.currentTimeMillis()));
                             String accessKey = response.getString("access_token");
 
                             if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
@@ -256,7 +259,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         response = new JSONObject(jsonRespond.get());
                         if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                             App.getAuthManager().loginAndCache(AuthManager.PREF_FACEBOOK, accessToken);
-                            //TODO:save current time
+                            App.getAuthManager().loginAndCache(AuthManager.PREF_TIME, String.valueOf(System.currentTimeMillis()));
+
                             String accessKey = response.getString("access_token");
 
                             if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
@@ -343,7 +347,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             if (cbRemember.isChecked()) {
                                 App.getAuthManager().loginAndCache(AuthManager.PREF_USERNAME, etEmailAddress.getText().toString());
                                 App.getAuthManager().loginAndCache(AuthManager.PREF_PASSWORD, etPassword.getText().toString());
-                                //TODO:save current time
+                                App.getAuthManager().loginAndCache(AuthManager.PREF_TIME, String.valueOf(System.currentTimeMillis()));
                             }
 
                             if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
