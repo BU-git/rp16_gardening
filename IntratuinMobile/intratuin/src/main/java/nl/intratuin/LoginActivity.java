@@ -121,13 +121,13 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_login);
 
-        if(this.getString(R.string.remember_me_default_value).equals("checked"))
+        /*if(this.getString(R.string.remember_me_default_value).equals("checked"))
             cbRemember.setChecked(true);
         String par=this.getString(R.string.social_login_visibility);
         if(par.equals("none")||par.equals("twitter"))
             lbFacebook.setVisibility(View.INVISIBLE);
         if(par.equals("none")||par.equals("facebook"))
-            bTwitter.setVisibility(View.INVISIBLE);
+            bTwitter.setVisibility(View.INVISIBLE);*/
 
         bTwitterHidden = (TwitterLoginButton) findViewById(R.id.bTwitterHidden);
         bTwitter = (Button) findViewById(R.id.bTwitter);

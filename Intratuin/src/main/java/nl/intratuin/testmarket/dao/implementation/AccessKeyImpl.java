@@ -25,12 +25,16 @@ public class AccessKeyImpl implements AccessKeyDao {
         TypedQuery<AccessKey> queryFindByAccessKey = em.createQuery("SELECT AK FROM AccessKey AK WHERE AK.accessKey = :regex",
                 AccessKey.class);
         queryFindByAccessKey.setParameter("regex", accessKey);
+        try {
             AccessKey accessKeyEntity = queryFindByAccessKey.getSingleResult();
             if (accessKeyEntity != null && currentDate.isBefore(accessKeyEntity.getExpireDate())) {
                 return accessKeyEntity;
             } else {
                 return null;
             }
+        } catch(Exception e){
+            return null;
+        }
     }
 
     public boolean addRefreshToken(String accessToken, String refreshToken){
