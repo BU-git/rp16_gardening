@@ -21,7 +21,6 @@ import nl.intratuin.SearchActivity;
 import nl.intratuin.WebActivity;
 import nl.intratuin.manager.AuthManager;
 import nl.intratuin.net.RequestResponse;
-import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.BuildType;
 import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;
@@ -38,9 +37,12 @@ public class CacheCustomerCredentials {
      * @param context the context
      */
     public static void cache(Context context) {
-        long timeOfLogin = Long.parseLong(App.getAuthManager().getTime());
+        String timeOfLoginStr=App.getAuthManager().getTime();
+        if(timeOfLoginStr==null)
+            return;
+        long timeOfLogin = Long.parseLong(timeOfLoginStr);
         long currentTimeInMillis = System.currentTimeMillis();
-        long cachingTime = R.string.login_caching_time;
+        long cachingTime = Long.parseLong(context.getString(R.string.login_caching_time));
         if ((currentTimeInMillis - timeOfLogin + cachingTime) > 0) {
             context.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)
                     .edit()
@@ -52,7 +54,7 @@ public class CacheCustomerCredentials {
         String username = App.getAuthManager().getAccessKeyUsername();
         String password = App.getAuthManager().getAccessKeyPassword();
         if (username != null && password != null) {
-            URI uri = new UriConstructor(context).makeURI("login");
+            URI uri = Settings.getUriConfig().getLogin();
             try {
                 MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
                 map.add("grant_type", "password");
@@ -104,7 +106,7 @@ public class CacheCustomerCredentials {
     private static void facebookCache(Context context) {
         String accessToken = App.getAuthManager().getAccessTokenFacebook();
         if (accessToken != null) {
-            URI uri = new UriConstructor(context).makeURI("facebookLogin");
+            URI uri = Settings.getUriConfig().getFacebookLogin();
             MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
             map.add("facebook_token", accessToken);
             AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
@@ -151,7 +153,7 @@ public class CacheCustomerCredentials {
         String accessToken = App.getAuthManager().getAccessTokenTwitter();
         String secretAccessToken = App.getAuthManager().getSecretAccessTokenTwitter();
         if (accessToken != null && secretAccessToken != null) {
-            URI uri = new UriConstructor(context).makeURI("twitterLogin");
+            URI uri = Settings.getUriConfig().getTwitterLogin();
             try {
                 MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
                 map.add("twitter_token", accessToken);

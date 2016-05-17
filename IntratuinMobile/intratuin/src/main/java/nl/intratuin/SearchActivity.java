@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,8 +25,7 @@ import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.handlers.HierarchyCategoryAdapter;
 import nl.intratuin.handlers.ProductAutoCompleteAdapter;
 import nl.intratuin.manager.RequestResponseManager;
-import nl.intratuin.net.UriConstructor;
-import nl.intratuin.settings.ToolBarActivity;
+import nl.intratuin.settings.Settings;
 
 /**
  * The class {@code SearchActivity} is used to provide logic on Search Activity
@@ -109,7 +107,7 @@ public class SearchActivity extends ToolBarActivity implements OnClickListener {
             //show user login
             String name = "anonymous";
             try {
-                String userInfoUri = new UriConstructor(SearchActivity.this).makeURI("userInfo").toString();
+                String userInfoUri = Settings.getUriConfig().getUserInfo().toString();
                 userInfoUri += "?access_token={access_token}";
                 if (userInfoUri != null) {
                     RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);
@@ -150,7 +148,7 @@ public class SearchActivity extends ToolBarActivity implements OnClickListener {
      * @return the list of Category as TreeNode
      */
     private List<TreeNode> generateCategoryHierarchy() {
-        URI uri = new UriConstructor(this).makeURI("categoryList");
+        URI uri = Settings.getUriConfig().getCategoryList();
 
         RequestResponseManager<Category[]> managerLoader = new RequestResponseManager(this, App.getShowManager(), Category[].class);
         List<Category> allCategory = Arrays.asList(managerLoader.loaderFromWebService(uri.toString(), null));

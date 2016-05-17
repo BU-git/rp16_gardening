@@ -53,9 +53,13 @@
     <string name="twitter_login">/customer/loginTwitter</string>
     <string name="facebook_login">/customer/loginFacebook</string>
     #get user by access token
-    <string name="info_server">/customer/info</string>
+    <string name="info_server">/customer/info/</string>
     <string name="info_api">/api/v1/companies/</string>
     <string name="info_api_end">/debtors</string>
+    #barcode
+    <string name="barcode_server">/product/barcode/</string>
+    <string name="barcode_api">/api/v1/companies/</string>
+    <string name="barcode_api_ending">/products/code/</string>
     #other
     <string name="products_in_category">/product/list/byCategory/</string>
     <string name="category_list">/category/all</string>

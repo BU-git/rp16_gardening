@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Properties;
@@ -70,6 +71,15 @@ public class CustomerController {
             String name=getCustomerName(c);
             r.put("name",name);
             r.put("email",c.getEmail());
+            Date birthday=c.getBirthday();
+            if(birthday!=null)
+                r.put("birthday",c.getBirthday().toString());
+            r.put("gender",c.getGender());
+            r.put("phoneNumber",c.getPhoneNumber());
+            r.put("city",c.getCity());
+            r.put("postalCode",c.getPostalCode());
+            r.put("streetName",c.getStreetName());
+            r.put("houseNumber",c.getHouseNumber());
             return "["+r.toJSONString()+"]";
         }else{
             JSONObject e=new JSONObject();
@@ -154,11 +164,6 @@ public class CustomerController {
         Facebook facebook = new FacebookTemplate(header.getFirst("facebook_token"), "IntratuinMobile", prop.getProperty("facebook.appId"));
         User profile = facebook.userOperations().getUserProfile();
         return customerService.loginWithFacebook(profile);
-    }
-
-    @RequestMapping(value = "access_token/{token}")
-    public Customer getCustomerByAccessToken(@PathVariable String token) {
-        return customerService.getCustomerByAccessKey(token);
     }
 }
 

@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import nl.intratuin.dto.Product;
-import nl.intratuin.settings.ToolBarActivity;
 
 /**
  * The class {@code ProductDetailsPageActivity} is used to provide logic on Product Detail Page Activity

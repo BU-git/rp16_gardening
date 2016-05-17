@@ -1,4 +1,4 @@
-package nl.intratuin.settings;
+package nl.intratuin;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,22 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import java.util.Arrays;
-import java.util.List;
-
-import nl.intratuin.App;
-import nl.intratuin.BuildConfig;
-import nl.intratuin.LoginActivity;
-import nl.intratuin.ProductDetailsPageActivity;
-import nl.intratuin.ProfileActivity;
-import nl.intratuin.R;
-import nl.intratuin.SearchActivity;
 import nl.intratuin.dto.Customer;
-import nl.intratuin.dto.Product;
 import nl.intratuin.manager.AuthManager;
 import nl.intratuin.manager.RequestResponseManager;
+import nl.intratuin.settings.Settings;
 
 
 public class ToolBarActivity extends AppCompatActivity {
@@ -64,10 +53,12 @@ public class ToolBarActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.profile):
-//                String uri = BuildConfig.API_HOME + "customer/access_token/{token}";
-                String uri = BuildConfig.API_HOST + "customer/access_token/{token}";
-                RequestResponseManager<Customer> managerLoader = new RequestResponseManager<>(this, App.getShowManager(), Customer.class);
-                Customer customerByAccessToken = managerLoader.loaderFromWebService(uri, SearchActivity.access_token);
+                String userInfoUri = Settings.getUriConfig().getUserInfo().toString();
+                userInfoUri += "?access_token={access_token}";
+                RequestResponseManager<String> managerLoader = new RequestResponseManager<>(this, App.getShowManager(), String.class);
+                String customerByAccessTokenString = managerLoader.loaderFromWebService(userInfoUri, SearchActivity.access_token);
+                customerByAccessTokenString=customerByAccessTokenString.substring(1,customerByAccessTokenString.length()-1);
+                Customer customerByAccessToken=Customer.parseFromJsonStr(customerByAccessTokenString);
 
                 Intent profilePageIntent = new Intent(ToolBarActivity.this, ProfileActivity.class);
                 profilePageIntent.putExtra(CUSTOMER, customerByAccessToken);

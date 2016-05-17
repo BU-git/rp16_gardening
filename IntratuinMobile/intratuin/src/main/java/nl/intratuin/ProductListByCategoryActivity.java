@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,8 +15,7 @@ import nl.intratuin.dto.TreeNode;
 import nl.intratuin.handlers.CategoryListAdapter;
 import nl.intratuin.handlers.ProductListAdapter;
 import nl.intratuin.manager.RequestResponseManager;
-import nl.intratuin.net.UriConstructor;
-import nl.intratuin.settings.ToolBarActivity;
+import nl.intratuin.settings.Settings;
 
 /**
  * The class {@code ProductListByCategoryActivity} is used to provide Product list logic
@@ -88,7 +86,7 @@ public class ProductListByCategoryActivity extends ToolBarActivity{
      * @param idCategory
      */
     private void generateProductListByCategory(String idCategory) {
-        String uri = new UriConstructor(this).makeURI("productsInCategory").toString() + "{idCategory}";
+        String uri = Settings.getUriConfig().getProductsInCategory() + "{idCategory}";
         RequestResponseManager<Product[]> managerLoader = new RequestResponseManager<>(this, App.getShowManager(), Product[].class);
         List<Product> allProductByCategory = Arrays.asList(managerLoader.loaderFromWebService(uri, idCategory));
         if (allProductByCategory != null) {

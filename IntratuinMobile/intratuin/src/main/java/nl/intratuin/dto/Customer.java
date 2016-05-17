@@ -3,6 +3,9 @@ package nl.intratuin.dto;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.sql.Date;
 
 /**
@@ -323,5 +326,37 @@ public class Customer implements Parcelable {
      */
     public void setGender(int gender) {
         this.gender = gender;
+    }
+
+    public static Customer parseFromJsonStr(String jsonStr){
+        try {
+            JSONObject json=new JSONObject(jsonStr);
+
+            Customer c=new Customer();
+            String fullName=json.getString("name");
+            String[] names=fullName.split(" ");
+            if(names.length==2){
+                c.firstName=names[0];
+                c.tussen="";
+                c.lastName=names[1];
+            } else {
+                c.firstName=names[0];
+                c.tussen=names[1];
+                c.lastName=names[2];
+            }
+            c.email=json.getString("email");
+            c.birthday=java.sql.Date.valueOf(json.getString("birthday"));
+            c.gender=json.getInt("gender");
+            c.phoneNumber=json.getString("phoneNumber");
+            c.city=json.getString("city");
+            c.postalCode=json.getString("postalCode");
+            c.streetName=json.getString("streetName");
+            c.houseNumber=json.getString("houseNumber");
+            return c;
+        } catch (JSONException e) {
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

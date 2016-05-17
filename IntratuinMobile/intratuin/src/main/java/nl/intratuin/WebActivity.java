@@ -19,7 +19,6 @@ import org.json.JSONObject;
 
 import nl.intratuin.manager.AuthManager;
 import nl.intratuin.manager.RequestResponseManager;
-import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.BuildType;
 import nl.intratuin.settings.Settings;
 
@@ -104,7 +103,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             //show user login
             String name = "anonymous";
             try {
-                String userInfoUri = new UriConstructor(WebActivity.this).makeURI("userInfo").toString();
+                String userInfoUri = Settings.getUriConfig().getUserInfo().toString();
                 userInfoUri += "?access_token={access_token}";
                 if (userInfoUri != null) {
                     RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);

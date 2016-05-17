@@ -20,7 +20,7 @@ import nl.intratuin.App;
 import nl.intratuin.R;
 import nl.intratuin.dto.Product;
 import nl.intratuin.manager.RequestResponseManager;
-import nl.intratuin.net.UriConstructor;
+import nl.intratuin.settings.Settings;
 
 
 /**
@@ -172,7 +172,7 @@ public class ProductAutoCompleteAdapter extends BaseAdapter implements Filterabl
          * @return list of products by name
          */
         private List<Product> findProducts(Context context, String name) {
-            String searchUri = new UriConstructor(context).makeURI("search").toString() + "{name}";
+            String searchUri = Settings.getUriConfig().getSearch().toString() + "{name}";
             RequestResponseManager<Product[]> managerLoader = new RequestResponseManager(context, App.getShowManager(), Product[].class);
             return Arrays.asList(managerLoader.loaderFromWebService(searchUri, name));
         }
