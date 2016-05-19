@@ -189,6 +189,7 @@ public class SearchActivity extends ToolBarActivity implements OnClickListener {
                 break;
 
             case R.id.ibMan:
+                ToolBarActivity.toCustomerProfile(this);
                 break;
 
             case R.id.ibBusket:

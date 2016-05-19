@@ -202,10 +202,6 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
      * @return the date
      */
     //wtf?))
-    public static Date parseDate(String str) {
-        String[] s = str.split("/");
-        return new Date(Integer.parseInt(s[2]) - 1900, Integer.parseInt(s[0]) - 1, Integer.parseInt(s[1]));
-    }
 
     /**
      * Setting listeners on field and buttons

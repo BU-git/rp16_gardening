@@ -248,30 +248,23 @@
                     android:id="@+id/bSignUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="15dp"
+                    android:layout_weight="1"
                     android:background="@drawable/button_action"
                     android:text="@string/signup"
-                    android:textStyle="bold"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    />
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/bCancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/button_action"
                     android:layout_weight="1"
+                    android:background="@drawable/button_action"
                     android:text="@string/cancel" />
 
             </LinearLayout>
-
-
         </LinearLayout>
-
-
-
-
     </RelativeLayout>
 </ScrollView>

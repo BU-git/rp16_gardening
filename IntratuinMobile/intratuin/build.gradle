@@ -29,10 +29,11 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", "API_HOME", "\"http://192.168.1.210:8080/\""
+            buildConfigField "String", "API_HOME", "\"http://128.0.169.5:8888/Intratuin/\""
         }
         release {
-            buildConfigField "String", "API_HOST", "\"http://128.0.169.5:8888/\""
+            buildConfigField "String", "API_HOST", "\"http://128.0.169.5:8888/Intratuin/\""
+            buildConfigField "String", "API_HOME", "\"http://192.168.1.210:8080/\""
 
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

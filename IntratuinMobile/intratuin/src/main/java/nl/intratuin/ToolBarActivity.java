@@ -9,6 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.net.URI;
 
 import nl.intratuin.dto.Customer;
 import nl.intratuin.manager.AuthManager;
@@ -53,16 +56,7 @@ public class ToolBarActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.profile):
-                String userInfoUri = Settings.getUriConfig().getUserInfo().toString();
-                userInfoUri += "?access_token={access_token}";
-                RequestResponseManager<String> managerLoader = new RequestResponseManager<>(this, App.getShowManager(), String.class);
-                String customerByAccessTokenString = managerLoader.loaderFromWebService(userInfoUri, SearchActivity.access_token);
-                customerByAccessTokenString=customerByAccessTokenString.substring(1,customerByAccessTokenString.length()-1);
-                Customer customerByAccessToken=Customer.parseFromJsonStr(customerByAccessTokenString);
-
-                Intent profilePageIntent = new Intent(ToolBarActivity.this, ProfileActivity.class);
-                profilePageIntent.putExtra(CUSTOMER, customerByAccessToken);
-                startActivity(profilePageIntent);
+                toCustomerProfile(this);
                 break;
             case (R.id.logout): {
                 ToolBarActivity.this.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)
@@ -76,5 +70,16 @@ public class ToolBarActivity extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+    public static void toCustomerProfile(Context context) {
+//        String userInfoUri = Settings.getUriConfig().getUserInfo().toString();
+//        userInfoUri += "?access_token={access_token}";
+        String userInfoUri = BuildConfig.API_HOME + "customer/access_token/{token}";
+        RequestResponseManager<Customer> managerLoader = new RequestResponseManager<>(context, App.getShowManager(), Customer.class);
+        Customer customerByAccessToken = managerLoader.loaderFromWebService(userInfoUri, SearchActivity.access_token);
+
+        Intent profilePageIntent = new Intent(context, ProfileActivity.class);
+        profilePageIntent.putExtra(CUSTOMER, customerByAccessToken);
+        context.startActivity(profilePageIntent);
     }
 }
