@@ -189,7 +189,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                 break;
 
             case R.id.ivIntratuin:
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.intratuin.nl/"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(this.getString(R.string.company_website)));
                 startActivity(browserIntent);
                 break;
         }

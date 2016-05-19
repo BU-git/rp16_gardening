@@ -94,7 +94,7 @@ public class RecoverActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.ivIntratuin:
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.intratuin.nl/"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(this.getString(R.string.company_website)));
                 startActivity(browserIntent);
                 break;
 

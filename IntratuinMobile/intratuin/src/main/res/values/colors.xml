@@ -3,13 +3,20 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ACC351</color>
-    <color name="colorControlNormal">#AAAAAA</color>
     <color name="textColor">#005A36</color>
     <color name="textColorHint">#75333333</color>
     <color name="twitter_pressed">#687781</color>
-    <color name="hint_search">#caed7f</color>
-    <color name="colorToolbar">#1c2801</color>
     <color name="product_background">#e7eae7</color>
     <color name="textColorLight">#BFD83F</color>
+    <color name="buttonGradientStartColor">#C5E170</color>
+    <color name="buttonGradientEndColor">#7E981B</color>
+    <color name="buttonStrokeColor">#9EB67A</color>
+    <color name="buttonPressedColor">#445317</color>
+    <color name="buttonMinorGradientStartColor">#13480C</color>
+    <color name="buttonMinorGradientEndColor">#092205</color>
+    <color name="buttonMinorStrokeColor">#1B4417</color>
+    <color name="buttonMinorPressedColor">#041102</color>
+    <color name="facebookColor">#3b5998</color>
+    <color name="facebookPressedColor">#4e69a2</color>
 </resources>
 

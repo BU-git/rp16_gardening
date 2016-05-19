@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
-    <solid android:color="#445317" />
-    <stroke android:width="1px" android:color="#9EB67A" />
+    <solid android:color="@color/buttonPressedColor" />
+    <stroke android:width="1px" android:color="@color/buttonStrokeColor" />
     <corners android:bottomRightRadius="0dp"
         android:bottomLeftRadius="0dp"
         android:topRightRadius="0dp"
