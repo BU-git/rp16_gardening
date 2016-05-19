@@ -5,6 +5,8 @@ import android.content.Context;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
 import nl.intratuin.R;
+import nl.intratuin.settings.parser.AbstractUriConfigParser;
+import nl.intratuin.settings.parser.UriParserFactory;
 
 /**
  * Class {@code Settings} is a utility class with connection details.
@@ -14,7 +16,14 @@ import nl.intratuin.R;
  */
 //rename class
 public class Settings {
+    private static UriConfig uriConfig;
+    private AbstractUriConfigParser uriConfigParser;
 
+    public Settings(Context context){
+        uriConfigParser = UriParserFactory.getParserImplementation(getBuildType(context), context);
+        uriConfig=new UriConfig();
+        uriConfigParser.parseUriConfiguration();
+    }
     /**
      * Gets build type.
      *
@@ -80,5 +89,13 @@ public class Settings {
     public static int getConnectionTimeout(Context context) {
         String timeout=context.getString(R.string.connection_timeout);
         return Integer.parseInt(timeout);
+    }
+
+    public static UriConfig getUriConfig() {
+        return uriConfig;
+    }
+
+    public static void setUriConfig(UriConfig c){
+        uriConfig=c;
     }
 }

@@ -30,7 +30,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import nl.intratuin.net.RequestResponse;
-import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;
 
@@ -89,8 +88,8 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
 
         setListeners();
 
-        registerUri = new UriConstructor(RegisterActivity.this).makeURI("registration");
-        loginUri = new UriConstructor(RegisterActivity.this).makeURI("login");
+        registerUri = Settings.getUriConfig().getRegistration();
+        loginUri = Settings.getUriConfig().getLogin();
     }
 
     /**

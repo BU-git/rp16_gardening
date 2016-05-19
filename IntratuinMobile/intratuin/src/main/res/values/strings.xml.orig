@@ -27,8 +27,13 @@
     <string name="twitter_customer_secret">pcOrskD4hWcUGxi5n3nMvtL3bArhIuyj2pmiMCQ7E9jj71wH5w</string>
 
     #build types: LOCAL, DEPLOYED, API, DEMOAPI; mainscreens: WEB, SEARCH. If build_type=API/DEMOAPI mainscreen is always WEB
+<<<<<<< HEAD
+    <string name="build_type">LOCAL</string>
+    <string name="mainscreen">SEARCH</string>
+=======
     <string name="build_type">DEMOAPI</string>
     <string name="mainscreen">WEB</string>
+>>>>>>> sprint
     <string name="connection_timeout">10000</string>
 
     #hosts

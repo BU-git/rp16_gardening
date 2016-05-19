@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -16,7 +19,6 @@ import org.json.JSONObject;
 
 import nl.intratuin.manager.AuthManager;
 import nl.intratuin.manager.RequestResponseManager;
-import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.BuildType;
 import nl.intratuin.settings.Settings;
 
@@ -26,32 +28,35 @@ import nl.intratuin.settings.Settings;
  *
  * @see AppCompatActivity
  */
-public class WebActivity extends AppCompatActivity {
+public class WebActivity extends AppCompatActivity implements View.OnClickListener {
     private WebView webView;
+    private ImageButton ibNfc;
+    private ImageButton ibBarcode;
+    private ImageButton ibUnknown;
     private String access_token;
     private String dummyPage = "<!DOCTYPE html>\n" +
-            "<html lang=\"en\">\n" +
-            "<head>\n" +
-            "    <meta charset=\"UTF-8\"></meta>\n" +
-            "</head>\n" +
-            "<body>\n" +
-            "    Dummy page.\n" +
-            "    <input type=\"button\" value=\"Scanner\" onClick=\"showAndroidScanner()\" />\n" +
-            "\n" + "<br/>" +
-            "    <script type=\"text/javascript\">\n" +
-            "        function showAndroidScanner() {\n" +
-            "            Android.ShowScanner();\n" +
-            "        }\n" +
-            "    </script>\n" +
-            "   <input type=\"button\" value=\"Logout\" onClick=\"logout()\" />\n" +
-            "\n" + "<br/>" +
-            "    <script type=\"text/javascript\">\n" +
-            "        function logout() {\n" +
-            "            Android.Logout();\n" +
-            "        }\n" +
-            "    </script>\n" +
-            "</body>\n" +
-            "</html>";
+            "            <html lang=\"en\">\n" +
+            "            <head>\n" +
+            "                <meta charset=\"UTF-8\"></meta>\n" +
+            "            </head>\n" +
+            "            <body>\n" +
+            "                Dummy page.\n" +
+            "                <input type=\"button\" value=\"Scanner\" onClick=\"showAndroidScanner()\" />\n" +
+            "            <br/>\n" +
+            "                <script type=\"text/javascript\">\n" +
+            "                    function showAndroidScanner() {\n" +
+            "                        Android.ShowScanner();\n" +
+            "                    }\n" +
+            "                </script>\n" +
+            "               <input type=\"button\" value=\"Logout\" onClick=\"logout()\" />\n" +
+            "            <br/>\n" +
+            "                <script type=\"text/javascript\">\n" +
+            "                    function logout() {\n" +
+            "                        Android.Logout();\n" +
+            "                    }\n" +
+            "                </script>\n" +
+            "            </body>\n" +
+            "            </html>";
 
     /**
      * Provide logic when activity created. Mapping field, creating HTML page, loading data to page.
@@ -72,6 +77,16 @@ public class WebActivity extends AppCompatActivity {
             setContentView(R.layout.activity_web);
 
             webView = (WebView) findViewById(R.id.webView);
+            ibNfc = (ImageButton) findViewById(R.id.ibNFC);
+            ibBarcode = (ImageButton) findViewById(R.id.ibBarcode);
+            ibUnknown = (ImageButton) findViewById(R.id.ibUnknown);
+
+            if(this.getString(R.string.nfc).equals("off"))
+                ibNfc.setVisibility(View.INVISIBLE);
+            if(this.getString(R.string.scandit).equals("off"))
+                ibBarcode.setVisibility(View.INVISIBLE);
+
+            webView.setWebChromeClient(new WebChromeClient());
             WebSettings webSettings = webView.getSettings();
             webSettings.setJavaScriptEnabled(true);
             webView.setWebViewClient(new MyWebViewClient());
@@ -88,7 +103,7 @@ public class WebActivity extends AppCompatActivity {
             //show user login
             String name = "anonymous";
             try {
-                String userInfoUri = new UriConstructor(WebActivity.this).makeURI("userInfo").toString();
+                String userInfoUri = Settings.getUriConfig().getUserInfo().toString();
                 userInfoUri += "?access_token={access_token}";
                 if (userInfoUri != null) {
                     RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);
@@ -119,6 +134,20 @@ public class WebActivity extends AppCompatActivity {
         } else {
             App.getShowManager().showMessage("No access token found!", WebActivity.this);
             startActivity(new Intent(WebActivity.this, LoginActivity.class));
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ibNFC:
+
+                break;
+            case R.id.ibBarcode:
+                startActivity(new Intent(WebActivity.this, ScannerActivity.class));
+                break;
+            case R.id.ibUnknown:
+                break;
         }
     }
 

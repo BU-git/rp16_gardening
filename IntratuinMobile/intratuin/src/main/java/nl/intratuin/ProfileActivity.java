@@ -17,7 +17,6 @@ import android.widget.Toast;
 import java.text.ParseException;
 
 import nl.intratuin.dto.Customer;
-import nl.intratuin.settings.ToolBarActivity;
 
 public class ProfileActivity extends ToolBarActivity implements View.OnClickListener {
     private LinearLayout layout;
@@ -47,7 +46,7 @@ public class ProfileActivity extends ToolBarActivity implements View.OnClickList
         try {
             fillActivity(customer);
         } catch (ParseException ex) {
-            Log.e("Parse Error!!!! ", ex.getMessage());
+            Log.e("Parse Error! ", ex.getMessage());
         }
         bEdit.setOnClickListener(this);
         bFingerprint.setOnClickListener(this);
@@ -67,7 +66,7 @@ public class ProfileActivity extends ToolBarActivity implements View.OnClickList
     }
 
     private void fillActivity(Customer customer) throws ParseException {
-        String fullName = customer.getLastName() + " " + customer.getFirstName();
+        String fullName = customer.getFirstName() + " " + customer.getLastName();
         String email = customer.getEmail();
 
         tvCustomerName.setText(fullName);

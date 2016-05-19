@@ -44,10 +44,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.fabric.sdk.android.Fabric;
-import nl.intratuin.manager.AuthManager;
 import nl.intratuin.handlers.CacheCustomerCredentials;
+import nl.intratuin.manager.AuthManager;
 import nl.intratuin.net.RequestResponse;
-import nl.intratuin.net.UriConstructor;
 import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;
 
@@ -99,6 +98,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private String loginByCache;
     private Pattern pattern;
     private Matcher matcher;
+
+    private long tempDate;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -114,6 +116,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new Settings(this);
         CacheCustomerCredentials.cache(this); //Check cache
 
         TwitterAuthConfig authConfig = Settings.getTwitterConfig(this);
@@ -122,9 +125,18 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_login);
 
+        cbRemember = (CheckBox) findViewById(R.id.cbRemember);
         bTwitterHidden = (TwitterLoginButton) findViewById(R.id.bTwitterHidden);
         bTwitter = (Button) findViewById(R.id.bTwitter);
         lbFacebook = (LoginButton) findViewById(R.id.bLoginFacebook);
+
+        if(this.getString(R.string.remember_me_default_value).equals("checked"))
+            cbRemember.setChecked(true);
+        String par=this.getString(R.string.social_login_visibility);
+        if(par.equals("none")||par.equals("twitter"))
+            lbFacebook.setVisibility(View.INVISIBLE);
+        if(par.equals("none")||par.equals("facebook"))
+            bTwitter.setVisibility(View.INVISIBLE);
 
         etEmailAddress = (EditText) findViewById(R.id.etEmailAddress);
         etEmailAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -153,7 +165,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         bLogin = (Button) findViewById(R.id.bLogin);
         bRegister = (Button) findViewById(R.id.bRegister);
         bForgot = (Button) findViewById(R.id.bForgot);
-        cbRemember = (CheckBox) findViewById(R.id.cbRemember);
         cbShow = (CheckBox) findViewById(R.id.cbShow);
         ivIntratuin = (ImageView) findViewById(R.id.ivIntratuin);
 
@@ -186,7 +197,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             @Override
             public void success(Result<TwitterSession> result) {
                 TwitterSession session = result.data;
-                twitterLoginUri = new UriConstructor(LoginActivity.this).makeURI("twitterLogin");
+                twitterLoginUri = Settings.getUriConfig().getTwitterLogin();
                 if (twitterLoginUri != null) {
                     String accessTokenTwitter = session.getAuthToken().token;
                     String secretAccessTokenTwitter = session.getAuthToken().secret;
@@ -202,6 +213,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                             App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_ACCESS_TOKEN, accessTokenTwitter);
                             App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_SECRET_ACCESS_TOKEN, secretAccessTokenTwitter);
+                            App.getAuthManager().loginAndCache(AuthManager.PREF_TIME, String.valueOf(System.currentTimeMillis()));
                             String accessKey = response.getString("access_token");
 
                             if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
@@ -235,7 +247,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             @Override
             public void onSuccess(LoginResult loginResult) {
                 String accessToken = loginResult.getAccessToken().getToken();
-                facebookLoginUri = new UriConstructor(LoginActivity.this).makeURI("facebookLogin");
+                facebookLoginUri = Settings.getUriConfig().getFacebookLogin();
                 if (facebookLoginUri != null) {
                     MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
                     map.add("facebook_token", loginResult.getAccessToken().getToken());
@@ -248,6 +260,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         response = new JSONObject(jsonRespond.get());
                         if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                             App.getAuthManager().loginAndCache(AuthManager.PREF_FACEBOOK, accessToken);
+                            App.getAuthManager().loginAndCache(AuthManager.PREF_TIME, String.valueOf(System.currentTimeMillis()));
+
                             String accessKey = response.getString("access_token");
 
                             if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
@@ -313,7 +327,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             case R.id.bLogin:
                 JSONObject response;
                 try {
-                    loginUri = new UriConstructor(LoginActivity.this).makeURI("login");
+                    loginUri = Settings.getUriConfig().getLogin();
                     if (loginUri != null && dataValidation()) {
                         MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
                         map.add("grant_type", "password");
@@ -322,19 +336,20 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         map.add("username", etEmailAddress.getText().toString());
                         map.add("password", etPassword.getText().toString());
 
-
                         AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
                                 new RequestResponse<MultiValueMap<String, String>, String>(loginUri, 3,
                                         String.class, App.getShowManager(), LoginActivity.this).execute(map);
                         if (jsonRespond == null) {
                             App.getShowManager().showMessage("Error! No response.", LoginActivity.this);
                         }
-                        response = new JSONObject(jsonRespond.get());
+                        String respStr=jsonRespond.get();
+                        response = new JSONObject(respStr);
                         if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                             String accessKey = response.getString("access_token");
                             if (cbRemember.isChecked()) {
                                 App.getAuthManager().loginAndCache(AuthManager.PREF_USERNAME, etEmailAddress.getText().toString());
                                 App.getAuthManager().loginAndCache(AuthManager.PREF_PASSWORD, etPassword.getText().toString());
+                                App.getAuthManager().loginAndCache(AuthManager.PREF_TIME, String.valueOf(System.currentTimeMillis()));
                             }
 
                             if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)

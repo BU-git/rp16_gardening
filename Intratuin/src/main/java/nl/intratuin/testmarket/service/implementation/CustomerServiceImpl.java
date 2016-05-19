@@ -62,10 +62,10 @@ public class CustomerServiceImpl implements CustomerService {
             response.put("error_description","Invalid json format");
             return response;
         }
-        //Check whether is email already registered or not
         JSONObject response=registerHeaderFormatCheck(request);
         if(response.containsKey("error"))
             return response;
+        //Check whether is email already registered or not
         String emailToRegister = request.get("email").toString().toLowerCase();
         Integer existedCustomerId = customerDao.findByEmail(emailToRegister);
 

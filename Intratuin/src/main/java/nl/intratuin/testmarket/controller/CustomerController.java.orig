@@ -167,6 +167,11 @@ public class CustomerController {
         User profile = facebook.userOperations().getUserProfile();
         return customerService.loginWithFacebook(profile);
     }
+<<<<<<< HEAD
+
+    @RequestMapping(value = "access_token/{token}")
+    public Customer getCustomerByAccessToken(@PathVariable String token) {
+        return customerService.getCustomerByAccessKey(token);
     }
 
     @RequestMapping(value = "update/personal", method = RequestMethod.POST)
@@ -198,5 +203,7 @@ public class CustomerController {
     Boolean registerFingerprint(@RequestBody byte[] publicKey) {
         return customerService.registerFingerprint(publicKey);
     }
+=======
+>>>>>>> sprint
 }
 
