@@ -141,7 +141,6 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibNFC:
-
                 break;
             case R.id.ibBarcode:
                 startActivity(new Intent(WebActivity.this, ScannerActivity.class));
