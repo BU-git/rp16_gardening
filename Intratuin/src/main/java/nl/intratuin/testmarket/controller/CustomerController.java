@@ -167,9 +167,13 @@ public class CustomerController {
         User profile = facebook.userOperations().getUserProfile();
         return customerService.loginWithFacebook(profile);
     }
+
+    @RequestMapping(value = "access_token/{token}")
+    public Customer getByName(@PathVariable String token) {
+        return customerService.getCustomerByAccessKey(token);
     }
 
-    @RequestMapping(value = "update/personal", method = RequestMethod.POST)
+        @RequestMapping(value = "update/personal", method = RequestMethod.POST)
     public
     @ResponseBody
     Boolean updateCustomer(@RequestBody Customer customer) {
@@ -190,7 +194,6 @@ public class CustomerController {
     Boolean updateCustomer(@RequestBody DTOPassword dtoNewPassword) {
         return customerService.updatePassword(dtoNewPassword);
     }
-
 
     @RequestMapping(value = "register/fingerprint", method = RequestMethod.POST)
     public

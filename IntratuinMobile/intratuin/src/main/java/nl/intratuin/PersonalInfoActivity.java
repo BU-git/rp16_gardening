@@ -2,31 +2,23 @@ package nl.intratuin;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.springframework.util.MultiValueMap;
-
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.Date;
 import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import nl.intratuin.dto.Customer;
 import nl.intratuin.handlers.DatePickerFragment;
 import nl.intratuin.net.RequestResponse;
-import nl.intratuin.settings.ToolBarActivity;
 
 public class PersonalInfoActivity extends ToolBarActivity implements View.OnClickListener {
     private EditText firstName;
