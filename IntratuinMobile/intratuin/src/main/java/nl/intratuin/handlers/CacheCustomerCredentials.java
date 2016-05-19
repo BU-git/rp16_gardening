@@ -43,7 +43,7 @@ public class CacheCustomerCredentials {
         long timeOfLogin = Long.parseLong(timeOfLoginStr);
         long currentTimeInMillis = System.currentTimeMillis();
         long cachingTime = Long.parseLong(context.getString(R.string.login_caching_time));
-        if ((currentTimeInMillis - timeOfLogin + cachingTime) > 0) {
+        if ((currentTimeInMillis - timeOfLogin - cachingTime) > 0) {
             context.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)
                     .edit()
                     .clear()
