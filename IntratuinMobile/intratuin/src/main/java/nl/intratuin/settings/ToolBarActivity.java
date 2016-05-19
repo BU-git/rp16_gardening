@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import nl.intratuin.dto.Customer;
 import nl.intratuin.dto.Product;
 import nl.intratuin.manager.AuthManager;
 import nl.intratuin.manager.RequestResponseManager;
+import nl.intratuin.net.UriConstructor;
 
 
 public class ToolBarActivity extends AppCompatActivity {
@@ -64,13 +66,7 @@ public class ToolBarActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.profile):
-                String uri = BuildConfig.API_HOME + "customer/access_token/{token}";
-                RequestResponseManager<Customer> managerLoader = new RequestResponseManager<>(this, App.getShowManager(), Customer.class);
-                Customer customerByAccessToken = managerLoader.loaderFromWebService(uri, SearchActivity.access_token);
-
-                Intent profilePageIntent = new Intent(ToolBarActivity.this, ProfileActivity.class);
-                profilePageIntent.putExtra(CUSTOMER, customerByAccessToken);
-                startActivity(profilePageIntent);
+                toCustomerProfile(this);
                 break;
             case (R.id.logout): {
                 ToolBarActivity.this.getSharedPreferences(AuthManager.PREF_FILENAME, Context.MODE_PRIVATE)
@@ -84,5 +80,14 @@ public class ToolBarActivity extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+    public static void toCustomerProfile(Context context) {
+        String uri = BuildConfig.API_HOME + "customer/access_token/{token}";
+        RequestResponseManager<Customer> managerLoader = new RequestResponseManager<>(context, App.getShowManager(), Customer.class);
+        Customer customerByAccessToken = managerLoader.loaderFromWebService(uri, SearchActivity.access_token);
+
+        Intent profilePageIntent = new Intent(context, ProfileActivity.class);
+        profilePageIntent.putExtra(CUSTOMER, customerByAccessToken);
+        context.startActivity(profilePageIntent);
     }
 }

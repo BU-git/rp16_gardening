@@ -9,39 +9,34 @@ import android.support.v4.app.DialogFragment;
 import android.widget.Button;
 import android.widget.EditText;
 
+import nl.intratuin.PersonalInfoActivity;
 import nl.intratuin.R;
 import nl.intratuin.RegisterActivity;
 
 import java.sql.Date;
 import java.util.Calendar;
 
-/**
- * The type Date picker fragment.
- */
-//Why we don't use this class?
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
-    /**
-     * The Et birthday.
-     */
+
     EditText etBirthday;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         final Calendar c = Calendar.getInstance();
-//        etBirthday = (EditText) getActivity().findViewById(R.id.etBirthday);
+        etBirthday = (EditText) getActivity().findViewById(R.id.birthday);
         String strDate = etBirthday.getText().toString();
         int year, month, day;
         if (strDate.indexOf('/') == -1) {
             year = c.get(Calendar.YEAR);
-            month = c.get(Calendar.MONTH);
+            month = c.get(Calendar.MONTH );
             day = c.get(Calendar.DAY_OF_MONTH);
         } else {
-            Date dt = RegisterActivity.parseDate(strDate);
-            year = dt.getYear() + 1900;
-            month = dt.getMonth();
-            day = dt.getDate();
+            String[] arrDate = strDate.split("/");
+            year = Integer.parseInt(arrDate[2]);
+            month = Integer.parseInt(arrDate[1]);
+            day = Integer.parseInt(arrDate[0]);
         }
 
         Dialog picker = new DatePickerDialog(getActivity(), this,
@@ -63,6 +58,6 @@ public class DatePickerFragment extends DialogFragment
     @Override
     public void onDateSet(android.widget.DatePicker datePicker, int year,
                           int month, int day) {
-        etBirthday.setText((month + 1) + "/" + day + "/" + year);
+        etBirthday.setText(day + "." + (month + 1) + "." + year);
     }
 }

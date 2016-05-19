@@ -1,5 +1,7 @@
 package nl.intratuin.testmarket.service.contract;
 
+import nl.intratuin.testmarket.dto.DTOEmail;
+import nl.intratuin.testmarket.dto.DTOPassword;
 import nl.intratuin.testmarket.entity.Customer;
 import org.json.simple.JSONObject;
 import org.springframework.social.facebook.api.User;
@@ -23,4 +25,12 @@ public interface CustomerService {
     JSONObject loginWithFacebook(User profile);
 
     Customer getCustomerByAccessKey(String accessKey);
+
+    boolean updateCustomer(Customer customer);
+
+    boolean updateEmail(DTOEmail dtoNewEmail);
+
+    boolean updatePassword(DTOPassword dtoNewPassword);
+
+    boolean registerFingerprint(byte[] publicKey);
 }

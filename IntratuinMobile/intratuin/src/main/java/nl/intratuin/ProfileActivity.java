@@ -1,7 +1,9 @@
 package nl.intratuin;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -129,8 +131,19 @@ public class ProfileActivity extends ToolBarActivity implements View.OnClickList
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setItems(editItems, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int position) {
-                String item = editItems[position];
-                Toast.makeText(ProfileActivity.this, item, Toast.LENGTH_LONG).show();
+                switch(position){
+                    case 0:
+                        Intent personalIntent = new Intent(ProfileActivity.this, PersonalInfoActivity.class);
+                        personalIntent.putExtra(CUSTOMER, customer);
+                        startActivity(personalIntent);
+                        break;
+                    case 1:
+                        Toast.makeText(ProfileActivity.this, editItems[position], Toast.LENGTH_LONG).show();
+                        break;
+                    case 2:
+                        Toast.makeText(ProfileActivity.this, editItems[position], Toast.LENGTH_LONG).show();
+                        break;
+                }
             }
         });
         AlertDialog alert = builder.create();
@@ -144,6 +157,9 @@ public class ProfileActivity extends ToolBarActivity implements View.OnClickList
                 initiatePopupWindow();
                 break;
             case R.id.bFingerprint:
+                if(Build.VERSION.SDK_INT != Build.VERSION_CODES.M)
+                    Toast.makeText(this, "Device doesn't support fingerprint authentication",
+                            Toast.LENGTH_LONG).show();
                 Toast.makeText(ProfileActivity.this, "register fingerprint", Toast.LENGTH_LONG).show();
                 break;
         }

@@ -11,8 +11,8 @@
     <string name="twitter_customer_secret">pcOrskD4hWcUGxi5n3nMvtL3bArhIuyj2pmiMCQ7E9jj71wH5w</string>
 
     #build types: LOCAL, DEPLOYED, API, DEMOAPI; mainscreens: WEB, SEARCH. If build_type=API/DEMOAPI mainscreen is always WEB
-    <string name="build_type">DEPLOYED</string>
-    <string name="mainscreen">WEB</string>
+    <string name="build_type">LOCAL</string>
+    <string name="mainscreen">SEARCH</string>
     <string name="connection_timeout">10000</string>
 
     #hosts
@@ -44,6 +44,8 @@
     <string name="products_in_category">/product/list/byCategory/</string>
     <string name="category_list">/category/all</string>
     <string name="product_search">/product/search/</string>
+    <string name="product_by_barcode">/product/barcode/{code}</string>
+    <string name="customer_by_token">/customer/access_token/{token}</string>
 
     <string name="recover">Recover password</string>
     <string name="logout">Logout</string>
@@ -61,19 +63,22 @@
     <string name="lastname">Last name</string>
     <string name="tuss">Tussenvoegsel</string>
     <string name="signup">Sign-up</string>
+    <string name="save">Save</string>
     <string name="birthbut">  Day of birth  </string>
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="city">City</string>
-    <string name="street">Street</string>
+    <string name="street">Street name</string>
     <string name="house">House</string>
     <string name="post">Postcode</string>
     <string name="repass">Re-enter password</string>
     <string name="show">Show  </string>
     <string name="cancel">Cancel</string>
     <string name="phone">Cellphone number</string>
+    <string name="phone_hint">+38(099)111 11 11</string>
     <string name="recoverbut">Recover password</string>
-    <string name="birthday">Date of birth...</string>
+    <string name="birthday">Date of birth</string>
+    <string name="birthday_hint">Date of birth...</string>
     <string name="categories">Categories</string>
 
     <string name="error_validation_email">Wrong email format!</string>

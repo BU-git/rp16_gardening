@@ -148,6 +148,30 @@ public class UriConstructor {
                             return new URL("http", Settings.getHost(context), Integer.parseInt(context.getString(R.string.port_local))
                                     , context.getString(R.string.products_in_category)).toURI();
                     }
+                case "barcode"://product search by barcode
+                    switch (Settings.getBuildType(context)) {
+                        case DEPLOYED:
+                            return new URL("http", Settings.getHost(context), Integer.parseInt(context.getString(R.string.port_deployed))
+                                    , "/Intratuin" + context.getString(R.string.product_by_barcode)).toURI();
+                        case API:
+                        case DEMOAPI:
+                            return null;
+                        default:
+                            return new URL("http", Settings.getHost(context), Integer.parseInt(context.getString(R.string.port_local))
+                                    , context.getString(R.string.product_by_barcode)).toURI();
+                    }
+                case "customerByToken"://customer search by access token
+                    switch (Settings.getBuildType(context)) {
+                        case DEPLOYED:
+                            return new URL("http", Settings.getHost(context), Integer.parseInt(context.getString(R.string.port_deployed))
+                                    , "/Intratuin" + context.getString(R.string.customer_by_token)).toURI();
+                        case API:
+                        case DEMOAPI:
+                            return null;
+                        default:
+                            return new URL("http", Settings.getHost(context), Integer.parseInt(context.getString(R.string.port_local))
+                                    , context.getString(R.string.customer_by_token)).toURI();
+                    }
                 default:
                     return null;
             }

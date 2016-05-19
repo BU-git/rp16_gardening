@@ -1,5 +1,7 @@
 package nl.intratuin.testmarket.controller;
 
+import nl.intratuin.testmarket.dto.DTOEmail;
+import nl.intratuin.testmarket.dto.DTOPassword;
 import nl.intratuin.testmarket.entity.Customer;
 import nl.intratuin.testmarket.entity.Product;
 import nl.intratuin.testmarket.service.contract.AccessKeyService;
@@ -159,6 +161,36 @@ public class CustomerController {
     @RequestMapping(value = "access_token/{token}")
     public Customer getCustomerByAccessToken(@PathVariable String token) {
         return customerService.getCustomerByAccessKey(token);
+    }
+
+    @RequestMapping(value = "update/personal", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Boolean updateCustomer(@RequestBody Customer customer) {
+        return customerService.updateCustomer(customer);
+    }
+
+    @RequestMapping(value = "update/email", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Boolean updateCustomer(@RequestBody DTOEmail dtoNewEmail) {
+        return customerService.updateEmail(dtoNewEmail);
+    }
+
+
+    @RequestMapping(value = "update/password", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Boolean updateCustomer(@RequestBody DTOPassword dtoNewPassword) {
+        return customerService.updatePassword(dtoNewPassword);
+    }
+
+
+    @RequestMapping(value = "register/fingerprint", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Boolean registerFingerprint(@RequestBody byte[] publicKey) {
+        return customerService.registerFingerprint(publicKey);
     }
 }
 
