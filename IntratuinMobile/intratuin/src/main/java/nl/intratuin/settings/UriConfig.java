@@ -16,6 +16,9 @@ public class UriConfig {
     private URI search;
     private URI productsInCategory;
     private URI barcode;
+    private URI customerByToken;
+    private URI customerPersonal;
+    private URI registerFingerprint;
 
     public URI getLogin() {
         return login;
@@ -95,5 +98,29 @@ public class UriConfig {
 
     public void setBarcode(URI barcode) {
         this.barcode = barcode;
+    }
+
+    public URI getCustomerByToken() {
+        return customerByToken;
+    }
+
+    public void setCustomerByToken(URI customerByToken) {
+        this.customerByToken = customerByToken;
+    }
+
+    public URI getCustomerPersonal() {
+        return customerPersonal;
+    }
+
+    public void setCustomerPersonal(URI customerPersonal) {
+        this.customerPersonal = customerPersonal;
+    }
+
+    public URI getRegisterFingerprint() {
+        return registerFingerprint;
+    }
+
+    public void setRegisterFingerprint(URI registerFingerprint) {
+        this.registerFingerprint = registerFingerprint;
     }
 }

@@ -19,6 +19,7 @@ import java.util.concurrent.ExecutionException;
 import nl.intratuin.dto.Customer;
 import nl.intratuin.handlers.DatePickerFragment;
 import nl.intratuin.net.RequestResponse;
+import nl.intratuin.settings.Settings;
 
 public class PersonalInfoActivity extends ToolBarActivity implements View.OnClickListener {
     private EditText firstName;
@@ -152,7 +153,7 @@ public class PersonalInfoActivity extends ToolBarActivity implements View.OnClic
                 changedCustomer();
                 URI updateURI = null;
                 try {
-                    updateURI = new URI(BuildConfig.API_HOME + "customer/update/personal");
+                    updateURI = Settings.getUriConfig().getCustomerPersonal();
 
                     AsyncTask<Customer, Void, Boolean> jsonUpdateRespond =
                             new RequestResponse<Customer, Boolean>(updateURI, 3,
@@ -166,7 +167,7 @@ public class PersonalInfoActivity extends ToolBarActivity implements View.OnClic
                             App.getShowManager().showMessage("Sorry, error saving, try again", this);
                     } else
                         App.getShowManager().showMessage("Error! Null response!", this);
-                } catch (URISyntaxException | InterruptedException | ExecutionException e) {
+                } catch (InterruptedException | ExecutionException e) {
                     App.getShowManager().showMessage("Exception!" + e.getMessage(), this);
                 }
                 break;

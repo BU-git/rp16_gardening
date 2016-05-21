@@ -74,7 +74,7 @@ public class ToolBarActivity extends AppCompatActivity {
     public static void toCustomerProfile(Context context) {
 //        String userInfoUri = Settings.getUriConfig().getUserInfo().toString();
 //        userInfoUri += "?access_token={access_token}";
-        String userInfoUri = BuildConfig.API_HOME + "customer/access_token/{token}";
+        String userInfoUri = Settings.getUriConfig().getCustomerByToken().toString();
         RequestResponseManager<Customer> managerLoader = new RequestResponseManager<>(context, App.getShowManager(), Customer.class);
         Customer customerByAccessToken = managerLoader.loaderFromWebService(userInfoUri, SearchActivity.access_token);
 

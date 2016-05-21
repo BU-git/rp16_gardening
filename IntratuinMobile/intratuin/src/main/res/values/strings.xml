@@ -67,6 +67,8 @@
     <string name="product_search">/product/search/</string>
     <string name="product_by_barcode">/product/barcode/{code}</string>
     <string name="customer_by_token">/customer/access_token/{token}</string>
+    <string name="update_customer_data">/customer/update/personal</string>
+    <string name="register_fingerprint">/customer/register/fingerprint</string>
 
     #labels
     <string name="recover">Recover password</string>
@@ -74,7 +76,7 @@
     <string name="profile">Profile</string>
     <string name="register">Register</string>
     <string name="choose_date">Select date</string>
-    <string name="ready">Ok</string>
+    <string name="ready">OK</string>
     <string name="email"> Email</string>
     <string name="pass"> Password</string>
     <string name="remember">Remember me  </string>
