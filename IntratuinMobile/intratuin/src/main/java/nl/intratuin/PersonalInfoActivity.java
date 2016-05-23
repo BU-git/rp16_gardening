@@ -19,6 +19,7 @@ import java.util.concurrent.ExecutionException;
 import nl.intratuin.dto.Customer;
 import nl.intratuin.handlers.DatePickerFragment;
 import nl.intratuin.net.RequestResponse;
+import nl.intratuin.settings.Settings;
 
 public class PersonalInfoActivity extends ToolBarActivity implements View.OnClickListener {
     private EditText firstName;
@@ -152,21 +153,23 @@ public class PersonalInfoActivity extends ToolBarActivity implements View.OnClic
                 changedCustomer();
                 URI updateURI = null;
                 try {
-                    updateURI = new URI(BuildConfig.API_HOME + "customer/update/personal");
+                    updateURI = Settings.getUriConfig().getCustomerPersonal();
 
                     AsyncTask<Customer, Void, Boolean> jsonUpdateRespond =
                             new RequestResponse<Customer, Boolean>(updateURI, 3,
                                     Boolean.class, App.getShowManager(), this).execute(customer);
                     if (jsonUpdateRespond != null) {
                         if (jsonUpdateRespond.get()) {
-                            Toast.makeText(PersonalInfoActivity.this, "you personal data is saved", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(PersonalInfoActivity.this, SearchActivity.class));
+                            Toast.makeText(PersonalInfoActivity.this, "you personal data has been changed", Toast.LENGTH_LONG).show();
+                            Intent profilePageIntent = new Intent(this, ProfileActivity.class);
+                            profilePageIntent.putExtra(CUSTOMER, customer);
+                            startActivity(profilePageIntent);
                         }
                         else
                             App.getShowManager().showMessage("Sorry, error saving, try again", this);
                     } else
                         App.getShowManager().showMessage("Error! Null response!", this);
-                } catch (URISyntaxException | InterruptedException | ExecutionException e) {
+                } catch (InterruptedException | ExecutionException e) {
                     App.getShowManager().showMessage("Exception!" + e.getMessage(), this);
                 }
                 break;

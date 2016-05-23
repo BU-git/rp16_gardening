@@ -40,6 +40,9 @@ public class UriConfigParserApiImpl extends AbstractUriConfigParser {
             uriConfig.setProductsInCategory(null);
             uriConfig.setBarcode(new URL("http", Settings.getHost(context), context.getString(R.string.barcode_api)
                     + context.getString(R.string.company_id) + context.getString(R.string.barcode_api_ending)).toURI());
+            uriConfig.setCustomerByToken(null);
+            uriConfig.setCustomerPersonal(null);
+            uriConfig.setRegisterFingerprint(null);
             Settings.setUriConfig(uriConfig);
         } catch (URISyntaxException e) {
             e.printStackTrace();
