@@ -160,8 +160,10 @@ public class PersonalInfoActivity extends ToolBarActivity implements View.OnClic
                                     Boolean.class, App.getShowManager(), this).execute(customer);
                     if (jsonUpdateRespond != null) {
                         if (jsonUpdateRespond.get()) {
-                            Toast.makeText(PersonalInfoActivity.this, "you personal data is saved", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(PersonalInfoActivity.this, SearchActivity.class));
+                            Toast.makeText(PersonalInfoActivity.this, "you personal data has been changed", Toast.LENGTH_LONG).show();
+                            Intent profilePageIntent = new Intent(this, ProfileActivity.class);
+                            profilePageIntent.putExtra(CUSTOMER, customer);
+                            startActivity(profilePageIntent);
                         }
                         else
                             App.getShowManager().showMessage("Sorry, error saving, try again", this);

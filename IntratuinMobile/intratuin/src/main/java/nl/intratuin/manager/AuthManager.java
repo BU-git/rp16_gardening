@@ -51,6 +51,10 @@ public class AuthManager {
         pref = context.getSharedPreferences(PREF_FILENAME, Context.MODE_PRIVATE);
     }
 
+public AuthManager(Context context, String fileName) {
+        pref = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+    }
+
     /**
      * Setting and applying login and cache.
      *
@@ -115,5 +119,9 @@ public class AuthManager {
      */
     public String getTime() {
         return pref.getString(PREF_TIME, null);
+    }
+
+    public String getValuesOfFingerprint(String fingerprint) {
+        return pref.getString(fingerprint, null);
     }
 }

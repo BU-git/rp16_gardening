@@ -3,6 +3,7 @@ package nl.intratuin;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -70,9 +71,6 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             webView.addJavascriptInterface(new WebInterface(this), "Android");
 
             if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
-                //String mime = "text/html";
-                //String encoding = "utf-8";
-                //webView.loadDataWithBaseURL(null, "file:///android_asset/xyz.html, mime, encoding, null);
                 webView.loadUrl("file:///android_asset/pages/dummy.html");
             } else {
                 webView.loadUrl("https://" + Settings.getHost(WebActivity.this) + "/?" + access_token + "#page:debtor_order");
@@ -196,7 +194,11 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
          */
         @JavascriptInterface
         public void Fingerprint() {
-            //TODO: make dummy fingerprint scanning
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+                Toast.makeText(WebActivity.this, "Device doesn't support fingerprint authentication",
+                        Toast.LENGTH_LONG).show();
+            else
+                startActivity(new Intent(WebActivity.this, FingerprintActivity.class));
         }
     }
 }
