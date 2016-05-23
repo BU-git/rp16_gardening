@@ -23,7 +23,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
+     
         </activity>
         <activity
             android:name=".RegisterActivity"
@@ -41,7 +41,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ProductListByCategoryActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".WebActivity"
             android:screenOrientation="portrait" />
@@ -64,21 +64,17 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="54232ea986b4a1d538079a1a020243c78d572f7d" />
-
-        <activity
+	<activity
             android:name=".ScannerActivity"
             android:label="@string/scanning"
-            android:screenOrientation="portrait" />
-        <activity
+            android:screenOrientation="portrait"/>
+<activity
             android:name=".ProfileActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".PersonalInfoActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".FingerprintActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -19,7 +19,6 @@ import java.text.ParseException;
 import nl.intratuin.dto.Customer;
 
 public class ProfileActivity extends ToolBarActivity implements View.OnClickListener {
-    public static String credentials = "";
     private LinearLayout layout;
     private ImageView ivProfile;
     private TextView tvCustomerName;
@@ -31,7 +30,6 @@ public class ProfileActivity extends ToolBarActivity implements View.OnClickList
     private Button bFingerprint;
 
     private Customer customer;
-    private AlertDialog.Builder builder;
     private String[] editItems = {"Personal information", "Email", "Password"};
 
     @Override
@@ -39,22 +37,22 @@ public class ProfileActivity extends ToolBarActivity implements View.OnClickList
         setContentView(R.layout.activity_profile);
         super.onCreate(savedInstanceState);
 
-        initComponents();
-        initiatePopupWindow();
+        init();
 
         final Bundle extra = getIntent().getExtras();
         if (extra != null) {
             customer = extra.getParcelable(ToolBarActivity.CUSTOMER);
-            credentials = customer.getEmail() + ":" + customer.getPassword();
         }
         try {
             fillActivity(customer);
         } catch (ParseException ex) {
             Log.e("Parse Error! ", ex.getMessage());
         }
+        bEdit.setOnClickListener(this);
+        bFingerprint.setOnClickListener(this);
     }
 
-    private void initComponents() {
+    private void init() {
         layout = (LinearLayout) findViewById(R.id.layout);
         ivProfile = (ImageView) findViewById(R.id.ivProfile);
         tvCustomerName = (TextView) findViewById(R.id.tvCustomerName);
@@ -65,9 +63,6 @@ public class ProfileActivity extends ToolBarActivity implements View.OnClickList
 
         bEdit = (Button) findViewById(R.id.bEdit);
         bFingerprint = (Button) findViewById(R.id.bFingerprint);
-
-        bEdit.setOnClickListener(this);
-        bFingerprint.setOnClickListener(this);
     }
 
     private void fillActivity(Customer customer) throws ParseException {
@@ -132,10 +127,10 @@ public class ProfileActivity extends ToolBarActivity implements View.OnClickList
     }
 
     private void initiatePopupWindow() {
-        builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setItems(editItems, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int position) {
-                switch (position) {
+                switch(position){
                     case 0:
                         Intent personalIntent = new Intent(ProfileActivity.this, PersonalInfoActivity.class);
                         personalIntent.putExtra(CUSTOMER, customer);
@@ -150,22 +145,21 @@ public class ProfileActivity extends ToolBarActivity implements View.OnClickList
                 }
             }
         });
-
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bEdit:
-                //show PopupWindow();
-                builder.create().show();
+                initiatePopupWindow();
                 break;
             case R.id.bFingerprint:
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+                if(Build.VERSION.SDK_INT != Build.VERSION_CODES.M)
                     Toast.makeText(this, "Device doesn't support fingerprint authentication",
                             Toast.LENGTH_LONG).show();
-                else
-                    startActivity(new Intent(this, FingerprintActivity.class));
+                Toast.makeText(ProfileActivity.this, "register fingerprint", Toast.LENGTH_LONG).show();
                 break;
         }
     }

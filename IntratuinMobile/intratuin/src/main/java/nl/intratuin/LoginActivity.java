@@ -1,18 +1,10 @@
 package nl.intratuin;
 
-import android.annotation.TargetApi;
-import android.app.KeyguardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.hardware.fingerprint.FingerprintManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyPermanentlyInvalidatedException;
-import android.security.keystore.KeyProperties;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
@@ -44,30 +36,15 @@ import org.json.JSONObject;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.io.IOException;
 import java.net.URI;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-
 import io.fabric.sdk.android.Fabric;
 import nl.intratuin.handlers.CacheCustomerCredentials;
-import nl.intratuin.handlers.FingerprintHandlerLogin;
 import nl.intratuin.manager.AuthManager;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.settings.Mainscreen;
@@ -123,14 +100,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private Matcher matcher;
 
     private long tempDate;
-    //data for fingerprint
-    private FingerprintManager fingerprintManager;
-    private KeyguardManager keyguardManager;
-    private KeyStore keyStore;
-    private KeyGenerator keyGenerator;
-    private Cipher cipher;
-    private FingerprintManager.CryptoObject cryptoObject;
-    public static String secretKey;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -150,10 +119,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         new Settings(this);
         CacheCustomerCredentials.cache(this); //Check cache
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            loginByFingerprint();//listener fingerprint
-        }
-
         TwitterAuthConfig authConfig = Settings.getTwitterConfig(this);
         Fabric.with(this, new Twitter(authConfig));
         FacebookSdk.sdkInitialize(this.getApplicationContext());
@@ -165,12 +130,12 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         bTwitter = (Button) findViewById(R.id.bTwitter);
         lbFacebook = (LoginButton) findViewById(R.id.bLoginFacebook);
 
-        if (this.getString(R.string.remember_me_default_value).equals("checked"))
+        if(this.getString(R.string.remember_me_default_value).equals("checked"))
             cbRemember.setChecked(true);
-        String par = this.getString(R.string.social_login_visibility);
-        if (par.equals("none") || par.equals("twitter"))
+        String par=this.getString(R.string.social_login_visibility);
+        if(par.equals("none")||par.equals("twitter"))
             lbFacebook.setVisibility(View.INVISIBLE);
-        if (par.equals("none") || par.equals("facebook"))
+        if(par.equals("none")||par.equals("facebook"))
             bTwitter.setVisibility(View.INVISIBLE);
 
         etEmailAddress = (EditText) findViewById(R.id.etEmailAddress);
@@ -329,7 +294,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 App.getShowManager().showMessage("Login attempt failed. " + error.getMessage(), LoginActivity.this);
             }
         });
-
     }
 
 
@@ -361,8 +325,52 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bLogin:
-                if (dataValidation())
-                    login(this, etEmailAddress.getText().toString(), etPassword.getText().toString());
+                JSONObject response;
+                try {
+                    loginUri = Settings.getUriConfig().getLogin();
+                    if (loginUri != null && dataValidation()) {
+                        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+                        map.add("grant_type", "password");
+                        map.add("client_id", etEmailAddress.getText().toString());
+                        map.add("client_secret", etPassword.getText().toString());
+                        map.add("username", etEmailAddress.getText().toString());
+                        map.add("password", etPassword.getText().toString());
+
+                        AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
+                                new RequestResponse<MultiValueMap<String, String>, String>(loginUri, 3,
+                                        String.class, App.getShowManager(), LoginActivity.this).execute(map);
+                        if (jsonRespond == null) {
+                            App.getShowManager().showMessage("Error! No response.", LoginActivity.this);
+                        }
+                        String respStr=jsonRespond.get();
+                        response = new JSONObject(respStr);
+                        if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
+                            String accessKey = response.getString("access_token");
+                            if (cbRemember.isChecked()) {
+                                App.getAuthManager().loginAndCache(AuthManager.PREF_USERNAME, etEmailAddress.getText().toString());
+                                App.getAuthManager().loginAndCache(AuthManager.PREF_PASSWORD, etPassword.getText().toString());
+                                App.getAuthManager().loginAndCache(AuthManager.PREF_TIME, String.valueOf(System.currentTimeMillis()));
+                            }
+
+                            if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
+                                startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
+                            else
+                                startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
+                            finish();
+                        } else {
+                            String errorStr;
+
+                            if (response == null)
+                                errorStr = "Error! Null response!";
+                            else
+                                errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
+
+                            App.getShowManager().showMessage(errorStr, LoginActivity.this);
+                        }
+                    }
+                } catch (InterruptedException | ExecutionException | JSONException e) {
+                    App.getShowManager().showMessage("Error!!! " + e.getMessage(), LoginActivity.this);
+                }
                 break;
 
             case R.id.bRegister:
@@ -432,102 +440,5 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         boolean validationError = emailError || passError;
         return !validationError;
-    }
-
-    public void login(Context context, String email, String password) {
-        JSONObject response;
-        try {
-            loginUri = Settings.getUriConfig().getLogin();
-            if (loginUri != null) {
-                MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-                map.add("grant_type", "password");
-                map.add("client_id", email);
-                map.add("client_secret", password);
-                map.add("username", email);
-                map.add("password", password);
-
-                AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
-                        new RequestResponse<MultiValueMap<String, String>, String>(loginUri, 3,
-                                String.class, App.getShowManager(), context).execute(map);
-                if (jsonRespond == null) {
-                    App.getShowManager().showMessage("Error! No response.", context);
-                }
-                String respStr = jsonRespond.get();
-                response = new JSONObject(respStr);
-                if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
-                    String accessKey = response.getString("access_token");
-                    if (cbRemember.isChecked()) {
-                        App.getAuthManager().loginAndCache(AuthManager.PREF_USERNAME, email);
-                        App.getAuthManager().loginAndCache(AuthManager.PREF_PASSWORD, password);
-                        App.getAuthManager().loginAndCache(AuthManager.PREF_TIME, String.valueOf(System.currentTimeMillis()));
-                    }
-
-                    if (Settings.getMainscreen(context) == Mainscreen.WEB)
-                        context.startActivity(new Intent(context, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
-                    else
-                        context.startActivity(new Intent(context, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
-                    finish();
-                } else {
-                    String errorStr;
-
-                    if (response == null)
-                        errorStr = "Error! Null response!";
-                    else
-                        errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
-
-                    App.getShowManager().showMessage(errorStr, context);
-                }
-            }
-        } catch (InterruptedException | ExecutionException | JSONException e) {
-            App.getShowManager().showMessage("Error!!! " + e.getMessage(), context);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private void loginByFingerprint() {
-        keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-        fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
-
-        secretKey = new String(FingerprintActivity.toByteArray(readSecretKey()));
-
-        if (cipherInit()) {
-            cryptoObject = new FingerprintManager.CryptoObject(cipher);
-            FingerprintHandlerLogin helper = new FingerprintHandlerLogin(this);
-            helper.startAuth(fingerprintManager, cryptoObject);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    public boolean cipherInit() {
-        try {
-            cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/"
-                    + KeyProperties.BLOCK_MODE_CBC + "/"
-                    + KeyProperties.ENCRYPTION_PADDING_PKCS7);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            throw new RuntimeException("Failed to get Cipher", e);
-        }
-
-        try {
-            keyStore.load(null);
-            SecretKey key = (SecretKey) keyStore.getKey(FingerprintActivity.KEY_NAME, null);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            return true;
-        } catch (KeyPermanentlyInvalidatedException e) {
-            return false;
-        } catch (KeyStoreException | CertificateException | UnrecoverableKeyException
-                | IOException | NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new RuntimeException("Failed to init Cipher", e);
-        }
-    }
-
-    private SecretKey readSecretKey() {
-        try {
-            keyStore = KeyStore.getInstance("AndroidKeyStore");
-            keyStore.load(null);
-            return (SecretKey) keyStore.getKey(FingerprintActivity.KEY_NAME, null);
-        } catch (KeyStoreException | NoSuchAlgorithmException | IOException
-                | CertificateException | UnrecoverableKeyException e) {
-            throw new RuntimeException("Failed to get secret key", e);
-        }
     }
 }

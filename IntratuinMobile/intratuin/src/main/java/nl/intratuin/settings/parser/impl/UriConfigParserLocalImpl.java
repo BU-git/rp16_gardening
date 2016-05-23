@@ -47,12 +47,6 @@ public class UriConfigParserLocalImpl extends AbstractUriConfigParser {
                     , context.getString(R.string.products_in_category)).toURI());
             uriConfig.setBarcode(new URL("http", Settings.getHost(context), Integer.parseInt(context.getString(R.string.port_local))
                     , context.getString(R.string.barcode_server)).toURI());
-            uriConfig.setCustomerByToken(new URL("http", Settings.getHost(context), Integer.parseInt(context.getString(R.string.port_local))
-                    , context.getString(R.string.customer_by_token)).toURI());
-            uriConfig.setCustomerPersonal(new URL("http", Settings.getHost(context), Integer.parseInt(context.getString(R.string.port_local))
-                    , context.getString(R.string.update_customer_data)).toURI());
-            uriConfig.setRegisterFingerprint(new URL("http", Settings.getHost(context), Integer.parseInt(context.getString(R.string.port_local))
-                    , context.getString(R.string.register_fingerprint)).toURI());
             Settings.setUriConfig(uriConfig);
         } catch (URISyntaxException e) {
             e.printStackTrace();

@@ -40,7 +40,6 @@ import java.util.concurrent.ExecutionException;
 import nl.intratuin.dto.Customer;
 import nl.intratuin.dto.LoginData;
 import nl.intratuin.net.RequestResponse;
-import nl.intratuin.settings.Settings;
 
 @TargetApi(Build.VERSION_CODES.M)
 public class RegisterFingerprintActivity extends AppCompatActivity {
@@ -136,7 +135,7 @@ public class RegisterFingerprintActivity extends AppCompatActivity {
     private void registerFingerprint(byte[] publicKey) {
         URI updateURI = null;
         try {
-            updateURI = Settings.getUriConfig().getRegisterFingerprint();
+            updateURI = new URI(BuildConfig.API_HOME + "customer/register/fingerprint");
 
             AsyncTask<byte[], Void, Boolean> jsonUpdateRespond =
                     new RequestResponse<byte[], Boolean>(updateURI, 3,
@@ -150,7 +149,7 @@ public class RegisterFingerprintActivity extends AppCompatActivity {
                     App.getShowManager().showMessage("Sorry, error saving, try again", this);
             } else
                 App.getShowManager().showMessage("Error! Null response!", this);
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (URISyntaxException | InterruptedException | ExecutionException e) {
             App.getShowManager().showMessage("Exception!" + e.getMessage(), this);
         }
 

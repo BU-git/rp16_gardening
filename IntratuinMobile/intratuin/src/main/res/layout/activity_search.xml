@@ -6,7 +6,6 @@
     android:background="@drawable/gradient"
     android:orientation="vertical"
     android:fillViewport="true"
-    android:focusableInTouchMode="true"
     tools:context="nl.intratuin.RegisterActivity">
 
     <include

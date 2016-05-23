@@ -115,8 +115,7 @@ public class ScannerActivity extends AppCompatActivity implements ScanditSDKOnSc
                     App.getShowManager().showMessage(e.getMessage(), ScannerActivity.this);
                 }
             } else {
-                //Toast.makeText(this, "Content:" + code.getData() + " Format:" + code.getSymbologyString(), Toast.LENGTH_LONG).show();
-
+                Toast.makeText(this, "Content:" + code.getData() + " Format:" + code.getSymbologyString(), Toast.LENGTH_LONG).show();
                 finish();
             }
         }

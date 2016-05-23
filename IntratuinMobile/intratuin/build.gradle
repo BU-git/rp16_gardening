@@ -29,9 +29,11 @@ android {
     }
     buildTypes {
         debug {
-
+            buildConfigField "String", "API_HOME", "\"http://128.0.169.5:8888/Intratuin/\""
         }
         release {
+            buildConfigField "String", "API_HOST", "\"http://128.0.169.5:8888/Intratuin/\""
+            buildConfigField "String", "API_HOME", "\"http://192.168.1.210:8080/\""
 
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -57,7 +59,7 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.2.+'
+    compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'

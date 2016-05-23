@@ -3,7 +3,6 @@ package nl.intratuin;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -35,6 +34,29 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
     private ImageButton ibBarcode;
     private ImageButton ibUnknown;
     private String access_token;
+    private String dummyPage = "<!DOCTYPE html>\n" +
+            "            <html lang=\"en\">\n" +
+            "            <head>\n" +
+            "                <meta charset=\"UTF-8\"></meta>\n" +
+            "            </head>\n" +
+            "            <body>\n" +
+            "                Dummy page.\n" +
+            "                <input type=\"button\" value=\"Scanner\" onClick=\"showAndroidScanner()\" />\n" +
+            "            <br/>\n" +
+            "                <script type=\"text/javascript\">\n" +
+            "                    function showAndroidScanner() {\n" +
+            "                        Android.ShowScanner();\n" +
+            "                    }\n" +
+            "                </script>\n" +
+            "               <input type=\"button\" value=\"Logout\" onClick=\"logout()\" />\n" +
+            "            <br/>\n" +
+            "                <script type=\"text/javascript\">\n" +
+            "                    function logout() {\n" +
+            "                        Android.Logout();\n" +
+            "                    }\n" +
+            "                </script>\n" +
+            "            </body>\n" +
+            "            </html>";
 
     /**
      * Provide logic when activity created. Mapping field, creating HTML page, loading data to page.
@@ -71,7 +93,9 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             webView.addJavascriptInterface(new WebInterface(this), "Android");
 
             if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
-                webView.loadUrl("file:///android_asset/pages/dummy.html");
+                String mime = "text/html";
+                String encoding = "utf-8";
+                webView.loadDataWithBaseURL(null, dummyPage, mime, encoding, null);
             } else {
                 webView.loadUrl("https://" + Settings.getHost(WebActivity.this) + "/?" + access_token + "#page:debtor_order");
             }
@@ -187,18 +211,6 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             Intent loginIntent = new Intent(WebActivity.this, LoginActivity.class);
             loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(loginIntent);
-        }
-
-        /**
-         * Logout.
-         */
-        @JavascriptInterface
-        public void Fingerprint() {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-                Toast.makeText(WebActivity.this, "Device doesn't support fingerprint authentication",
-                        Toast.LENGTH_LONG).show();
-            else
-                startActivity(new Intent(WebActivity.this, FingerprintActivity.class));
         }
     }
 }
