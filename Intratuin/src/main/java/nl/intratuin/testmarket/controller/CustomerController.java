@@ -194,12 +194,5 @@ public class CustomerController {
     Boolean updateCustomer(@RequestBody DTOPassword dtoNewPassword) {
         return customerService.updatePassword(dtoNewPassword);
     }
-
-    @RequestMapping(value = "register/fingerprint", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    Boolean registerFingerprint(@RequestBody byte[] publicKey) {
-        return customerService.registerFingerprint(publicKey);
-    }
 }
 
