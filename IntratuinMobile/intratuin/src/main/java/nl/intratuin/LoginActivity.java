@@ -124,12 +124,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     private long tempDate;
     //data for fingerprint
-    private FingerprintManager fingerprintManager;
-    private KeyguardManager keyguardManager;
-    private KeyStore keyStore;
-    private KeyGenerator keyGenerator;
-    private Cipher cipher;
-    private FingerprintManager.CryptoObject cryptoObject;
     public static String secretKey;
 
     /**
@@ -485,12 +479,16 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     @TargetApi(Build.VERSION_CODES.M)
     private void loginByFingerprint() {
-        keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-        fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
+        KeyGenerator keyGenerator;
+        Cipher cipher = null;
+        FingerprintManager.CryptoObject cryptoObject;
+
+        FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
+        KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
 
         secretKey = new String(FingerprintActivity.toByteArray(readSecretKey()));
 
-        if (cipherInit()) {
+        if (cipherInit(cipher)) {
             cryptoObject = new FingerprintManager.CryptoObject(cipher);
             FingerprintHandlerLogin helper = new FingerprintHandlerLogin(this);
             helper.startAuth(fingerprintManager, cryptoObject);
@@ -498,7 +496,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    public boolean cipherInit() {
+    public boolean cipherInit(Cipher cipher) {
         try {
             cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/"
                     + KeyProperties.BLOCK_MODE_CBC + "/"
@@ -508,6 +506,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         }
 
         try {
+            KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
             keyStore.load(null);
             SecretKey key = (SecretKey) keyStore.getKey(FingerprintActivity.KEY_NAME, null);
             cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -522,12 +521,12 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     private SecretKey readSecretKey() {
         try {
-            keyStore = KeyStore.getInstance("AndroidKeyStore");
+            KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
             keyStore.load(null);
             return (SecretKey) keyStore.getKey(FingerprintActivity.KEY_NAME, null);
         } catch (KeyStoreException | NoSuchAlgorithmException | IOException
                 | CertificateException | UnrecoverableKeyException e) {
-            throw new RuntimeException("Failed to get secret key", e);
+            throw new RuntimeException("Failed to read secret key", e);
         }
     }
 }

@@ -41,8 +41,6 @@ public class Customer implements Parcelable {
 
     private int gender;
 
-    private byte[] fingerprint;
-
     public Customer(){}
 
     private Customer(Parcel in) {
@@ -95,15 +93,6 @@ public class Customer implements Parcelable {
         public Customer[] newArray(int size) {
             return new Customer[size];
         }};
-
-    public byte[] getFingerprint() {
-        return fingerprint;
-    }
-
-    public void setFingerprint(byte[] fingerprint) {
-        this.fingerprint = fingerprint;
-    }
-
     /**
      * Gets id.
      *
