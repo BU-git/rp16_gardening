@@ -20,6 +20,4 @@ public interface CustomerDao {
     boolean updateEmail(DTOEmail dtoNewEmail);
 
     boolean updatePassword(DTOPassword dtoNewPassword);
-
-    boolean registerFingerprint(byte[] publicKey);
 }

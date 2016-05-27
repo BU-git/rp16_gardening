@@ -13,7 +13,7 @@ import nl.intratuin.manager.AuthManager;
  * @see ShowManagerImpl
  */
 public class App extends Application {
-    public static final String Fingerprint_FILENAME = "fingerprint";
+    public static final String FINGERPRINT_FILENAME = "fingerprint";
 
     private static App sInstance;
     private AuthManager authManager;
@@ -28,7 +28,7 @@ public class App extends Application {
         super.onCreate();
         sInstance = this;
         authManager = new AuthManager(this);
-        authManagerOfFingerprint = new AuthManager(this, Fingerprint_FILENAME);
+        authManagerOfFingerprint = new AuthManager(this, FINGERPRINT_FILENAME);
         showManager = new ShowManagerImpl();
 
     }

@@ -28,9 +28,7 @@ public interface CustomerService {
 
     boolean updateCustomer(Customer customer);
 
-    boolean updateEmail(DTOEmail dtoNewEmail);
+    JSONObject updateEmail(DTOEmail dtoNewEmail);
 
     boolean updatePassword(DTOPassword dtoNewPassword);
-
-    boolean registerFingerprint(byte[] publicKey);
 }

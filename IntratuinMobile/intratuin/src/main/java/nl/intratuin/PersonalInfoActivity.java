@@ -160,7 +160,7 @@ public class PersonalInfoActivity extends ToolBarActivity implements View.OnClic
                                     Boolean.class, App.getShowManager(), this).execute(customer);
                     if (jsonUpdateRespond != null) {
                         if (jsonUpdateRespond.get()) {
-                            Toast.makeText(PersonalInfoActivity.this, "you personal data has been changed", Toast.LENGTH_LONG).show();
+                            Toast.makeText(PersonalInfoActivity.this, "your personal data has been changed", Toast.LENGTH_LONG).show();
                             Intent profilePageIntent = new Intent(this, ProfileActivity.class);
                             profilePageIntent.putExtra(CUSTOMER, customer);
                             startActivity(profilePageIntent);

@@ -142,10 +142,14 @@ public class ProfileActivity extends ToolBarActivity implements View.OnClickList
                         startActivity(personalIntent);
                         break;
                     case 1:
-                        Toast.makeText(ProfileActivity.this, editItems[position], Toast.LENGTH_LONG).show();
+                        Intent emailEditIntent = new Intent(ProfileActivity.this, EmailEditActivity.class);
+                        emailEditIntent.putExtra(CUSTOMER, customer);
+                        startActivity(emailEditIntent);
                         break;
                     case 2:
-                        Toast.makeText(ProfileActivity.this, editItems[position], Toast.LENGTH_LONG).show();
+                        Intent passwordEditIntent = new Intent(ProfileActivity.this, PasswordEditActivity.class);
+                        passwordEditIntent.putExtra(CUSTOMER, customer);
+                        startActivity(passwordEditIntent);
                         break;
                 }
             }

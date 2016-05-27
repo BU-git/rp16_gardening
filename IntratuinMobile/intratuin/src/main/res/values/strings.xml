@@ -103,6 +103,11 @@
     <string name="birthday">Date of birth</string>
     <string name="birthday_hint">Date of birth...</string>
     <string name="categories">Categories</string>
+    <string name="current_email">Current email</string>
+    <string name="new_email">New email</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="repeat_new_password">Repeat new password</string>
 
     <string name="search_hint">Product search</string>
     <string name="search">Search...</string>

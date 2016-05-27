@@ -79,6 +79,12 @@
         <activity
             android:name=".FingerprintActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".EmailEditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PasswordEditActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

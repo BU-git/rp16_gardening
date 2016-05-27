@@ -183,7 +183,7 @@ public class CustomerController {
     @RequestMapping(value = "update/email", method = RequestMethod.POST)
     public
     @ResponseBody
-    Boolean updateCustomer(@RequestBody DTOEmail dtoNewEmail) {
+    JSONObject updateCustomer(@RequestBody DTOEmail dtoNewEmail) {
         return customerService.updateEmail(dtoNewEmail);
     }
 

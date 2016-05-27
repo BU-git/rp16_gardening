@@ -51,7 +51,7 @@ public class AuthManager {
         pref = context.getSharedPreferences(PREF_FILENAME, Context.MODE_PRIVATE);
     }
 
-public AuthManager(Context context, String fileName) {
+    public AuthManager(Context context, String fileName) {
         pref = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
     }
 

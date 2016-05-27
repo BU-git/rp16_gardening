@@ -62,7 +62,7 @@ public class CustomerDaoImpl implements CustomerDao {
                 : false;
     }
 
-    public boolean updateEmail(DTOEmail dtoNewEmail){
+    public boolean updateEmail(DTOEmail dtoNewEmail) {
         TypedQuery<Customer> queryUpdateEmail = em.createQuery("UPDATE Customer c SET c.email = :email WHERE c.id = :id", Customer.class);
         queryUpdateEmail.setParameter("email", dtoNewEmail.getEmail());
         queryUpdateEmail.setParameter("id", dtoNewEmail.getId());
@@ -73,7 +73,7 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
 
-    public boolean updatePassword(DTOPassword dtoNewPassword){
+    public boolean updatePassword(DTOPassword dtoNewPassword) {
         TypedQuery<Customer> queryUpdatePassword = em.createQuery("UPDATE Customer c SET c.password = :password WHERE c.id = :id", Customer.class);
         queryUpdatePassword.setParameter("password", dtoNewPassword.getPassword());
         queryUpdatePassword.setParameter("id", dtoNewPassword.getId());
@@ -83,13 +83,5 @@ public class CustomerDaoImpl implements CustomerDao {
                 : false;
     }
 
-    public boolean registerFingerprint(byte[] publicKey){
-        TypedQuery<Customer> queryUpdatePassword = em.createQuery("UPDATE Customer c SET c.fingerprint = :fingerprint WHERE c.id = :id", Customer.class);
-        queryUpdatePassword.setParameter("fingerprint", publicKey);
-
-        return queryUpdatePassword.executeUpdate() > 0
-                ? true
-                : false;
-    }
 }
 
