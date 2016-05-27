@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.hardware.fingerprint.FingerprintManager;
 import android.net.Uri;
+import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -69,6 +70,7 @@ import javax.crypto.SecretKey;
 import io.fabric.sdk.android.Fabric;
 import nl.intratuin.handlers.CacheCustomerCredentials;
 import nl.intratuin.handlers.FingerprintHandlerLogin;
+import nl.intratuin.handlers.NFCHandler;
 import nl.intratuin.manager.AuthManager;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.settings.Mainscreen;
@@ -126,6 +128,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private long tempDate;
     //data for fingerprint
     public static String secretKey;
+    //nfc
+    private NfcAdapter mNfcAdapter;
+    private NFCHandler nfcHandler;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -148,6 +153,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             loginByFingerprint();//listener fingerprint
         }
+        //NFC
+        loginByNFC();
 
         TwitterAuthConfig authConfig = Settings.getTwitterConfig(this);
         Fabric.with(this, new Twitter(authConfig));
@@ -529,5 +536,34 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 | CertificateException | UnrecoverableKeyException e) {
             throw new RuntimeException("Failed to read secret key", e);
         }
+    }
+
+    private void loginByNFC(){
+        nfcHandler = new NFCHandler();
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
+        if (mNfcAdapter == null) {
+            // Stop here, we definitely need NFC
+            finish();
+            return;
+        }
+
+    }
+    protected void onResume() {
+        super.onResume();
+        NFCHandler.setupForegroundDispatch(this, mNfcAdapter);
+    }
+
+    @Override
+    protected void onPause() {
+        NFCHandler.stopForegroundDispatch(this, mNfcAdapter);
+        super.onPause();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        String credentials = nfcHandler.handleIntent(intent);
+        String[] parseCredentials = credentials.split(" ");
+        login(this, parseCredentials[0], parseCredentials[1]);
     }
 }
