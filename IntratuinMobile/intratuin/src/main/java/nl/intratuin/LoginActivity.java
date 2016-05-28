@@ -563,7 +563,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     @Override
     protected void onNewIntent(Intent intent) {
         String credentials = nfcHandler.handleIntent(intent);
-        String[] parseCredentials = credentials.split(" ");
+        String[] parseCredentials = credentials.split(":");
         login(this, parseCredentials[0], parseCredentials[1]);
     }
 }

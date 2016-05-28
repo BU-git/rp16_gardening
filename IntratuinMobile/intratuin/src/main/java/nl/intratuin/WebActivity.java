@@ -63,6 +63,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 ibNfc.setVisibility(View.INVISIBLE);
             if(this.getString(R.string.scandit).equals("off"))
                 ibBarcode.setVisibility(View.INVISIBLE);
+            ibNfc.setOnClickListener(this);
 
             webView.setWebChromeClient(new WebChromeClient());
             WebSettings webSettings = webView.getSettings();
@@ -117,6 +118,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibNFC:
+                startActivity(new Intent(WebActivity.this, NFCActivity.class));
                 break;
             case R.id.ibBarcode:
                 startActivity(new Intent(WebActivity.this, ScannerActivity.class));

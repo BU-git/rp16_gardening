@@ -103,9 +103,6 @@ public class NFCHandler {
             // Get the Language Code
             int languageCodeLength = payload[0] & 0063;
 
-            // String languageCode = new String(payload, 1, languageCodeLength, "US-ASCII");
-            // e.g. "en"
-
             // Get the Text
             return new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
         }

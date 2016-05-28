@@ -53,6 +53,7 @@ public class SearchActivity extends ToolBarActivity implements OnClickListener {
     private ImageButton ibBarcode;
     private ImageButton ibMan;
     private ImageButton ibBusket;
+    private ImageButton ibNFC;
 
     /**
      * Provide logic when activity created. Mapping field, configuring AutoCompleteTextView, showing user info.
@@ -72,11 +73,13 @@ public class SearchActivity extends ToolBarActivity implements OnClickListener {
             ibBarcode = (ImageButton) findViewById(R.id.ibBarcode);
             ibMan = (ImageButton) findViewById(R.id.ibMan);
             ibBusket = (ImageButton) findViewById(R.id.ibBusket);
+            ibNFC = (ImageButton) findViewById(R.id.ibNFC);
             categoryListView = (ListView) findViewById(R.id.categoryListView);
 
             ibBarcode.setOnClickListener(this);
             ibMan.setOnClickListener(this);
             ibBusket.setOnClickListener(this);
+            ibNFC.setOnClickListener(this);
 
             treeCategory = generateCategoryHierarchy();//all categories
             categoryAdapter = new HierarchyCategoryAdapter(this, treeCategory);
@@ -193,6 +196,10 @@ public class SearchActivity extends ToolBarActivity implements OnClickListener {
                 break;
 
             case R.id.ibBusket:
+                break;
+
+            case R.id.ibNFC:
+                startActivity(new Intent(this, NFCActivity.class));
                 break;
         }
     }

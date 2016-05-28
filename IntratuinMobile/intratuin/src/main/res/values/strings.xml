@@ -29,7 +29,7 @@
 
     #build types: LOCAL, DEPLOYED, API, DEMOAPI; mainscreens: WEB, SEARCH. If build_type=API/DEMOAPI mainscreen is always WEB
     <string name="build_type">DEPLOYED</string>
-    <string name="mainscreen">SEARCH</string>
+    <string name="mainscreen">WEB</string>
     <string name="connection_timeout">10000</string>
 
     #hosts

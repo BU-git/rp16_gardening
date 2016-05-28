@@ -92,7 +92,10 @@
             android:name=".EmailEditActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PasswordEditActivity"
+        android:name=".PasswordEditActivity"
+        android:screenOrientation="portrait" />
+        <activity
+            android:name=".NFCActivity"
             android:screenOrientation="portrait" />
     </application>
 
