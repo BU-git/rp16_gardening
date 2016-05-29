@@ -41,45 +41,46 @@ public class NFCActivity extends ToolBarActivity {
                     .setNegativeButton("Cancel",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
+                                    finish();
                                 }
                             });
             android.app.AlertDialog alert = builder.create();
             alert.show();
-            finish();
-            return;
-        }
+        } else {
 
-        if (!mNfcAdapter.isEnabled()) {
-            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-            builder.setTitle("NFC is disabled.")
-                    .setMessage("go to Settings -> (Wireless & networks) ...More ->")
-                    .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent dialogIntent = new Intent(android.provider.Settings.ACTION_SETTINGS);
-                            dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(dialogIntent);
-                        }
-                    })
-                    .setNegativeButton("Cancel",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-            android.app.AlertDialog alert = builder.create();
-            alert.show();
+            if (!mNfcAdapter.isEnabled()) {
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+                builder.setTitle("NFC is disabled.")
+                        .setMessage("go to Settings -> (Wireless & networks) ...More ->")
+                        .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent dialogIntent = new Intent(android.provider.Settings.ACTION_SETTINGS);
+                                dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(dialogIntent);
+                            }
+                        })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                android.app.AlertDialog alert = builder.create();
+                alert.show();
+            }
         }
     }
 
     protected void onResume() {
         super.onResume();
-        NFCHandler.setupForegroundDispatch(this, mNfcAdapter);
+        if(mNfcAdapter!=null)
+            NFCHandler.setupForegroundDispatch(this, mNfcAdapter);
     }
 
     @Override
     protected void onPause() {
-        NFCHandler.stopForegroundDispatch(this, mNfcAdapter);
+        if(mNfcAdapter!=null)
+            NFCHandler.stopForegroundDispatch(this, mNfcAdapter);
         super.onPause();
     }
 

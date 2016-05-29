@@ -67,6 +67,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
 
             webView.setWebChromeClient(new WebChromeClient());
             WebSettings webSettings = webView.getSettings();
+            webSettings.setDomStorageEnabled(true);
             webSettings.setJavaScriptEnabled(true);
             webView.setWebViewClient(new MyWebViewClient());
             webView.addJavascriptInterface(new WebInterface(this), "Android");
@@ -75,6 +76,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 webView.loadUrl("file:///android_asset/pages/dummy.html");
             } else {
                 webView.loadUrl("https://" + Settings.getHost(WebActivity.this) + "/?" + access_token + "#page:debtor_order");
+                webView.loadUrl("javascript:(function () {window.localStorage.setItem('wehandcraft.accessToken', '" + access_token + "')})");
             }
 
             //show user login

@@ -519,10 +519,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             SecretKey key = (SecretKey) keyStore.getKey(FingerprintActivity.KEY_NAME, null);
             cipher.init(Cipher.ENCRYPT_MODE, key);
             return true;
-        } catch (KeyPermanentlyInvalidatedException e) {
+        } catch(InvalidKeyException e){
             return false;
-        } catch (KeyStoreException | CertificateException | UnrecoverableKeyException
-                | IOException | NoSuchAlgorithmException | InvalidKeyException e) {
+        } catch(KeyStoreException | CertificateException | UnrecoverableKeyException
+                | IOException | NoSuchAlgorithmException e) {
             throw new RuntimeException("Failed to init Cipher", e);
         }
     }
@@ -544,19 +544,20 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         if (mNfcAdapter == null) {
             // Stop here, we definitely need NFC
-            finish();
             return;
         }
 
     }
     protected void onResume() {
         super.onResume();
-        NFCHandler.setupForegroundDispatch(this, mNfcAdapter);
+        if(mNfcAdapter!=null)
+            NFCHandler.setupForegroundDispatch(this, mNfcAdapter);
     }
 
     @Override
     protected void onPause() {
-        NFCHandler.stopForegroundDispatch(this, mNfcAdapter);
+        if(mNfcAdapter!=null)
+            NFCHandler.stopForegroundDispatch(this, mNfcAdapter);
         super.onPause();
     }
 
