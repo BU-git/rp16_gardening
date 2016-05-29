@@ -88,7 +88,7 @@ public class RecoverActivity extends AppCompatActivity implements View.OnClickLi
                         etEmailAddress.setError("Email can't be blank!");
                     else etEmailAddress.setError("Wrong email format!");
                 } else {
-                    //TODO
+                    //TODO: sending request for password changing
                 }
 
                 break;

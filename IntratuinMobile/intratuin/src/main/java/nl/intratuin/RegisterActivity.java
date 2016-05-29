@@ -1,11 +1,17 @@
 package nl.intratuin;
 
 import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
@@ -41,6 +47,8 @@ import nl.intratuin.settings.Settings;
  * @see OnClickListener
  */
 public class RegisterActivity extends AppCompatActivity implements OnClickListener {
+
+    public static final int NOTIFY_ID = 1; // Уникальный индификатор вашего уведомления в пределах класса
 
     private EditText etFirstName;
     private EditText etTussen;
@@ -165,6 +173,9 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                                     startActivity(new Intent(RegisterActivity.this, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, response.getString("access_token")));
                                 else
                                     startActivity(new Intent(RegisterActivity.this, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, response.getString("access_token")));
+
+                                showNotification();
+
                                 finishAffinity();
                             } else {
                                 String errorStr;
@@ -359,5 +370,32 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         }
 
         return res;
+    }
+
+    public void showNotification(){
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.mipmap.taskbar_icon)
+                        .setTicker(this.getString(R.string.notification_register_ticker))
+                        .setContentTitle(this.getString(R.string.notification_register_title))
+                        .setContentText(this.getString(R.string.notification_register_message));
+
+        Intent resultIntent = new Intent(this, NotificationActivity.class);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+
+        stackBuilder.addParentStack(NotificationActivity.class);
+
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.notify(NOTIFY_ID, mBuilder.build());
     }
 }

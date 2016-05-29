@@ -27,7 +27,8 @@
     <string name="twitter_customer_key">CpdWZOr27su9Vduhipt3XVUgD</string>
     <string name="twitter_customer_secret">pcOrskD4hWcUGxi5n3nMvtL3bArhIuyj2pmiMCQ7E9jj71wH5w</string>
 
-    #build types: LOCAL, DEPLOYED, API, DEMOAPI; mainscreens: WEB, SEARCH. If build_type=API/DEMOAPI mainscreen is always WEB
+    #build types: LOCAL, DEPLOYED, API, DEMOAPI; mainscreens: WEB, SEARCH. If build_type=API/DEMOAPI
+    mainscreen is always WEB
     <string name="build_type">DEPLOYED</string>
     <string name="mainscreen">WEB</string>
     <string name="connection_timeout">10000</string>
@@ -108,6 +109,12 @@
     <string name="current_password">Current password</string>
     <string name="new_password">New password</string>
     <string name="repeat_new_password">Repeat new password</string>
+    <string name="notification_register_ticker">Registration successful</string>
+    <string name="notification_register_title">Registration successful</string>
+    <string name="notification_register_message">Your registration ended successfully</string>
+
+    <string name="notification_button_ok">OK</string>
+    <string name="notification_button_to_app">To application</string>
 
     <string name="search_hint">Product search</string>
     <string name="search">Search...</string>
