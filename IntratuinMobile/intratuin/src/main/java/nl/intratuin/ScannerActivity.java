@@ -32,6 +32,11 @@ public class ScannerActivity extends AppCompatActivity implements ScanditSDKOnSc
     private ScanditSDKBarcodePicker mPicker;
     private final String KEY = "QIGbqG4vLkqJN+EXOqWUxvS0V3akzdlwjwbUTueP8C4";
 
+    public static final String FORMAT = "format";
+    public static final String CONTENT = "content";
+
+    private String accessToken;
+
     /**
      * Provide logic when activity created. Mapping field, setting barcode scanner.
      *
@@ -40,6 +45,10 @@ public class ScannerActivity extends AppCompatActivity implements ScanditSDKOnSc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final Bundle extra = getIntent().getExtras();
+        if(extra != null){
+            accessToken=extra.getString(LoginActivity.ACCESS_TOKEN);
+        }
         setContentView(R.layout.activity_scanner);
 
         ScanditSDKScanSettings settings = ScanditSDKScanSettings.getDefaultSettings();
@@ -115,8 +124,11 @@ public class ScannerActivity extends AppCompatActivity implements ScanditSDKOnSc
                     App.getShowManager().showMessage(e.getMessage(), ScannerActivity.this);
                 }
             } else {
-                //Toast.makeText(this, "Content:" + code.getData() + " Format:" + code.getSymbologyString(), Toast.LENGTH_LONG).show();
-
+                Intent webPageIntent = new Intent(ScannerActivity.this, WebActivity.class);
+                webPageIntent.putExtra(LoginActivity.ACCESS_TOKEN, accessToken);
+                webPageIntent.putExtra(ScannerActivity.FORMAT, code.getSymbologyString());
+                webPageIntent.putExtra(ScannerActivity.CONTENT, code.getData());
+                startActivity(webPageIntent);
                 finish();
             }
         }

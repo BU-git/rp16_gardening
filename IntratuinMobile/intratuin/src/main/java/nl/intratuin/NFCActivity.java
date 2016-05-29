@@ -24,9 +24,15 @@ public class NFCActivity extends ToolBarActivity {
     private ImageView ivNFC;
     private TextView tvNFC;
 
+    private String accessToken;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_nfc);
+        final Bundle extra = getIntent().getExtras();
+        if(extra != null){
+            accessToken=extra.getString(LoginActivity.ACCESS_TOKEN);
+        }
         super.onCreate(savedInstanceState);
 
         ivNFC = (ImageView) findViewById(R.id.ivNFC);
@@ -122,7 +128,11 @@ public class NFCActivity extends ToolBarActivity {
                 App.getShowManager().showMessage(e.getMessage(), this);
             }
         } else {
-            Toast.makeText(this, "Content:" + parseContent[2], Toast.LENGTH_LONG).show();
+            Intent webPageIntent = new Intent(NFCActivity.this, WebActivity.class);
+            webPageIntent.putExtra(LoginActivity.ACCESS_TOKEN, accessToken);
+            webPageIntent.putExtra(ScannerActivity.FORMAT, "NFC");
+            webPageIntent.putExtra(ScannerActivity.CONTENT, parseContent[2]);
+            startActivity(webPageIntent);
             finish();
         }
     }

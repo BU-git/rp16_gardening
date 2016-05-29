@@ -36,6 +36,8 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
     private ImageButton ibUnknown;
     private String access_token;
 
+    private String barcode_format;
+    private String barcode_content;
     /**
      * Provide logic when activity created. Mapping field, creating HTML page, loading data to page.
      *
@@ -50,6 +52,8 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         final Bundle extra = getIntent().getExtras();
         if (extra != null) {
             access_token = extra.getString(LoginActivity.ACCESS_TOKEN);
+            barcode_format = extra.getString(ScannerActivity.FORMAT);
+            barcode_content = extra.getString(ScannerActivity.CONTENT);
         }
         if (access_token != null) {
             setContentView(R.layout.activity_web);
@@ -72,44 +76,59 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             webView.setWebViewClient(new MyWebViewClient());
             webView.addJavascriptInterface(new WebInterface(this), "Android");
 
-            if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
-                webView.loadUrl("file:///android_asset/pages/dummy.html");
-            } else {
-                webView.loadUrl("https://" + Settings.getHost(WebActivity.this) + "/?" + access_token + "#page:debtor_order");
-                webView.loadUrl("javascript:(function () {window.localStorage.setItem('wehandcraft.accessToken', '" + access_token + "')})");
-            }
-
-            //show user login
-            String name = "anonymous";
-            try {
-                String userInfoUri = Settings.getUriConfig().getUserInfo().toString();
-                userInfoUri += "?access_token={access_token}";
-                if (userInfoUri != null) {
-                    RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);
-                    String jsonRespond = managerLoader.loaderFromWebService(userInfoUri, access_token);
-                    jsonRespond=jsonRespond.substring(1,jsonRespond.length()-1);
-                    JSONObject response = new JSONObject(jsonRespond);
-                    if (response != null && response.has("id")) {
-                        if (response.has("name") && response.getString("name").length() > 0)
-                            name = response.getString("name");
-                        else
-                            name = response.getString("email");
-                    } else {
-                        String errorStr;
-                        if (response == null)
-                            errorStr = "Error! Null response!";
-                        else
-                            errorStr = "Error" + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
-                        App.getShowManager().showMessage(errorStr, WebActivity.this);
-                        startActivity(new Intent(WebActivity.this, LoginActivity.class));
-                    }
+            if(barcode_content == null && barcode_format == null) {
+                if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
+                    webView.loadUrl("file:///android_asset/pages/dummy.html");
+                } else {
+                    webView.loadUrl("https://" + Settings.getHost(WebActivity.this) + "/?" + access_token + "#page:debtor_order");
+                    webView.loadUrl("javascript:(function () {window.localStorage.setItem('wehandcraft.accessToken', '" + access_token + "')})");
                 }
-            } catch (JSONException e) {
-                App.getShowManager().showMessage("Can't get user info!", WebActivity.this);
-                startActivity(new Intent(WebActivity.this, LoginActivity.class));
-            }
 
-            Toast.makeText(this, "Logged as " + name, Toast.LENGTH_LONG).show();
+                //show user login
+                String name = "anonymous";
+                try {
+                    String userInfoUri = Settings.getUriConfig().getUserInfo().toString();
+                    userInfoUri += "?access_token={access_token}";
+                    if (userInfoUri != null) {
+                        RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);
+                        String jsonRespond = managerLoader.loaderFromWebService(userInfoUri, access_token);
+                        jsonRespond = jsonRespond.substring(1, jsonRespond.length() - 1);
+                        JSONObject response = new JSONObject(jsonRespond);
+                        if (response != null && response.has("id")) {
+                            if (response.has("name") && response.getString("name").length() > 0)
+                                name = response.getString("name");
+                            else
+                                name = response.getString("email");
+                        } else {
+                            String errorStr;
+                            if (response == null)
+                                errorStr = "Error! Null response!";
+                            else
+                                errorStr = "Error" + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
+                            App.getShowManager().showMessage(errorStr, WebActivity.this);
+                            startActivity(new Intent(WebActivity.this, LoginActivity.class));
+                        }
+                    }
+                } catch (JSONException e) {
+                    App.getShowManager().showMessage("Can't get user info!", WebActivity.this);
+                    startActivity(new Intent(WebActivity.this, LoginActivity.class));
+                }
+
+                Toast.makeText(this, "Logged as " + name, Toast.LENGTH_LONG).show();
+            } else {
+                if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
+                    webView.setWebViewClient(new WebViewClient(){
+                        public void onPageFinished(WebView view, String url) {
+                            String jsString="javascript: insertBarcode('"+barcode_format+"','"+barcode_content+"')";
+                            webView.loadUrl(jsString);
+                        }
+                    });
+                    webView.loadUrl("file:///android_asset/pages/product.html");
+                } else {
+                    webView.loadUrl("https://" + Settings.getHost(WebActivity.this));
+                    webView.loadUrl("javascript:(function () {window.localStorage.setItem('wehandcraft.accessToken', '" + access_token + "')})");
+                }
+            }
         } else {
             App.getShowManager().showMessage("No access token found!", WebActivity.this);
             startActivity(new Intent(WebActivity.this, LoginActivity.class));
@@ -120,10 +139,14 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibNFC:
-                startActivity(new Intent(WebActivity.this, NFCActivity.class));
+                Intent nfcIntent = new Intent(WebActivity.this, NFCActivity.class);
+                nfcIntent.putExtra(LoginActivity.ACCESS_TOKEN, access_token);
+                startActivity(nfcIntent);
                 break;
             case R.id.ibBarcode:
-                startActivity(new Intent(WebActivity.this, ScannerActivity.class));
+                Intent scannerIntent = new Intent(WebActivity.this, ScannerActivity.class);
+                scannerIntent.putExtra(LoginActivity.ACCESS_TOKEN, access_token);
+                startActivity(scannerIntent);
                 break;
             case R.id.ibUnknown:
                 break;
@@ -176,7 +199,9 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
          */
         @JavascriptInterface
         public void ShowScanner() {
-            startActivity(new Intent(WebActivity.this, ScannerActivity.class));
+            Intent scannerIntent = new Intent(WebActivity.this, ScannerActivity.class);
+            scannerIntent.putExtra(LoginActivity.ACCESS_TOKEN, access_token);
+            startActivity(scannerIntent);
         }
 
         /**
