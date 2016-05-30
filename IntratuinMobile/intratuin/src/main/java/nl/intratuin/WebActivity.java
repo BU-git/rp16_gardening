@@ -80,8 +80,12 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
                     webView.loadUrl("file:///android_asset/pages/dummy.html");
                 } else {
-                    webView.loadUrl("https://" + Settings.getHost(WebActivity.this) + "/?" + access_token + "#page:debtor_order");
-                    webView.loadUrl("javascript:(function () {window.localStorage.setItem('wehandcraft.accessToken', '" + access_token + "')})");
+//                    webView.loadUrl("https://" + Settings.getHost(WebActivity.this) + "/?" + access_token + "#page:debtor_order");
+//                    webView.loadUrl("javascript:(function () {window.localStorage.setItem('wehandcraft.accessToken', '" + access_token + "')})");
+                    String nsKeyValue="'wehandcraft', 'accessToken', '"+access_token+"'";
+                    String url="https://" + Settings.getHost(WebActivity.this);
+                    String injection = "<html><head><script type='javascript'>LocalStorage.set("+nsKeyValue+");window.location.replace('"+url+"');</script></head><body></body></html>";
+                    webView.loadData(injection, "text/html", null);
                 }
 
                 //show user login
