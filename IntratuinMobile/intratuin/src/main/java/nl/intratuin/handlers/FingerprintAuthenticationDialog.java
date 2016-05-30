@@ -23,7 +23,6 @@ import nl.intratuin.settings.Settings;
 public class FingerprintAuthenticationDialog {
     public static final String Fingerprint_FILENAME = "fingerprint";
     private Context context;
-    private SharedPreferences pref;
 
     public FingerprintAuthenticationDialog(Context context) {
         this.context = context;
@@ -44,6 +43,10 @@ public class FingerprintAuthenticationDialog {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
+                                if (Settings.getMainscreen(context) == Mainscreen.WEB)
+                                    context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
+                                else
+                                    context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
                             }
                         });
         android.app.AlertDialog alert = builder.create();
@@ -65,6 +68,10 @@ public class FingerprintAuthenticationDialog {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
+                                if (Settings.getMainscreen(context) == Mainscreen.WEB)
+                                    context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
+                                else
+                                    context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
                             }
                         });
         android.app.AlertDialog alert = builder.create();
@@ -90,6 +97,10 @@ public class FingerprintAuthenticationDialog {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
+                                if (Settings.getMainscreen(context) == Mainscreen.WEB)
+                                    context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
+                                else
+                                    context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
                             }
                         });
         android.app.AlertDialog alert = builder.create();
