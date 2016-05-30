@@ -59,7 +59,7 @@ public class FingerprintHandlerLogin extends FingerprintManager.AuthenticationCa
     @Override
     public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
         String valueOfFingerprint =  App.getAuthManagerOfFingerprint().getValuesOfFingerprint(LoginActivity.secretKey);
-        if (valueOfFingerprint != null) {
+        if (valueOfFingerprint != null && valueOfFingerprint.length() > 0) {
             String[] arrValueOfFingerprint = valueOfFingerprint.split(":");
             emailByFingerprint = arrValueOfFingerprint[0];
             passwordByFingerprint = arrValueOfFingerprint[1];

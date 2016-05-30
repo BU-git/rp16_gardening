@@ -49,6 +49,7 @@ import nl.intratuin.settings.Settings;
 public class RegisterActivity extends AppCompatActivity implements OnClickListener {
 
     public static final int NOTIFY_ID = 1; // Уникальный индификатор вашего уведомления в пределах класса
+    public static String responseAccessToken; // Уникальный индификатор вашего уведомления в пределах класса
 
     private EditText etFirstName;
     private EditText etTussen;
@@ -58,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     private CheckBox cbShowPassword;
     private EditText etRePassword;
     private CheckBox cbShowRePassword;
+    private CheckBox cbRegisterFingerprint;
     private RadioButton rbMale;
     private RadioButton rbFemale;
     private Button bCancel;
@@ -86,6 +88,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
         cbShowPassword = (CheckBox) findViewById(R.id.cbShowPassword);
+        cbRegisterFingerprint = (CheckBox) findViewById(R.id.cbRegisterFingerprint);
         etRePassword = (EditText) findViewById(R.id.etRePassword);
         cbShowRePassword = (CheckBox) findViewById(R.id.cbShowRePassword);
         rbMale = (RadioButton) findViewById(R.id.rbMale);
@@ -95,6 +98,9 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         ivIntratuin = (ImageView) findViewById(R.id.ivIntratuin);
 
         setListeners();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            cbRegisterFingerprint.setVisibility(CheckBox.VISIBLE);
+        }
 
         registerUri = Settings.getUriConfig().getRegistration();
         loginUri = Settings.getUriConfig().getLogin();
@@ -141,16 +147,16 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                         fullName += etTussen.getText().toString() + " ";
                     fullName += etLastName.getText().toString();
                     try {
-                    jsonObject.put("name", fullName);
-                    jsonObject.put("email", etEmail.getText().toString());
-                    jsonObject.put("password", etPassword.getText().toString());
+                        jsonObject.put("name", fullName);
+                        jsonObject.put("email", etEmail.getText().toString());
+                        jsonObject.put("password", etPassword.getText().toString());
 
-                    AsyncTask<String, Void, String> jsonRespond =
-                            new RequestResponse<String, String>(registerUri, 3,
-                                    String.class, App.getShowManager(), this).execute(jsonObject.toString());
-                    if (jsonRespond == null) {
-                        App.getShowManager().showMessage("Error! No response.", RegisterActivity.this);
-                    }
+                        AsyncTask<String, Void, String> jsonRespond =
+                                new RequestResponse<String, String>(registerUri, 3,
+                                        String.class, App.getShowManager(), this).execute(jsonObject.toString());
+                        if (jsonRespond == null) {
+                            App.getShowManager().showMessage("Error! No response.", RegisterActivity.this);
+                        }
                         JSONObject response = new JSONObject(jsonRespond.get());
                         if (response != null && response.has("id")) {
                             map = new LinkedMultiValueMap<>();
@@ -162,17 +168,25 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
 
                             AsyncTask<MultiValueMap<String, String>, Void, String> jsonLoginRespond =
                                     new RequestResponse<MultiValueMap<String, String>, String>(loginUri, 3,
-                                    String.class, App.getShowManager(), this).execute(map);
+                                            String.class, App.getShowManager(), this).execute(map);
                             if (jsonLoginRespond == null) {
                                 App.getShowManager().showMessage("Error! No response.", RegisterActivity.this);
                             }
                             response = new JSONObject(jsonLoginRespond.get());
                             if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
+                                responseAccessToken = response.getString("access_token");
 
-                                if (Settings.getMainscreen(RegisterActivity.this) == Mainscreen.WEB)
-                                    startActivity(new Intent(RegisterActivity.this, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, response.getString("access_token")));
-                                else
-                                    startActivity(new Intent(RegisterActivity.this, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, response.getString("access_token")));
+                                if (Settings.getMainscreen(RegisterActivity.this) == Mainscreen.WEB) {
+                                    if (cbRegisterFingerprint.isChecked())
+                                        startActivity(new Intent(this, FingerprintActivity.class));
+                                    else
+                                        startActivity(new Intent(RegisterActivity.this, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, responseAccessToken));
+                                } else {
+                                    if (cbRegisterFingerprint.isChecked())
+                                        startActivity(new Intent(this, FingerprintActivity.class));
+                                    else
+                                        startActivity(new Intent(RegisterActivity.this, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, responseAccessToken));
+                                }
 
                                 showNotification();
 
@@ -372,7 +386,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
         return res;
     }
 
-    public void showNotification(){
+    public void showNotification() {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.taskbar_icon)

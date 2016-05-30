@@ -238,6 +238,18 @@
 
             </LinearLayout>
 
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/register_finger"
+                android:id="@+id/cbRegisterFingerprint"
+                android:layout_below="@id/llPasswordsSecondTime"
+                android:layout_alignRight="@+id/ivIntratuin"
+                android:textColor="#ffffff"
+                android:buttonTint="#ffffff"
+                android:layout_marginTop="22dp"
+                android:visibility="gone"/>
+
             <LinearLayout
                 android:id="@+id/llButtons"
                 android:layout_width="match_parent"
