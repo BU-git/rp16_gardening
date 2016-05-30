@@ -127,15 +127,8 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                     });
                     webView.loadUrl("file:///android_asset/pages/product.html");
                 } else {
-                    webView.setWebViewClient(new WebViewClient() {
-                        public void onPageFinished(WebView view, String url) {
-                            if (url.equals("file:///android_asset/pages/redirect.html")) {
-                                String jsString = "javascript: saveToken('" + access_token + "')";
-                                webView.loadUrl(jsString);
-                            }
-                        }
-                    });
-                    webView.loadUrl("file:///android_asset/pages/redirect.html");
+                    webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
+                    webView.loadUrl("javascript: window.localStorage.setItem('wehandcraft.accessToken', '"+access_token+"');");
                 }
             }
         } else {
