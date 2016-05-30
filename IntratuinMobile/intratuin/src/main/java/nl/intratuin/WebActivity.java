@@ -2,6 +2,7 @@ package nl.intratuin;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -83,13 +84,17 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 } else {
                     webView.setWebViewClient(new WebViewClient() {
                         public void onPageFinished(WebView view, String url) {
-                            if (url.equals("file:///android_asset/pages/redirect.html")) {
-                                String jsString = "javascript: saveToken('" + access_token + "')";
-                                webView.loadUrl(jsString);
+                            if(url.indexOf("#page:login")!=-1) {
+                                webView.loadUrl("javascript: window.localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');");
+                                webView.loadUrl("javascript: window.location.reload();");
                             }
                         }
                     });
-                    webView.loadUrl("file:///android_asset/pages/redirect.html");
+                    //webView.loadUrl("file:///android_asset/pages/redirect.html");
+                    //String url="https://"+Settings.getHost(this);
+                    //webView.loadUrl("javascript: window.localStorage.setItem('wehandcraft.accessToken', '"+access_token+"');");
+                    //webView.loadUrl("javascript: window.location.assign('"+url+"');");
+                    webView.loadUrl("https://"+Settings.getHost(this)+"/#page:login");
                 }
 
                 //show user login

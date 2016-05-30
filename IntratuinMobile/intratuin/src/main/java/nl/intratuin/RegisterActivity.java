@@ -176,16 +176,12 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                             if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                                 responseAccessToken = response.getString("access_token");
 
-                                if (Settings.getMainscreen(RegisterActivity.this) == Mainscreen.WEB) {
-                                    if (cbRegisterFingerprint.isChecked())
-                                        startActivity(new Intent(this, FingerprintActivity.class));
-                                    else
-                                        startActivity(new Intent(RegisterActivity.this, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, responseAccessToken));
+                                if (cbRegisterFingerprint.isChecked())
+                                    startActivity(new Intent(this, FingerprintActivity.class));
+                                else if (Settings.getMainscreen(RegisterActivity.this) == Mainscreen.WEB) {
+                                    startActivity(new Intent(RegisterActivity.this, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, responseAccessToken));
                                 } else {
-                                    if (cbRegisterFingerprint.isChecked())
-                                        startActivity(new Intent(this, FingerprintActivity.class));
-                                    else
-                                        startActivity(new Intent(RegisterActivity.this, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, responseAccessToken));
+                                    startActivity(new Intent(RegisterActivity.this, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, responseAccessToken));
                                 }
 
                                 showNotification();
