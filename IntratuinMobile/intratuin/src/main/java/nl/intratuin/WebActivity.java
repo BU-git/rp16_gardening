@@ -80,8 +80,15 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
                     webView.loadUrl("file:///android_asset/pages/dummy.html");
                 } else {
-                    webView.loadUrl("https://" + Settings.getHost(WebActivity.this) + "/?" + access_token + "#page:debtor_order");
-                    webView.loadUrl("javascript:(function () {window.localStorage.setItem('wehandcraft.accessToken', '" + access_token + "')})");
+                    webView.setWebViewClient(new WebViewClient() {
+                        public void onPageFinished(WebView view, String url) {
+                            if (url.equals("file:///android_asset/pages/redirect.html")) {
+                                String jsString = "javascript: saveToken('" + access_token + "')";
+                                webView.loadUrl(jsString);
+                            }
+                        }
+                    });
+                    webView.loadUrl("file:///android_asset/pages/redirect.html");
                 }
 
                 //show user login
@@ -125,8 +132,15 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                     });
                     webView.loadUrl("file:///android_asset/pages/product.html");
                 } else {
-                    webView.loadUrl("https://" + Settings.getHost(WebActivity.this));
-                    webView.loadUrl("javascript:(function () {window.localStorage.setItem('wehandcraft.accessToken', '" + access_token + "')})");
+                    webView.setWebViewClient(new WebViewClient() {
+                        public void onPageFinished(WebView view, String url) {
+                            if (url.equals("file:///android_asset/pages/redirect.html")) {
+                                String jsString = "javascript: saveToken('" + access_token + "')";
+                                webView.loadUrl(jsString);
+                            }
+                        }
+                    });
+                    webView.loadUrl("file:///android_asset/pages/redirect.html");
                 }
             }
         } else {
@@ -170,6 +184,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if (Uri.parse(url).getHost().equals(Settings.getHost(WebActivity.this))) {
                 // On same host, do not override; let WebView load the page
+                view.loadUrl(url);
                 return false;
             }
             // Otherwise, the link is not for a page on same host, launch browser
