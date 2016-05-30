@@ -19,7 +19,7 @@ import java.text.ParseException;
 import nl.intratuin.dto.Customer;
 
 public class ProfileActivity extends ToolBarActivity implements View.OnClickListener {
-    public static String credentials = "";
+    public static String credentials;
     private LinearLayout layout;
     private ImageView ivProfile;
     private TextView tvCustomerName;

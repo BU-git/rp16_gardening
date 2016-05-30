@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -490,6 +491,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
 
         secretKey = new String(FingerprintActivity.toByteArray(readSecretKey()));
+        if(secretKey.equals(FingerprintActivity.secretKey)){
+            Toast.makeText(this, "secret keys are equal", Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(this, "secret keys aren't equal", Toast.LENGTH_SHORT).show();
 
         if (cipherInit(cipher)) {
             cryptoObject = new FingerprintManager.CryptoObject(cipher);
