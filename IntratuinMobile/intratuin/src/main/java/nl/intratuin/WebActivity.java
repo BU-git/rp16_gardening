@@ -94,7 +94,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                     //String url="https://"+Settings.getHost(this);
                     //webView.loadUrl("javascript: window.localStorage.setItem('wehandcraft.accessToken', '"+access_token+"');");
                     //webView.loadUrl("javascript: window.location.assign('"+url+"');");
-                    webView.loadUrl("https://"+Settings.getHost(this)+"/#page:login");
+                    webView.loadUrl("https://"+Settings.getHost(this));
                 }
 
                 //show user login
