@@ -82,19 +82,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
                     webView.loadUrl("file:///android_asset/pages/dummy.html");
                 } else {
-                    /*webView.setWebViewClient(new WebViewClient() {
-                        public void onPageFinished(WebView view, String url) {
-                            if(url.indexOf("#page:login")!=-1) {
-                                webView.loadUrl("javascript: window.localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');");
-                                webView.loadUrl("javascript: window.location.reload();");
-                            }
-                        }
-                    });*/
-                    //webView.loadUrl("file:///android_asset/pages/redirect.html");
-                    //String url="https://"+Settings.getHost(this);
-                    //webView.loadUrl("javascript: window.localStorage.setItem('wehandcraft.accessToken', '"+access_token+"');");
-                    //webView.loadUrl("javascript: window.location.assign('"+url+"');");
-                    webView.loadUrl("https://"+Settings.getHost(this));
+                    webView.loadUrl("https://"+Settings.getHost(this)+"/#page:debtor_order");
                     webView.loadUrl("javascript: window.localStorage.setItem('wehandcraft.accessToken', '"+access_token+"');");
                 }
 
