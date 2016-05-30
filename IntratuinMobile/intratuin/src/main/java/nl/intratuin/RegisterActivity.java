@@ -174,6 +174,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                             }
                             response = new JSONObject(jsonLoginRespond.get());
                             if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
+                                ProfileActivity.credentials = etEmail.getText().toString() + ":" + etPassword.getText().toString();
                                 responseAccessToken = response.getString("access_token");
 
                                 if (cbRegisterFingerprint.isChecked())

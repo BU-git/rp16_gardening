@@ -495,6 +495,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
 
         secretKey = new String(FingerprintActivity.toByteArray(readSecretKey()));
+        if(secretKey.equals(FingerprintActivity.secretKey)){
+            Toast.makeText(this, "secret keys are equal", Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(this, "secret keys aren't equal", Toast.LENGTH_SHORT).show();
 
         if (cipherInit(cipher)) {
             cryptoObject = new FingerprintManager.CryptoObject(cipher);
