@@ -84,6 +84,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 } else {
                     webView.loadUrl("https://"+Settings.getHost(this)+"/#page:debtor_order");
                     webView.loadUrl("javascript: window.localStorage.setItem('wehandcraft.accessToken', '"+access_token+"');");
+                    webView.loadUrl("javascript: window.location.reload();");
                 }
 
                 //show user login
