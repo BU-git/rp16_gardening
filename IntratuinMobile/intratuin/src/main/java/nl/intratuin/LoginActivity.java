@@ -433,7 +433,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     }
 
     public void login(Context context, String email, String password) {
-        JSONObject response;
+        JSONObject response=null;
         try {
             loginUri = Settings.getUriConfig().getLogin();
             if (loginUri != null) {
@@ -451,7 +451,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     App.getShowManager().showMessage("Error! No response.", context);
                 }
                 String respStr = jsonRespond.get();
-                response = new JSONObject(respStr);
+                if(respStr == null)
+                    App.getShowManager().showMessage("Connection error", context);
+                else response = new JSONObject(respStr);
                 if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
                     String accessKey = response.getString("access_token");
                     if (cbRemember.isChecked()) {
@@ -465,13 +467,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     else
                         context.startActivity(new Intent(context, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
                     finish();
-                } else {
+                } else if(response != null){
                     String errorStr;
 
-                    if (response == null)
-                        errorStr = "Error! Null response!";
-                    else
-                        errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
+                    errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
 
                     App.getShowManager().showMessage(errorStr, context);
                 }
