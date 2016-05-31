@@ -33,12 +33,6 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
     }
 
     @Override
-    public void onAuthenticationError(int errMsgId, CharSequence errString) {
-        Toast.makeText(appContext, "Authentication error\n" + errString,
-                Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
         Toast.makeText(appContext, "Authentication help\n" + helpString,
                 Toast.LENGTH_LONG).show();

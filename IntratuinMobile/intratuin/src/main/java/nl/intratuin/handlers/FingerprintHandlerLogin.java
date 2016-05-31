@@ -13,13 +13,25 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+
+import javax.crypto.SecretKey;
+
 import nl.intratuin.App;
+import nl.intratuin.FingerprintActivity;
 import nl.intratuin.LoginActivity;
 
 @TargetApi(Build.VERSION_CODES.M)
 public class FingerprintHandlerLogin extends FingerprintManager.AuthenticationCallback {
     public static String emailByFingerprint;
     public static String passwordByFingerprint;
+
+    private String secretKey;
 
     private CancellationSignal cancellationSignal;
     private Context appContext;
@@ -41,12 +53,6 @@ public class FingerprintHandlerLogin extends FingerprintManager.AuthenticationCa
     }
 
     @Override
-    public void onAuthenticationError(int errMsgId, CharSequence errString) {
-        Toast.makeText(appContext, "Authentication error\n" + errString,
-                Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
         Toast.makeText(appContext, "Authentication help\n" + helpString,
                 Toast.LENGTH_LONG).show();
@@ -59,12 +65,24 @@ public class FingerprintHandlerLogin extends FingerprintManager.AuthenticationCa
 
     @Override
     public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
-        String valueOfFingerprint =  App.getAuthManagerOfFingerprint().getValuesOfFingerprint(LoginActivity.secretKey);
+        secretKey = new String(FingerprintActivity.toByteArray(readSecretKey()));
+        String valueOfFingerprint =  App.getAuthManagerOfFingerprint().getValuesOfFingerprint(secretKey);
         if (valueOfFingerprint != null && valueOfFingerprint.length() > 0) {
             String[] arrValueOfFingerprint = valueOfFingerprint.split(":");
             emailByFingerprint = arrValueOfFingerprint[0];
             passwordByFingerprint = arrValueOfFingerprint[1];
             ((LoginActivity)appContext).login(appContext, emailByFingerprint, passwordByFingerprint);
+        }
+    }
+
+    private SecretKey readSecretKey() {
+        try {
+            KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+            keyStore.load(null);
+            return (SecretKey) keyStore.getKey(FingerprintActivity.KEY_NAME, null);
+        } catch (KeyStoreException | NoSuchAlgorithmException | IOException
+                | CertificateException | UnrecoverableKeyException e) {
+            throw new RuntimeException("Failed to read secret key", e);
         }
     }
 }

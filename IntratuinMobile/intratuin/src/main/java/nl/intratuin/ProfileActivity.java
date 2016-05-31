@@ -95,7 +95,7 @@ public class ProfileActivity extends ToolBarActivity implements View.OnClickList
         gender.setText("Gender:  " + customerGender);
 
         String customerPhoneNumber = customer.getPhoneNumber();
-        if (customerPhoneNumber != null) {
+        if (customerPhoneNumber != null && !customerPhoneNumber.isEmpty()) {
             TextView phoneNumber = new TextView(this);
             phoneNumber.setPadding(0, 20, 0, 0);
             phoneNumber.setTextSize(15);
@@ -106,22 +106,22 @@ public class ProfileActivity extends ToolBarActivity implements View.OnClickList
 
         String customerAddress = "";
         String houseNumber = customer.getHouseNumber();
-        if (houseNumber != null)
+        if (houseNumber != null && !houseNumber.isEmpty())
             customerAddress += houseNumber + "  ";
 
         String streetName = customer.getStreetName();
-        if (streetName != null)
+        if (streetName != null && !streetName.isEmpty())
             customerAddress += streetName + "  ";
 
         String city = customer.getCity();
-        if (city != null)
+        if (city != null && !city.isEmpty())
             customerAddress += city + "  ";
 
         String postalCode = customer.getPostalCode();
-        if (postalCode != null)
+        if (postalCode != null && !postalCode.isEmpty())
             customerAddress += postalCode + "  ";
 
-        if (!customerAddress.equals("")) {
+        if (!customerAddress.isEmpty()) {
             TextView address = new TextView(this);
             address.setPadding(0, 20, 0, 0);
             address.setTextSize(15);

@@ -40,6 +40,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
 
     private String barcode_format;
     private String barcode_content;
+
     /**
      * Provide logic when activity created. Mapping field, creating HTML page, loading data to page.
      *
@@ -65,9 +66,9 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             ibBarcode = (ImageButton) findViewById(R.id.ibBarcode);
             ibUnknown = (ImageButton) findViewById(R.id.ibUnknown);
 
-            if(this.getString(R.string.nfc).equals("off"))
+            if (this.getString(R.string.nfc).equals("off"))
                 ibNfc.setVisibility(View.INVISIBLE);
-            if(this.getString(R.string.scandit).equals("off"))
+            if (this.getString(R.string.scandit).equals("off"))
                 ibBarcode.setVisibility(View.INVISIBLE);
             ibNfc.setOnClickListener(this);
 
@@ -78,12 +79,12 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             webView.setWebViewClient(new MyWebViewClient());
             webView.addJavascriptInterface(new WebInterface(this), "Android");
 
-            if(barcode_content == null && barcode_format == null) {
+            if (barcode_content == null && barcode_format == null) {
                 if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
                     webView.loadUrl("file:///android_asset/pages/dummy.html");
                 } else {
-                    webView.loadUrl("https://"+Settings.getHost(this)+"/#page:debtor_order");
-                    webView.loadUrl("javascript: window.localStorage.setItem('wehandcraft.accessToken', '"+access_token+"');");
+                    webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
+                    webView.loadUrl("javascript: window.localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');");
                     webView.loadUrl("javascript: window.location.reload();");
                 }
 
@@ -120,16 +121,16 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 Toast.makeText(this, "Logged as " + name, Toast.LENGTH_LONG).show();
             } else {
                 if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
-                    webView.setWebViewClient(new WebViewClient(){
+                    webView.setWebViewClient(new WebViewClient() {
                         public void onPageFinished(WebView view, String url) {
-                            String jsString="javascript: insertBarcode('"+barcode_format+"','"+barcode_content+"')";
+                            String jsString = "javascript: insertBarcode('" + barcode_format + "','" + barcode_content + "')";
                             webView.loadUrl(jsString);
                         }
                     });
                     webView.loadUrl("file:///android_asset/pages/product.html");
                 } else {
                     webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
-                    webView.loadUrl("javascript: window.localStorage.setItem('wehandcraft.accessToken', '"+access_token+"');");
+                    webView.loadUrl("javascript: window.localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');");
                     webView.loadUrl("javascript: window.location.reload();");
                 }
             }
@@ -166,6 +167,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
 
         /**
          * Overriding URL if needed
+         *
          * @param view
          * @param url
          * @return
@@ -181,6 +183,15 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
             return true;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(webView.canGoBack()) {
+            webView.goBack();
+        } else {
+            super.onBackPressed();
         }
     }
 

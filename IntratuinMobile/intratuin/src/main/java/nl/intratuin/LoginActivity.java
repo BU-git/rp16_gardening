@@ -124,10 +124,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private String loginByCache;
     private Pattern pattern;
     private Matcher matcher;
-
-    private long tempDate;
-    //data for fingerprint
-    public static String secretKey;
     //nfc
     private NfcAdapter mNfcAdapter;
     private NFCHandler nfcHandler;
@@ -487,24 +483,19 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     @TargetApi(Build.VERSION_CODES.M)
     private void loginByFingerprint() {
-        KeyGenerator keyGenerator;
         Cipher cipher = null;
         FingerprintManager.CryptoObject cryptoObject;
 
         FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
 
-        secretKey = new String(FingerprintActivity.toByteArray(readSecretKey()));
-        if(secretKey.equals(FingerprintActivity.secretKey)){
-            Toast.makeText(this, "secret keys are equal", Toast.LENGTH_SHORT).show();
-        } else
-            Toast.makeText(this, "secret keys aren't equal", Toast.LENGTH_SHORT).show();
 
         if (cipherInit(cipher)) {
             cryptoObject = new FingerprintManager.CryptoObject(cipher);
             FingerprintHandlerLogin helper = new FingerprintHandlerLogin(this);
             helper.startAuth(fingerprintManager, cryptoObject);
         }
+
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -523,26 +514,15 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             SecretKey key = (SecretKey) keyStore.getKey(FingerprintActivity.KEY_NAME, null);
             cipher.init(Cipher.ENCRYPT_MODE, key);
             return true;
-        } catch(InvalidKeyException e){
+        } catch (InvalidKeyException e) {
             return false;
-        } catch(KeyStoreException | CertificateException | UnrecoverableKeyException
+        } catch (KeyStoreException | CertificateException | UnrecoverableKeyException
                 | IOException | NoSuchAlgorithmException e) {
             throw new RuntimeException("Failed to init Cipher", e);
         }
     }
 
-    private SecretKey readSecretKey() {
-        try {
-            KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
-            keyStore.load(null);
-            return (SecretKey) keyStore.getKey(FingerprintActivity.KEY_NAME, null);
-        } catch (KeyStoreException | NoSuchAlgorithmException | IOException
-                | CertificateException | UnrecoverableKeyException e) {
-            throw new RuntimeException("Failed to read secret key", e);
-        }
-    }
-
-    private void loginByNFC(){
+    private void loginByNFC() {
         nfcHandler = new NFCHandler();
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
@@ -551,15 +531,16 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             return;
         }
     }
+
     protected void onResume() {
         super.onResume();
-        if(mNfcAdapter!=null)
+        if (mNfcAdapter != null)
             NFCHandler.setupForegroundDispatch(this, mNfcAdapter);
     }
 
     @Override
     protected void onPause() {
-        if(mNfcAdapter!=null)
+        if (mNfcAdapter != null)
             NFCHandler.stopForegroundDispatch(this, mNfcAdapter);
         super.onPause();
     }

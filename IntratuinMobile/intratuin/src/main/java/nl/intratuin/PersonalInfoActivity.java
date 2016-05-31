@@ -3,6 +3,7 @@ package nl.intratuin;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.Button;
@@ -164,8 +165,7 @@ public class PersonalInfoActivity extends ToolBarActivity implements View.OnClic
                             Intent profilePageIntent = new Intent(this, ProfileActivity.class);
                             profilePageIntent.putExtra(CUSTOMER, customer);
                             startActivity(profilePageIntent);
-                        }
-                        else
+                        } else
                             App.getShowManager().showMessage("Sorry, error saving, try again", this);
                     } else
                         App.getShowManager().showMessage("Error! Null response!", this);
@@ -183,12 +183,12 @@ public class PersonalInfoActivity extends ToolBarActivity implements View.OnClic
     }
 
     public static java.sql.Date parseDate(String strDate) {
-        java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("dd.MM.yyyy");
-        try {
-            return new java.sql.Date(simpleDateFormat.parse(strDate).getTime());
-        } catch (ParseException e) {
-            throw new RuntimeException("ParseDate Error!!! ", e);
-        }
+            java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("dd.MM.yyyy");
+            try {
+                return new java.sql.Date(simpleDateFormat.parse(strDate).getTime());
+            } catch (ParseException e) {
+                throw new RuntimeException("ParseDate Error!!! ", e);
+            }
     }
 
     private void changedCustomer() {
@@ -200,7 +200,9 @@ public class PersonalInfoActivity extends ToolBarActivity implements View.OnClic
         customer.setHouseNumber(houseNumber.getText().toString());
         customer.setPostalCode(postcode.getText().toString());
 
-        java.sql.Date changedBirthday = parseDate(birthday.getText().toString());
+        java.sql.Date changedBirthday = (birthday.getText() != null && !birthday.getText().toString().isEmpty())
+                ? parseDate(birthday.getText().toString())
+                : null;
         customer.setBirthday(changedBirthday);
 
         if (rbMale.isChecked())
