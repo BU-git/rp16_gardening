@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.JavascriptInterface;
@@ -84,8 +85,6 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                     webView.loadUrl("file:///android_asset/pages/dummy.html");
                 } else {
                     webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
-                    webView.loadUrl("javascript: window.localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');");
-                    webView.loadUrl("javascript: window.location.reload();");
                 }
 
                 //show user login
@@ -130,8 +129,6 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                     webView.loadUrl("file:///android_asset/pages/product.html");
                 } else {
                     webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
-                    webView.loadUrl("javascript: window.localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');");
-                    webView.loadUrl("javascript: window.location.reload();");
                 }
             }
         } else {
@@ -184,11 +181,15 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             startActivity(intent);
             return true;
         }
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            webView.loadUrl("javascript:localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');");
+        }
     }
 
     @Override
     public void onBackPressed() {
-        if(webView.canGoBack()) {
+        if (webView.canGoBack()) {
             webView.goBack();
         } else {
             super.onBackPressed();
