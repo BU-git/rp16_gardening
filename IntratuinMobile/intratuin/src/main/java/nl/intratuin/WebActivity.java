@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,10 +22,16 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
+import java.util.Random;
+import java.util.Vector;
+
 import nl.intratuin.manager.AuthManager;
 import nl.intratuin.manager.RequestResponseManager;
 import nl.intratuin.settings.BuildType;
 import nl.intratuin.settings.Settings;
+
+import nl.intratuin.net.WebSocket;
 
 /**
  * The class {@code WebActivity} is used to provide logic on Web Activity
@@ -36,7 +43,6 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
     private WebView webView;
     private ImageButton ibNfc;
     private ImageButton ibBarcode;
-    private ImageButton ibUnknown;
     private String access_token;
 
     private String barcode_format;
@@ -65,7 +71,6 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             webView = (WebView) findViewById(R.id.webView);
             ibNfc = (ImageButton) findViewById(R.id.ibNFC);
             ibBarcode = (ImageButton) findViewById(R.id.ibBarcode);
-            ibUnknown = (ImageButton) findViewById(R.id.ibUnknown);
 
             if (this.getString(R.string.nfc).equals("off"))
                 ibNfc.setVisibility(View.INVISIBLE);
@@ -78,7 +83,8 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             webSettings.setDomStorageEnabled(true);
             webSettings.setJavaScriptEnabled(true);
             webView.setWebViewClient(new MyWebViewClient());
-            webView.addJavascriptInterface(new WebInterface(this), "Android");
+            Handler handler = new Handler();
+            webView.addJavascriptInterface(new WebSocketFactory(handler, webView), "WebSocketFactory");
 
             if (barcode_content == null && barcode_format == null) {
                 if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
@@ -150,8 +156,6 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 scannerIntent.putExtra(LoginActivity.ACCESS_TOKEN, access_token);
                 startActivity(scannerIntent);
                 break;
-            case R.id.ibUnknown:
-                break;
         }
     }
 
@@ -196,19 +200,20 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    /**
-     * Class {@code WebInterface} provide web interface
-     */
-    private class WebInterface {
-        private Context cont;
-
+    public class WebSocketFactory {
+        private Vector<WebSocket> socketList = new Vector<WebSocket>();
+        private Handler handler;
+        /** The app view. */
+        WebView appView;
         /**
-         * Instantiates a new Web interface.
+         * Instantiates a new web socket factory.
          *
-         * @param c the c
+         * @param appView
+         * the app view
          */
-        WebInterface(Context c) {
-            cont = c;
+        public WebSocketFactory(Handler h, WebView appView) {
+            this.appView = appView;
+            this.handler = h;
         }
 
         /**
@@ -245,6 +250,41 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                         Toast.LENGTH_LONG).show();
             else
                 startActivity(new Intent(WebActivity.this, FingerprintActivity.class));
+        }
+
+        @JavascriptInterface
+        public Vector<WebSocket> getSocketList() {
+            return socketList;
+        }
+        @JavascriptInterface
+        public WebSocket getInstance(String url) {
+        // use Draft76 by default
+            return getInstance(url, WebSocket.Draft.DRAFT76);
+        }
+        @JavascriptInterface
+        public WebSocket getInstance(String url, WebSocket.Draft draft) {
+            WebSocket socket = null;
+            Thread th = null;
+            try {
+                socket = new WebSocket(handler, appView, new URI(url), draft, getRandonUniqueId());
+                socketList.add(socket);
+                th = socket.connect();
+                return socket;
+            } catch (Exception e) {
+//Log.v("websocket", e.toString());
+                if(th != null) {
+                    th.interrupt();
+                }
+            }
+            return null;
+        }
+        /**
+         * Generates random unique ids for WebSocket instances
+         *
+         * @return String
+         */
+        private String getRandonUniqueId() {
+            return "WEBSOCKET." + new Random().nextInt(100);
         }
     }
 }

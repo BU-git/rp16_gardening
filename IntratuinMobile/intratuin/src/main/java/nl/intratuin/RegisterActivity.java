@@ -202,6 +202,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                                 errorStr = "Error! Null response!";
                             else
                                 errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
+                            Thread.sleep(10,0);//Have no idea why, but we need this 0.01sec sleep to avoid execution error. Possible concurrent execution?
                             App.getShowManager().showMessage(errorStr, RegisterActivity.this);
                         }
                     } catch (InterruptedException | ExecutionException | JSONException e) {
