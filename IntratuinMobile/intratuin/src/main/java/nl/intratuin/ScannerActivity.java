@@ -30,7 +30,7 @@ import nl.intratuin.settings.Settings;
 public class ScannerActivity extends AppCompatActivity implements ScanditSDKOnScanListener {
 
     private ScanditSDKBarcodePicker mPicker;
-    private final String KEY = "QIGbqG4vLkqJN+EXOqWUxvS0V3akzdlwjwbUTueP8C4";
+    private final String KEY = "4R+u6NGkE0KUkuaFA2MgbdDI+OTC097HIPuiHNq+lbg";
 
     public static final String FORMAT = "format";
     public static final String CONTENT = "content";
