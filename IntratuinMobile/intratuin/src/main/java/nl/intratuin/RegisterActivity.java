@@ -295,6 +295,9 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                 if (!hasFocus && !matcher.matches()) {
                     showPassError();
                 }
+                else if(hasFocus){
+                    showPassRequirements();
+                }
             }
         });
 
@@ -329,7 +332,11 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
     private void showPassError() {
         if (etPassword.getText().length() == 0)
             etPassword.setError("Password can't be blank!");
-        else etPassword.setError("Password has to be 6-15 chars, at least 1 small letter, " +
+        else showPassRequirements();
+    }
+
+    private void showPassRequirements() {
+        etPassword.setError("Password has to be 6-15 chars, at least 1 small letter, " +
                 "1 cap. letter and 1 number");
     }
 
