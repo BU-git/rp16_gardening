@@ -30,19 +30,10 @@ public class UriConfigParserApiImpl extends AbstractUriConfigParser {
             uriConfig.setLogin(new URL("http", Settings.getHost(context), context.getString(R.string.login_api)).toURI());
             uriConfig.setRegistration(new URL("https", context.getString(R.string.registration_host),
                     context.getString(R.string.registration_relative) + context.getString(R.string.company_id)).toURI());
-            uriConfig.setTwitterLogin(null);
-            uriConfig.setFacebookLogin(null);
-            uriConfig.setCategoryList(null);
-            uriConfig.setProductSearch(null);
             uriConfig.setUserInfo(new URL("http", Settings.getHost(context), context.getString(R.string.info_api)
                     + context.getString(R.string.company_id) + context.getString(R.string.info_api_end)).toURI());
-            uriConfig.setSearch(null);
-            uriConfig.setProductsInCategory(null);
             uriConfig.setBarcode(new URL("http", Settings.getHost(context), context.getString(R.string.barcode_api)
                     + context.getString(R.string.company_id) + context.getString(R.string.barcode_api_ending)).toURI());
-            uriConfig.setCustomerByToken(null);
-            uriConfig.setCustomerPersonal(null);
-            uriConfig.setRegisterFingerprint(null);
             Settings.setUriConfig(uriConfig);
         } catch (URISyntaxException e) {
             e.printStackTrace();

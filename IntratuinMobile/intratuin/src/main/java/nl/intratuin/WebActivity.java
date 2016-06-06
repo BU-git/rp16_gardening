@@ -87,11 +87,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             webView.addJavascriptInterface(new WebSocketFactory(handler, webView), "WebSocketFactory");
 
             if (barcode_content == null && barcode_format == null) {
-                if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
-                    webView.loadUrl("file:///android_asset/pages/dummy.html");
-                } else {
-                    webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
-                }
+                webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
 
                 //show user login
                 String name = "anonymous";
@@ -125,17 +121,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
 
                 Toast.makeText(this, "Logged as " + name, Toast.LENGTH_LONG).show();
             } else {
-                if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
-                    webView.setWebViewClient(new WebViewClient() {
-                        public void onPageFinished(WebView view, String url) {
-                            String jsString = "javascript: insertBarcode('" + barcode_format + "','" + barcode_content + "')";
-                            webView.loadUrl(jsString);
-                        }
-                    });
-                    webView.loadUrl("file:///android_asset/pages/product.html");
-                } else {
-                    webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
-                }
+                webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
             }
         } else {
             App.getShowManager().showMessage("No access token found!", WebActivity.this);

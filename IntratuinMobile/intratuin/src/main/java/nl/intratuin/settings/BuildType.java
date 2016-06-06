@@ -6,4 +6,4 @@ package nl.intratuin.settings;
  * @author Ivan
  * @since 22.04.2016.
  */
-public enum BuildType { LOCAL, DEPLOYED, API, DEMOAPI }
+public enum BuildType { API, DEMOAPI }

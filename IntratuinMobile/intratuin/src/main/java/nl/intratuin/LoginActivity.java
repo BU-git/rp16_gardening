@@ -73,7 +73,6 @@ import nl.intratuin.handlers.FingerprintHandlerLogin;
 import nl.intratuin.handlers.NFCHandler;
 import nl.intratuin.manager.AuthManager;
 import nl.intratuin.net.RequestResponse;
-import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;
 
 /**
@@ -103,6 +102,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
      * The constant PASSWORD_PATTERN is used for validation user password
      */
     public static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,15})";
+
+    public static String credentials;
 
     private CallbackManager callbackManager;
     private LoginButton lbFacebook;
@@ -229,43 +230,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         bTwitterHidden.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-                TwitterSession session = result.data;
-                twitterLoginUri = Settings.getUriConfig().getTwitterLogin();
-                if (twitterLoginUri != null) {
-                    String accessTokenTwitter = session.getAuthToken().token;
-                    String secretAccessTokenTwitter = session.getAuthToken().secret;
-                    MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-                    map.add("twitter_token", accessTokenTwitter);
-                    map.add("twitter_secret", secretAccessTokenTwitter);
-                    try {
-                        JSONObject response;
-                        AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
-                                new RequestResponse<MultiValueMap<String, String>, String>(twitterLoginUri, 3,
-                                        String.class, App.getShowManager(), LoginActivity.this).execute(map);
-                        response = new JSONObject(jsonRespond.get());
-                        if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
-                            App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_ACCESS_TOKEN, accessTokenTwitter);
-                            App.getAuthManager().loginAndCache(AuthManager.PREF_TWITTER_SECRET_ACCESS_TOKEN, secretAccessTokenTwitter);
-                            App.getAuthManager().loginAndCache(AuthManager.PREF_TIME, String.valueOf(System.currentTimeMillis()));
-                            String accessKey = response.getString("access_token");
 
-                            if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
-                                startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
-                            else
-                                startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
-                            finish();
-                        } else {
-                            String errorStr;
-                            if (response == null)
-                                errorStr = "Error! Null response!";
-                            else
-                                errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
-                            App.getShowManager().showMessage(errorStr, LoginActivity.this);
-                        }
-                    } catch (InterruptedException | ExecutionException | JSONException e) {
-                        App.getShowManager().showMessage("Encryption error!", LoginActivity.this);
-                    }
-                }
             }
 
             @Override
@@ -279,42 +244,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
             @Override
             public void onSuccess(LoginResult loginResult) {
-                String accessToken = loginResult.getAccessToken().getToken();
-                facebookLoginUri = Settings.getUriConfig().getFacebookLogin();
-                if (facebookLoginUri != null) {
-                    MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-                    map.add("facebook_token", loginResult.getAccessToken().getToken());
 
-                    AsyncTask<MultiValueMap<String, String>, Void, String> jsonRespond =
-                            new RequestResponse<MultiValueMap<String, String>, String>(facebookLoginUri, 3,
-                                    String.class, App.getShowManager(), LoginActivity.this).execute(map);
-                    JSONObject response;
-                    try {
-                        response = new JSONObject(jsonRespond.get());
-                        if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
-                            App.getAuthManager().loginAndCache(AuthManager.PREF_FACEBOOK, accessToken);
-                            App.getAuthManager().loginAndCache(AuthManager.PREF_TIME, String.valueOf(System.currentTimeMillis()));
-
-                            String accessKey = response.getString("access_token");
-
-                            if (Settings.getMainscreen(LoginActivity.this) == Mainscreen.WEB)
-                                startActivity(new Intent(LoginActivity.this, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
-                            else
-                                startActivity(new Intent(LoginActivity.this, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
-                            LoginManager.getInstance().logOut();
-                            finish();
-                        } else {
-                            String errorStr;
-                            if (response == null)
-                                errorStr = "Error! Null response!";
-                            else
-                                errorStr = "Error " + response.getString("code") + ": " + response.getString("error") + ": " + response.getString("error_description");
-                            App.getShowManager().showMessage(errorStr, LoginActivity.this);
-                        }
-                    } catch (InterruptedException | ExecutionException | JSONException e) {
-                        App.getShowManager().showMessage("Error: " + e.getMessage(), LoginActivity.this);
-                    }
-                }
             }
 
             @Override
@@ -462,10 +392,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         App.getAuthManager().loginAndCache(AuthManager.PREF_TIME, String.valueOf(System.currentTimeMillis()));
                     }
 
-                    if (Settings.getMainscreen(context) == Mainscreen.WEB)
-                        context.startActivity(new Intent(context, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
-                    else
-                        context.startActivity(new Intent(context, SearchActivity.class).putExtra(ACCESS_TOKEN, accessKey));
+                    context.startActivity(new Intent(context, WebActivity.class).putExtra(ACCESS_TOKEN, accessKey));
                     finish();
                 } else if(response != null){
                     String errorStr;

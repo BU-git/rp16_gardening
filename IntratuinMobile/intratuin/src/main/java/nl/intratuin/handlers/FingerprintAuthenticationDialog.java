@@ -4,21 +4,15 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.widget.Toast;
 
 import nl.intratuin.App;
 import nl.intratuin.FingerprintActivity;
 import nl.intratuin.LoginActivity;
-import nl.intratuin.ProfileActivity;
 import nl.intratuin.R;
 import nl.intratuin.RegisterActivity;
-import nl.intratuin.SearchActivity;
 import nl.intratuin.WebActivity;
-import nl.intratuin.manager.AuthManager;
-import nl.intratuin.settings.Mainscreen;
-import nl.intratuin.settings.Settings;
 
 public class FingerprintAuthenticationDialog {
     public static final String Fingerprint_FILENAME = "fingerprint";
@@ -43,10 +37,7 @@ public class FingerprintAuthenticationDialog {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
-                                if (Settings.getMainscreen(context) == Mainscreen.WEB)
-                                    context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
-                                else
-                                    context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
+                                context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
                             }
                         });
         android.app.AlertDialog alert = builder.create();
@@ -68,10 +59,7 @@ public class FingerprintAuthenticationDialog {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
-                                if (Settings.getMainscreen(context) == Mainscreen.WEB)
-                                    context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
-                                else
-                                    context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
+                                context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
                             }
                         });
         android.app.AlertDialog alert = builder.create();
@@ -84,11 +72,8 @@ public class FingerprintAuthenticationDialog {
         builder.setView(R.layout.confirm_fingerprint)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        App.getAuthManagerOfFingerprint().loginAndCache(FingerprintActivity.secretKey, ProfileActivity.credentials);
-                        if (Settings.getMainscreen(context) == Mainscreen.WEB)
-                                context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
-                         else
-                                context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
+                        App.getAuthManagerOfFingerprint().loginAndCache(FingerprintActivity.secretKey, LoginActivity.credentials);
+                        context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
 
                         Toast.makeText(context, "login with fingerprint is activated", Toast.LENGTH_LONG).show();
                     }
@@ -97,10 +82,7 @@ public class FingerprintAuthenticationDialog {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
-                                if (Settings.getMainscreen(context) == Mainscreen.WEB)
-                                    context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
-                                else
-                                    context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
+                                context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
                             }
                         });
         android.app.AlertDialog alert = builder.create();

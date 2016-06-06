@@ -36,20 +36,6 @@ public class Settings {
     }
 
     /**
-     * Gets mainscreen.
-     *
-     * @param context the context
-     * @return the mainscreen
-     */
-    public static Mainscreen getMainscreen(Context context) {
-        BuildType type = getBuildType(context);
-        if(type==BuildType.API || type==BuildType.DEMOAPI)
-            return Mainscreen.WEB;
-        String screen=context.getString(R.string.mainscreen);
-        return Mainscreen.valueOf(screen);
-    }
-
-    /**
      * Get host string.
      *
      * @param context the context
@@ -58,14 +44,10 @@ public class Settings {
     public static String getHost(Context context){
         BuildType type=getBuildType(context);
         switch (type){
-            case DEPLOYED:
-                return context.getString(R.string.host_deployed);
             case API:
                 return context.getString(R.string.host_api);
-            case DEMOAPI:
-                return context.getString(R.string.host_demoapi);
             default:
-                return context.getString(R.string.host_local);
+                return context.getString(R.string.host_demoapi);
         }
     }
 

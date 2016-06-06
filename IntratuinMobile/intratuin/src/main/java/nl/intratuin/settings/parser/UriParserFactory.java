@@ -10,11 +10,6 @@ import nl.intratuin.settings.parser.impl.*;
  */
 public class UriParserFactory {
     public static AbstractUriConfigParser getParserImplementation(BuildType buildType, Context context){
-        switch (buildType){
-            case DEPLOYED: {return new UriConfigParserDeployedImpl(context);}
-            case DEMOAPI:
-            case API:{return new UriConfigParserApiImpl(context);}
-            default: return new UriConfigParserLocalImpl(context);
-        }
+        return new UriConfigParserApiImpl(context);
     }
 }

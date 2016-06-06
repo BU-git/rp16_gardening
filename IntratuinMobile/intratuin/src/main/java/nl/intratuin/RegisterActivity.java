@@ -30,13 +30,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.net.URI;
-import java.sql.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import nl.intratuin.net.RequestResponse;
-import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;
 
 /**
@@ -48,8 +46,8 @@ import nl.intratuin.settings.Settings;
  */
 public class RegisterActivity extends AppCompatActivity implements OnClickListener {
 
-    public static final int NOTIFY_ID = 1; // Уникальный индификатор вашего уведомления в пределах класса
-    public static String responseAccessToken; // Уникальный индификатор вашего уведомления в пределах класса
+    public static final int NOTIFY_ID = 1; // Unique notification identifier
+    public static String responseAccessToken;
 
     private EditText etFirstName;
     private EditText etTussen;
@@ -174,16 +172,12 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                             }
                             response = new JSONObject(jsonLoginRespond.get());
                             if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
-                                ProfileActivity.credentials = etEmail.getText().toString() + ":" + etPassword.getText().toString();
+                                LoginActivity.credentials = etEmail.getText().toString() + ":" + etPassword.getText().toString();
                                 responseAccessToken = response.getString("access_token");
 
                                 if (cbRegisterFingerprint.isChecked())
                                     startActivity(new Intent(this, FingerprintActivity.class));
-                                else if (Settings.getMainscreen(RegisterActivity.this) == Mainscreen.WEB) {
-                                    startActivity(new Intent(RegisterActivity.this, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, responseAccessToken));
-                                } else {
-                                    startActivity(new Intent(RegisterActivity.this, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, responseAccessToken));
-                                }
+                                else startActivity(new Intent(RegisterActivity.this, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, responseAccessToken));
 
                                 showNotification();
 
