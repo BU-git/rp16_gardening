@@ -90,6 +90,18 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
                     webView.loadUrl("file:///android_asset/pages/dummy.html");
                 } else {
+                    webView.setWebViewClient(new WebViewClient() {
+                        public void onPageFinished(WebView view, String url) {
+                            /*String jsString = "javascript: var x = document.getElementsByClassName('dropdown-menu animated fadeInRight m-t-xs');" +
+                                    "alert(x[0].innerHTML);";*/
+                            String jsString = "javascript: var x = document.getElementsByClassName('dropdown-menu animated fadeInRight m-t-xs');" +
+                                    "var c1=x[0].childNodes;" +
+                                    "var c2=c1[3].childNodes;" +
+                                    "var logoutLink=c2[0];" +
+                                    "logoutLink.onclick=WebSocketFactory.Logout();";
+                            webView.loadUrl(jsString);
+                        }
+                    });
                     webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
                 }
 
