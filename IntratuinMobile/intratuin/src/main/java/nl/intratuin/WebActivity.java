@@ -82,7 +82,6 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             WebSettings webSettings = webView.getSettings();
             webSettings.setDomStorageEnabled(true);
             webSettings.setJavaScriptEnabled(true);
-            webView.setWebViewClient(new MyWebViewClient());
             Handler handler = new Handler();
             webView.addJavascriptInterface(new WebSocketFactory(handler, webView), "WebSocketFactory");
 
@@ -90,6 +89,16 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
                     webView.loadUrl("file:///android_asset/pages/dummy.html");
                 } else {
+                    webView.setWebViewClient(new WebViewClient() {
+                        public void onPageFinished(WebView view, String url) {
+                            String jsString =  "javascript:localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');"+
+                                        "var x = document.getElementsByClassName('dropdown-menu animated fadeInRight m-t-xs');" +
+                                        "var c1=x[0].childNodes;" +
+                                        "var c2=c1[5];" +
+                                        "c2.addEventListener('touchstart',function() { WebSocketFactory.Logout(); } );";
+                            webView.loadUrl(jsString);
+                        }
+                    });
                     webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
                 }
 
@@ -156,38 +165,6 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 scannerIntent.putExtra(LoginActivity.ACCESS_TOKEN, access_token);
                 startActivity(scannerIntent);
                 break;
-        }
-    }
-
-    /**
-     * Class {@code MyWebViewClient} is Configured implementation of WebViewClient
-     *
-     * @see WebViewClient
-     */
-    private class MyWebViewClient extends WebViewClient {
-
-        /**
-         * Overriding URL if needed
-         *
-         * @param view
-         * @param url
-         * @return
-         */
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (Uri.parse(url).getHost().equals(Settings.getHost(WebActivity.this))) {
-                // On same host, do not override; let WebView load the page
-                view.loadUrl(url);
-                return false;
-            }
-            // Otherwise, the link is not for a page on same host, launch browser
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(intent);
-            return true;
-        }
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            webView.loadUrl("javascript:localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');");
         }
     }
 
