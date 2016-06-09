@@ -59,14 +59,15 @@ public class ProductDetailsPageActivity extends ToolBarActivity {
             currentDate = simpleDateFormat.format(new Date()).toString();
             Cursor cursor = sqLiteDatabase.query(ProductContract.ProductEntity.TABLE_NAME,
                     new String[]{ProductContract.ProductEntity._ID},
-                    ProductContract.ProductEntity.PRODUCT_ID + " = ? AND " + ProductContract.ProductEntity.DATE + "= ?",
-                    new String[]{"" + productBySearch.getProductId(), currentDate},
+                    ProductContract.ProductEntity.PRODUCT_ID + " = ? AND " +
+                            ProductContract.ProductEntity.DATE + "= ? AND " + ProductContract.ProductEntity.CUSTOMER_NAME + "= ?",
+                    new String[]{"" + productBySearch.getProductId(), currentDate, ToolBarActivity.profileItem},
                     null, null, null);
             if (cursor.getCount() == 0) {
                 cursor = sqLiteDatabase.query(ProductContract.ProductEntity.TABLE_NAME,
                         new String[]{ProductContract.ProductEntity._ID},
-                        ProductContract.ProductEntity.PRODUCT_ID + " = ?",
-                        new String[]{"" + productBySearch.getProductId()},
+                        ProductContract.ProductEntity.PRODUCT_ID + " = ? AND " + ProductContract.ProductEntity.CUSTOMER_NAME + "= ?",
+                        new String[]{"" + productBySearch.getProductId(), ToolBarActivity.profileItem},
                         null, null, null);
                 if (cursor.getCount() != 0) {
                     int id = cursor.getInt(cursor.getColumnIndex(ProductContract.ProductEntity._ID));
@@ -96,11 +97,7 @@ public class ProductDetailsPageActivity extends ToolBarActivity {
         values.put(ProductContract.ProductEntity.CATEGORY_ID, productBySearch.getCategoryId());
         values.put(ProductContract.ProductEntity.BARCODE, productBySearch.getBarcode());
         values.put(ProductContract.ProductEntity.STATUS, "review");
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        String currentDate = simpleDateFormat.format(new Date()).toString();
         values.put(ProductContract.ProductEntity.DATE, currentDate);
-        Toast.makeText(this, currentDate, Toast.LENGTH_SHORT).show();
 
         sqLiteDatabase.insert(ProductContract.ProductEntity.TABLE_NAME, null, values);
     }
