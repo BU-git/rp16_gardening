@@ -11,6 +11,7 @@ import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +37,7 @@ import nl.intratuin.handlers.FingerprintAuthenticationDialog;
 import nl.intratuin.handlers.FingerprintHandler;
 
 @TargetApi(Build.VERSION_CODES.M)
-public class FingerprintActivity extends ToolBarActivity {
+public class FingerprintActivity extends AppCompatActivity {
     public static final String KEY_NAME = "fingerprint_key";
     public static String secretKey;
 
@@ -52,8 +53,8 @@ public class FingerprintActivity extends ToolBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_register_fingerprint);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register_fingerprint);
 
         bSensor = (ImageView) findViewById(R.id.bSensor);
         textUnderSensor = (TextView) findViewById(R.id.textUnderSensor);

@@ -9,7 +9,7 @@ public class ProductContract {
     public static final String CREATE =
             "CREATE TABLE IF NOT EXISTS " + ProductEntity.TABLE_NAME + " ("
                     + ProductEntity._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + ProductEntity.CUSTOMER_NAME + " INTEGER NOT NULL,"
+                    + ProductEntity.CUSTOMER_NAME + " TEXT NOT NULL,"
                     + ProductEntity.PRODUCT_ID + " INTEGER NOT NULL,"
                     + ProductEntity.NAME + " TEXT NOT NULL,"
                     + ProductEntity.PRICE + " DOUBLE NOT NULL,"

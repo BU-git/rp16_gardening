@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,7 +18,7 @@ import nl.intratuin.manager.RequestResponseManager;
 import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;
 
-public class NFCActivity extends ToolBarActivity {
+public class NFCActivity extends AppCompatActivity {
     private NfcAdapter mNfcAdapter;
     private NFCHandler nfcHandler;
 
@@ -28,12 +29,12 @@ public class NFCActivity extends ToolBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfc);
         final Bundle extra = getIntent().getExtras();
         if(extra != null){
             accessToken=extra.getString(LoginActivity.ACCESS_TOKEN);
         }
-        super.onCreate(savedInstanceState);
 
         ivNFC = (ImageView) findViewById(R.id.ivNFC);
         tvNFC = (TextView) findViewById(R.id.tvNFC);

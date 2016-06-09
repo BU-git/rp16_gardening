@@ -101,6 +101,9 @@
         <activity
             android:name=".NotificationActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".CachedProductListActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
