@@ -1,7 +1,11 @@
 package nl.intratuin;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -45,6 +49,29 @@ public class ScannerActivity extends AppCompatActivity implements ScanditSDKOnSc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA);
+        if(permission == PackageManager.PERMISSION_GRANTED) {
+            scannerInitialize();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA}, 1);
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            scannerInitialize();
+        } else {
+            Toast.makeText(this, "No camera permission!", Toast.LENGTH_LONG).show();
+            return;
+        }
+    }
+
+    private void scannerInitialize(){
         final Bundle extra = getIntent().getExtras();
         if(extra != null){
             accessToken=extra.getString(LoginActivity.ACCESS_TOKEN);
@@ -69,7 +96,8 @@ public class ScannerActivity extends AppCompatActivity implements ScanditSDKOnSc
      */
     @Override
     protected void onResume() {
-        mPicker.startScanning();
+        if(mPicker!=null)
+            mPicker.startScanning();
         super.onResume();
     }
 
@@ -78,7 +106,8 @@ public class ScannerActivity extends AppCompatActivity implements ScanditSDKOnSc
      */
     @Override
     protected void onPause() {
-        mPicker.stopScanning();
+        if(mPicker!=null)
+            mPicker.stopScanning();
         super.onPause();
     }
 
