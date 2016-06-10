@@ -11,6 +11,7 @@ import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -54,6 +55,29 @@ public class FingerprintActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.USE_FINGERPRINT);
+        if(permission == PackageManager.PERMISSION_GRANTED) {
+            fingerprintInitialize();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.USE_FINGERPRINT}, 1);
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            fingerprintInitialize();
+        } else {
+            Toast.makeText(this, "No Fingerprint permission!", Toast.LENGTH_LONG).show();
+            return;
+        }
+    }
+
+    private void fingerprintInitialize(){
         setContentView(R.layout.activity_register_fingerprint);
 
         bSensor = (ImageView) findViewById(R.id.bSensor);
