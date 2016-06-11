@@ -2,15 +2,11 @@ package nl.intratuin;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -26,12 +22,12 @@ import java.net.URI;
 import java.util.Random;
 import java.util.Vector;
 
+import nl.intratuin.dto.Product;
 import nl.intratuin.manager.AuthManager;
 import nl.intratuin.manager.RequestResponseManager;
+import nl.intratuin.net.WebSocket;
 import nl.intratuin.settings.BuildType;
 import nl.intratuin.settings.Settings;
-
-import nl.intratuin.net.WebSocket;
 
 /**
  * The class {@code WebActivity} is used to provide logic on Web Activity
@@ -89,17 +85,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
                     webView.loadUrl("file:///android_asset/pages/dummy.html");
                 } else {
-                    webView.setWebViewClient(new WebViewClient() {
-                        public void onPageFinished(WebView view, String url) {
-                            String jsString =  "javascript:localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');"+
-                                        "var x = document.getElementsByClassName('dropdown-menu animated fadeInRight m-t-xs');" +
-                                        "var c1=x[0].childNodes;" +
-                                        "var c2=c1[5];" +
-                                        "c2.addEventListener('touchstart',function() { WebSocketFactory.Logout(); } );";
-                            webView.loadUrl(jsString);
-                        }
-                    });
-                    webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
+                    loadDummyPage();
                 }
 
                 //show user login
@@ -137,8 +123,18 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
                     webView.setWebViewClient(new WebViewClient() {
                         public void onPageFinished(WebView view, String url) {
-                            String jsString = "javascript: insertBarcode('" + barcode_format + "','" + barcode_content + "')";
-                            webView.loadUrl(jsString);
+                            try {
+                                Product product = ScannerActivity.getProductByBarcode(barcode_content, WebActivity.this);
+                                String jsString = "javascript: insertData('" + product.getProductId() + "','" + product.getProductName() + "'," +
+                                        "'"+getCategoryName(product.getCategoryId(), WebActivity.this)+"','"+product.getProductPrice()+"')";
+                                webView.loadUrl(jsString);
+                            } catch(JSONException e){
+                                App.getShowManager().showMessage("Error! No response.", WebActivity.this);
+                                loadDummyPage();
+                            } catch(RuntimeException e){
+                                App.getShowManager().showMessage(e.getMessage(), WebActivity.this);
+                                loadDummyPage();
+                            }
                         }
                     });
                     webView.loadUrl("file:///android_asset/pages/product.html");
@@ -150,6 +146,46 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             App.getShowManager().showMessage("No access token found!", WebActivity.this);
             startActivity(new Intent(WebActivity.this, LoginActivity.class));
         }
+    }
+
+    private void loadDummyPage() {
+        webView.setWebViewClient(new WebViewClient() {
+            public void onPageFinished(WebView view, String url) {
+                String jsString = "javascript:localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');" +
+                        "var x = document.getElementsByClassName('dropdown-menu animated fadeInRight m-t-xs');" +
+                        "var c1=x[0].childNodes;" +
+                        "var c2=c1[5];" +
+                        "c2.addEventListener('touchstart',function() { WebSocketFactory.Logout(); } );";
+                webView.loadUrl(jsString);
+            }
+        });
+        webView.loadUrl("file:///android_asset/pages/dummy.html");
+    }
+
+    private String getCategoryName(int id, Context context){
+        String uri = Settings.getUriConfig().getCategoryName().toString();
+        uri += "/{id}";
+        RequestResponseManager<String> managerLoader = new RequestResponseManager(context, App.getShowManager(), String.class);
+        String jsonRespond = managerLoader.loaderFromWebService(uri, ""+id);
+        jsonRespond=jsonRespond.substring(1,jsonRespond.length()-1);
+        JSONObject response = null;
+        try {
+            response = new JSONObject(jsonRespond);
+            if (response != null && response.has("categoryId")) {
+                return response.getString("name");
+            } else {
+                String errorStr;
+                if (response == null)
+                    errorStr = "Error! Null response!";
+                else
+                    errorStr = "Error " + response.getString("code") + ": " + response.getString("error_description");
+                throw new RuntimeException(errorStr);
+            }
+        } catch (JSONException e) {
+            App.getShowManager().showMessage("Error! No response.", context);
+        }
+
+        return "";
     }
 
     @Override

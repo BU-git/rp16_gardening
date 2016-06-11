@@ -1,6 +1,7 @@
 package nl.intratuin;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -121,36 +122,12 @@ public class ScannerActivity extends AppCompatActivity implements ScanditSDKOnSc
         scanSession.stopScanning();
         for (final ScanditSDKCode code : scanSession.getNewlyDecodedCodes()) {
             if (Settings.getMainscreen(ScannerActivity.this) == Mainscreen.SEARCH) {
-                Product productByBarcode = new Product();
-
-                String uri = Settings.getUriConfig().getBarcode().toString();
-                uri += "/{code}";
-                RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);
-                String jsonRespond = managerLoader.loaderFromWebService(uri, code.getData());
-                try {
-                    JSONObject response = new JSONObject(jsonRespond);
-                    if (response != null && response.has("productId")) {
-                        productByBarcode.setProductId(Integer.parseInt(response.getString("productId")));
-                        productByBarcode.setCategoryId(Integer.parseInt(response.getString("categoryId")));
-                        productByBarcode.setProductName(response.getString("productName"));
-                        productByBarcode.setProductPrice(Double.parseDouble(response.getString("productPrice")));
-                        productByBarcode.setProductImage(response.getString("productImage"));
-                        productByBarcode.setBarcode(Long.parseLong(response.getString("barcode")));
-
-                        Intent productPageIntent = new Intent(ScannerActivity.this, ProductDetailsPageActivity.class);
-                        productPageIntent.putExtra(SearchActivity.PRODUCT, productByBarcode);
-                        startActivity(productPageIntent);
-                    } else {
-                        String errorStr;
-                        if (response == null)
-                            errorStr = "Error! Null response!";
-                        else
-                            errorStr = "Error " + response.getString("code") + ": " + response.getString("error_description");
-                        Toast.makeText(this, errorStr, Toast.LENGTH_LONG).show();
-                        finish();
-                    }
-                } catch (JSONException e) {
-                    App.getShowManager().showMessage(e.getMessage(), ScannerActivity.this);
+                try{
+                    getProductByBarcode(code.getData(),this);
+                } catch(JSONException e){
+                    App.getShowManager().showMessage("Error! No response.", this);
+                } catch(RuntimeException e){
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } else {
                 Intent webPageIntent = new Intent(ScannerActivity.this, WebActivity.class);
@@ -161,5 +138,32 @@ public class ScannerActivity extends AppCompatActivity implements ScanditSDKOnSc
                 finish();
             }
         }
+    }
+
+    public static Product getProductByBarcode(String barcode, Context context) throws JSONException, RuntimeException{
+        Product productByBarcode = new Product();
+
+        String uri = Settings.getUriConfig().getBarcode().toString();
+        uri += "/{code}";
+        RequestResponseManager<String> managerLoader = new RequestResponseManager(context, App.getShowManager(), String.class);
+        String jsonRespond = managerLoader.loaderFromWebService(uri, barcode);
+        JSONObject response = new JSONObject(jsonRespond);
+        if (response != null && response.has("productId")) {
+            productByBarcode.setProductId(Integer.parseInt(response.getString("productId")));
+            productByBarcode.setCategoryId(Integer.parseInt(response.getString("categoryId")));
+            productByBarcode.setProductName(response.getString("productName"));
+            productByBarcode.setProductPrice(Double.parseDouble(response.getString("productPrice")));
+            productByBarcode.setProductImage(response.getString("productImage"));
+            productByBarcode.setBarcode(Long.parseLong(response.getString("barcode")));
+        } else {
+            String errorStr;
+            if (response == null)
+                errorStr = "Error! Null response!";
+            else
+                errorStr = "Error " + response.getString("code") + ": " + response.getString("error_description");
+            throw new RuntimeException(errorStr);
+        }
+
+        return productByBarcode;
     }
 }
