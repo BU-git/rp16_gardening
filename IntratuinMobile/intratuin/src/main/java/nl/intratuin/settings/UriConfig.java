@@ -19,6 +19,7 @@ public class UriConfig {
     private URI customerByToken;
     private URI customerPersonal;
     private URI registerFingerprint;
+    private URI categoryName;
 
     public URI getLogin() {
         return login;
@@ -122,5 +123,13 @@ public class UriConfig {
 
     public void setRegisterFingerprint(URI registerFingerprint) {
         this.registerFingerprint = registerFingerprint;
+    }
+
+    public URI getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(URI categoryName) {
+        this.categoryName = categoryName;
     }
 }

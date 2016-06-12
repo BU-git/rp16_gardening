@@ -43,6 +43,7 @@ public class UriConfigParserApiImpl extends AbstractUriConfigParser {
             uriConfig.setCustomerByToken(null);
             uriConfig.setCustomerPersonal(null);
             uriConfig.setRegisterFingerprint(null);
+            uriConfig.setCategoryName(null);
             Settings.setUriConfig(uriConfig);
         } catch (URISyntaxException e) {
             e.printStackTrace();

@@ -4,18 +4,26 @@
     <meta charset="UTF-8"/>
 </head>
 <script type="text/javascript">
-function insertBarcode(ean, barcode) {
-    document.getElementById('tdEan').innerHTML = ean;
-    document.getElementById('tdBarcode').innerHTML = barcode;
+function insertData(id,name,category,price) {
+    document.getElementById('tdId').innerHTML = id;
+    document.getElementById('tdName').innerHTML = name;
+    document.getElementById('tdCategory').innerHTML = category;
+    document.getElementById('tdPrice').innerHTML = price;
 }
 </script>
 <body>
     <table>
         <tr>
-            <td>EAN code:</td><td id="tdEan"></td>
+            <td>ID:</td><td id="tdId"></td>
         </tr>
         <tr>
-            <td>Barcode:</td><td id="tdBarcode"></td>
+            <td>Product:</td><td id="tdName"></td>
+        </tr>
+        <tr>
+            <td>Category:</td><td id="tdCategory"></td>
+        </tr>
+        <tr>
+            <td>Price:</td><td id="tdPrice"></td>
         </tr>
     </table>
 </body>

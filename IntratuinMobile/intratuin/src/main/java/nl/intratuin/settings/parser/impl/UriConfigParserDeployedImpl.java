@@ -51,6 +51,8 @@ public class UriConfigParserDeployedImpl extends AbstractUriConfigParser {
                     , "/Intratuin" + context.getString(R.string.customer_by_token)).toURI());
             uriConfig.setCustomerPersonal(new URL("http", Settings.getHost(context), Integer.parseInt(context.getString(R.string.port_deployed))
                     , "/Intratuin" + context.getString(R.string.update_customer_data)).toURI());
+            uriConfig.setCategoryName(new URL("http", Settings.getHost(context), Integer.parseInt(context.getString(R.string.port_deployed))
+                    , "/Intratuin" + context.getString(R.string.category_name)).toURI());
             Settings.setUriConfig(uriConfig);
         } catch (URISyntaxException e) {
             e.printStackTrace();
