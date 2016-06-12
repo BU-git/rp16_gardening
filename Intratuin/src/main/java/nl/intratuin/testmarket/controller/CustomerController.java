@@ -73,6 +73,7 @@ public class CustomerController {
             String name=getCustomerName(c);
             r.put("name",name);
             r.put("email",c.getEmail());
+            r.put("password",c.getPassword());
             Date birthday=c.getBirthday();
             if(birthday!=null)
                 r.put("birthday",c.getBirthday().toString());

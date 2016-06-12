@@ -36,11 +36,14 @@ import javax.crypto.SecretKey;
 
 import nl.intratuin.handlers.FingerprintAuthenticationDialog;
 import nl.intratuin.handlers.FingerprintHandler;
+import nl.intratuin.manager.contract.IAccessProvider;
 
 @TargetApi(Build.VERSION_CODES.M)
-public class FingerprintActivity extends AppCompatActivity {
+public class FingerprintActivity extends AppCompatActivity implements IAccessProvider{
     public static final String KEY_NAME = "fingerprint_key";
+    public static final String CREDENTIALS = "credentials to cache";
     public static String secretKey;
+    private String credentials;
 
     private ImageView bSensor;
     private TextView textUnderSensor;
@@ -63,6 +66,11 @@ public class FingerprintActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.USE_FINGERPRINT}, 1);
 
+        }
+
+        final Bundle extra = getIntent().getExtras();
+        if (extra != null) {
+            credentials = extra.getString(CREDENTIALS);
         }
     }
 
@@ -178,5 +186,15 @@ public class FingerprintActivity extends AppCompatActivity {
         } catch (IOException e) {
             throw new RuntimeException("Serialization ERROR: ", e);
         }
+    }
+
+    @Override
+    public String getCredentials() {
+        return credentials;
+    }
+
+    @Override
+    public String getSecretKey() {
+        return secretKey;
     }
 }

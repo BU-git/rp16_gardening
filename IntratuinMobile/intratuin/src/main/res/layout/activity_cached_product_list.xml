@@ -10,14 +10,9 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
 
-    <ListView
-        android:id="@+id/cachedProduct_listView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="27dp"
-        android:background="#FFFFFF"
-        android:divider="@color/colorAccent"
-        android:dividerHeight="1px"
-        android:scrollIndicators="right"
-        android:clickable="true" />
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/movie_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     </LinearLayout>

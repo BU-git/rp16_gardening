@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
+import java.util.Map;
+
+import nl.intratuin.manager.contract.IAccessProvider;
+
 /**
  * Class {@code AuthManager} is used for login with user chosen credentials.
  *
@@ -38,6 +42,7 @@ public class AuthManager {
      * The constant PREF_TWITTER_SECRET_ACCESS_TOKEN hold the additional key to access to Facebook with token..
      */
     public static final String PREF_TWITTER_SECRET_ACCESS_TOKEN = "secret access key: twitter";
+    public static final String PREF_SECRET_KEY = "secret key: twitter";
 
     private final SharedPreferences pref;
 
@@ -67,6 +72,11 @@ public class AuthManager {
                 .apply();
     }
 
+    public void cacheFingerprint(@NonNull String keyToCache, @NonNull IAccessProvider values) {
+        pref.edit()
+                .putString(keyToCache, values.getCredentials() + ":" + values.getSecretKey())
+                .apply();
+    }
     /**
      * Gets facebook access token.
      *
@@ -121,7 +131,11 @@ public class AuthManager {
         return pref.getString(PREF_TIME, null);
     }
 
-    public String getValuesOfFingerprint(String fingerprint) {
-        return pref.getString(fingerprint, null);
+    public String getValuesOfFingerprint() {
+        return pref.getString(PREF_SECRET_KEY, null);
+    }
+
+    public Map<String, ?> getAll() {
+        return pref.getAll();
     }
 }

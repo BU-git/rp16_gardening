@@ -17,6 +17,7 @@ import android.widget.Toast;
 import java.text.ParseException;
 
 import nl.intratuin.dto.Customer;
+import nl.intratuin.manager.contract.IAccessProvider;
 
 public class ProfileActivity extends ToolBarActivity implements View.OnClickListener {
     public static String credentials;
@@ -168,8 +169,11 @@ public class ProfileActivity extends ToolBarActivity implements View.OnClickList
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
                     Toast.makeText(this, "Device doesn't support fingerprint authentication",
                             Toast.LENGTH_LONG).show();
-                else
-                    startActivity(new Intent(this, FingerprintActivity.class));
+                else {
+                    Intent fingerprintIntent = new Intent(this, FingerprintActivity.class);
+                    fingerprintIntent.putExtra(FingerprintActivity.CREDENTIALS, credentials);
+                    startActivity(fingerprintIntent);
+                }
                 break;
         }
     }

@@ -120,8 +120,7 @@ public class NFCActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        String credentials = nfcHandler.handleIntent(intent);
-        String[] parseContent = credentials.split(":");
+        String content = nfcHandler.handleIntent(intent);
 
         if (Settings.getMainscreen(this) == Mainscreen.SEARCH) {
             Product productByBarcode = new Product();
@@ -129,7 +128,7 @@ public class NFCActivity extends AppCompatActivity {
             String uri = Settings.getUriConfig().getBarcode().toString();
             uri += "/{code}";
             RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);
-            String jsonRespond = managerLoader.loaderFromWebService(uri, parseContent[2]);
+            String jsonRespond = managerLoader.loaderFromWebService(uri, content);
             try {
                 JSONObject response = new JSONObject(jsonRespond);
                 if (response != null && response.has("productId")) {
@@ -159,7 +158,7 @@ public class NFCActivity extends AppCompatActivity {
             Intent webPageIntent = new Intent(NFCActivity.this, WebActivity.class);
             webPageIntent.putExtra(LoginActivity.ACCESS_TOKEN, accessToken);
             webPageIntent.putExtra(ScannerActivity.FORMAT, "NFC");
-            webPageIntent.putExtra(ScannerActivity.CONTENT, parseContent[2]);
+            webPageIntent.putExtra(ScannerActivity.CONTENT, content);
             startActivity(webPageIntent);
             finish();
         }

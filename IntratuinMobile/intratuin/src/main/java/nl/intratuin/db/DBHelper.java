@@ -8,7 +8,7 @@ import nl.intratuin.db.contract.ProductContract;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
 
     public static final String DB_NAME = "database.db";
 

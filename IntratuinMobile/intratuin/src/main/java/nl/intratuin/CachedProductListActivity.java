@@ -2,20 +2,18 @@ package nl.intratuin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 
 import java.util.List;
 
 import nl.intratuin.dto.CachedProduct;
 import nl.intratuin.dto.Product;
-import nl.intratuin.handlers.CachedProductListAdapter;
+import nl.intratuin.handlers.MovieAdapter;
+import nl.intratuin.handlers.MovieTouchHelper;
 
 public class CachedProductListActivity extends ToolBarActivity{
-        private CachedProductListAdapter adapter;
-
-        private ListView cachedProductListView;
         private List<CachedProduct> cachedProductList;
         private Product product;
 
@@ -23,8 +21,10 @@ public class CachedProductListActivity extends ToolBarActivity{
         protected void onCreate(Bundle savedInstanceState) {
             setContentView(R.layout.activity_cached_product_list);
             super.onCreate(savedInstanceState);
-
-            cachedProductListView = (ListView) findViewById(R.id.cachedProduct_listView);
+            RecyclerView movieRecyclerView = (RecyclerView) findViewById(R.id.movie_recycler_view);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            movieRecyclerView.setLayoutManager(linearLayoutManager);
 
             final Bundle extra = getIntent().getExtras();
             if (extra != null) {
@@ -32,13 +32,8 @@ public class CachedProductListActivity extends ToolBarActivity{
             }
 
             if(cachedProductList != null) {
-                CachedProductListAdapter adapter = new CachedProductListAdapter(this, cachedProductList);
-                cachedProductListView.setAdapter(adapter);
-                cachedProductListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        CachedProduct cachedProduct = (CachedProduct) parent.getItemAtPosition(position);
-
+                MovieAdapter movieAdapter = new MovieAdapter(this, cachedProductList, new MovieAdapter.OnItemClickListener() {
+                    @Override public void onItemClick(CachedProduct cachedProduct) {
                         product = new Product();
                         product.setProductId(cachedProduct.getProductId());
                         product.setProductName(cachedProduct.getProductName());
@@ -51,6 +46,12 @@ public class CachedProductListActivity extends ToolBarActivity{
                         startActivity(productDetailIntent);
                     }
                 });
+                movieRecyclerView.setAdapter(movieAdapter);
+
+                // Setup ItemTouchHelper
+                ItemTouchHelper.Callback callback = new MovieTouchHelper(movieAdapter);
+                ItemTouchHelper helper = new ItemTouchHelper(callback);
+                helper.attachToRecyclerView(movieRecyclerView);
             }
         }
 }

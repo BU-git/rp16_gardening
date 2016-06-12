@@ -4,24 +4,21 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.widget.Toast;
 
 import nl.intratuin.App;
-import nl.intratuin.FingerprintActivity;
 import nl.intratuin.LoginActivity;
-import nl.intratuin.ProfileActivity;
 import nl.intratuin.R;
 import nl.intratuin.RegisterActivity;
 import nl.intratuin.SearchActivity;
 import nl.intratuin.WebActivity;
 import nl.intratuin.manager.AuthManager;
+import nl.intratuin.manager.contract.IAccessProvider;
 import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;
 
 public class FingerprintAuthenticationDialog {
-    public static final String Fingerprint_FILENAME = "fingerprint";
     private Context context;
 
     public FingerprintAuthenticationDialog(Context context) {
@@ -84,7 +81,7 @@ public class FingerprintAuthenticationDialog {
         builder.setView(R.layout.confirm_fingerprint)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        App.getAuthManagerOfFingerprint().loginAndCache(FingerprintActivity.secretKey, ProfileActivity.credentials);
+                        App.getAuthManagerOfFingerprint().cacheFingerprint(AuthManager.PREF_SECRET_KEY, (IAccessProvider) context);
                         if (Settings.getMainscreen(context) == Mainscreen.WEB)
                                 context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
                          else

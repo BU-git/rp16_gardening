@@ -2,13 +2,11 @@ package nl.intratuin;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.JavascriptInterface;
@@ -19,6 +17,10 @@ import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +30,7 @@ import java.util.Vector;
 
 import nl.intratuin.manager.AuthManager;
 import nl.intratuin.manager.RequestResponseManager;
+import nl.intratuin.manager.contract.IAccessProvider;
 import nl.intratuin.settings.BuildType;
 import nl.intratuin.settings.Settings;
 
@@ -39,14 +42,21 @@ import nl.intratuin.net.WebSocket;
  *
  * @see AppCompatActivity
  */
-public class WebActivity extends AppCompatActivity implements View.OnClickListener {
+public class WebActivity extends AppCompatActivity implements OnClickListener {
     private WebView webView;
     private ImageButton ibNfc;
     private ImageButton ibBarcode;
     private String access_token;
+    private String credentials;
 
     private String barcode_format;
     private String barcode_content;
+    private JSONObject response;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     /**
      * Provide logic when activity created. Mapping field, creating HTML page, loading data to page.
@@ -91,11 +101,11 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 } else {
                     webView.setWebViewClient(new WebViewClient() {
                         public void onPageFinished(WebView view, String url) {
-                            String jsString =  "javascript:localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');"+
-                                        "var x = document.getElementsByClassName('dropdown-menu animated fadeInRight m-t-xs');" +
-                                        "var c1=x[0].childNodes;" +
-                                        "var c2=c1[5];" +
-                                        "c2.addEventListener('touchstart',function() { WebSocketFactory.Logout(); } );";
+                            String jsString = "javascript:localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');" +
+                                    "var x = document.getElementsByClassName('dropdown-menu animated fadeInRight m-t-xs');" +
+                                    "var c1=x[0].childNodes;" +
+                                    "var c2=c1[5];" +
+                                    "c2.addEventListener('touchstart',function() { WebSocketFactory.Logout(); } );";
                             webView.loadUrl(jsString);
                         }
                     });
@@ -111,8 +121,10 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                         RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);
                         String jsonRespond = managerLoader.loaderFromWebService(userInfoUri, access_token);
                         jsonRespond = jsonRespond.substring(1, jsonRespond.length() - 1);
-                        JSONObject response = new JSONObject(jsonRespond);
+                        response = new JSONObject(jsonRespond);
                         if (response != null && response.has("id")) {
+                            if (Settings.getBuildType(this) == BuildType.LOCAL || Settings.getBuildType(this) == BuildType.DEPLOYED)
+                                credentials = response.getString("email") + ":" + response.getString("password");
                             if (response.has("name") && response.getString("name").length() > 0)
                                 name = response.getString("name");
                             else
@@ -150,6 +162,9 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             App.getShowManager().showMessage("No access token found!", WebActivity.this);
             startActivity(new Intent(WebActivity.this, LoginActivity.class));
         }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -177,16 +192,58 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Web Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://nl.intratuin/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Web Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://nl.intratuin/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
+
     public class WebSocketFactory {
         private Vector<WebSocket> socketList = new Vector<WebSocket>();
         private Handler handler;
-        /** The app view. */
+        /**
+         * The app view.
+         */
         WebView appView;
+
         /**
          * Instantiates a new web socket factory.
          *
-         * @param appView
-         * the app view
+         * @param appView the app view
          */
         public WebSocketFactory(Handler h, WebView appView) {
             this.appView = appView;
@@ -225,19 +282,24 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
                 Toast.makeText(WebActivity.this, "Device doesn't support fingerprint authentication",
                         Toast.LENGTH_LONG).show();
-            else
-                startActivity(new Intent(WebActivity.this, FingerprintActivity.class));
+            else {
+                Intent fingerprintIntent = new Intent(WebActivity.this, FingerprintActivity.class);
+                fingerprintIntent.putExtra(FingerprintActivity.CREDENTIALS, credentials);
+                startActivity(fingerprintIntent);
+            }
         }
 
         @JavascriptInterface
         public Vector<WebSocket> getSocketList() {
             return socketList;
         }
+
         @JavascriptInterface
         public WebSocket getInstance(String url) {
-        // use Draft76 by default
+            // use Draft76 by default
             return getInstance(url, WebSocket.Draft.DRAFT76);
         }
+
         @JavascriptInterface
         public WebSocket getInstance(String url, WebSocket.Draft draft) {
             WebSocket socket = null;
@@ -249,12 +311,13 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 return socket;
             } catch (Exception e) {
 //Log.v("websocket", e.toString());
-                if(th != null) {
+                if (th != null) {
                     th.interrupt();
                 }
             }
             return null;
         }
+
         /**
          * Generates random unique ids for WebSocket instances
          *

@@ -19,12 +19,14 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.Map;
 
 import javax.crypto.SecretKey;
 
 import nl.intratuin.App;
 import nl.intratuin.FingerprintActivity;
 import nl.intratuin.LoginActivity;
+import nl.intratuin.manager.AuthManager;
 
 @TargetApi(Build.VERSION_CODES.M)
 public class FingerprintHandlerLogin extends FingerprintManager.AuthenticationCallback {
@@ -66,12 +68,14 @@ public class FingerprintHandlerLogin extends FingerprintManager.AuthenticationCa
     @Override
     public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
         secretKey = new String(FingerprintActivity.toByteArray(readSecretKey()));
-        String valueOfFingerprint =  App.getAuthManagerOfFingerprint().getValuesOfFingerprint(secretKey);
+        String valueOfFingerprint =  App.getAuthManagerOfFingerprint().getValuesOfFingerprint();
         if (valueOfFingerprint != null && valueOfFingerprint.length() > 0) {
             String[] arrValueOfFingerprint = valueOfFingerprint.split(":");
-            emailByFingerprint = arrValueOfFingerprint[0];
-            passwordByFingerprint = arrValueOfFingerprint[1];
-            ((LoginActivity)appContext).login(appContext, emailByFingerprint, passwordByFingerprint);
+            if(secretKey.equals(arrValueOfFingerprint[2])) {
+                emailByFingerprint = arrValueOfFingerprint[0];
+                passwordByFingerprint = arrValueOfFingerprint[1];
+                ((LoginActivity) appContext).login(appContext, emailByFingerprint, passwordByFingerprint);
+            }
         }
     }
 

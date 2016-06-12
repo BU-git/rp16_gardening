@@ -1,7 +1,6 @@
 package nl.intratuin;
 
 import android.annotation.TargetApi;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -30,11 +29,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.net.URI;
-import java.sql.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import nl.intratuin.manager.contract.IAccessProvider;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;
@@ -50,6 +49,7 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
 
     public static final int NOTIFY_ID = 1; // Уникальный индификатор вашего уведомления в пределах класса
     public static String responseAccessToken; // Уникальный индификатор вашего уведомления в пределах класса
+    public String credentials;
 
     private EditText etFirstName;
     private EditText etTussen;
@@ -174,11 +174,14 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
                             }
                             response = new JSONObject(jsonLoginRespond.get());
                             if (response != null && response.has("token_type") && response.getString("token_type").equals("bearer")) {
-                                ProfileActivity.credentials = etEmail.getText().toString() + ":" + etPassword.getText().toString();
+                                credentials = etEmail.getText().toString() + ":" + etPassword.getText().toString();
                                 responseAccessToken = response.getString("access_token");
 
-                                if (cbRegisterFingerprint.isChecked())
-                                    startActivity(new Intent(this, FingerprintActivity.class));
+                                if (cbRegisterFingerprint.isChecked()) {
+                                    Intent fingerprintIntent = new Intent(this, FingerprintActivity.class);
+                                    fingerprintIntent.putExtra(FingerprintActivity.CREDENTIALS, credentials);
+                                    startActivity(fingerprintIntent);
+                                }
                                 else if (Settings.getMainscreen(RegisterActivity.this) == Mainscreen.WEB) {
                                     startActivity(new Intent(RegisterActivity.this, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, responseAccessToken));
                                 } else {
