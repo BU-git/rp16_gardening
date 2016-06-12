@@ -178,7 +178,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 webView.loadUrl(jsString);
             }
         });
-        webView.loadUrl("file:///android_asset/pages/dummy.html");
+        webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
     }
 
     private String getCategoryName(int id, Context context){
