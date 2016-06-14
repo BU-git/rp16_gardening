@@ -165,6 +165,16 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                     });
                     webView.loadUrl("file:///android_asset/pages/product.html");
                 } else {
+                    webView.setWebViewClient(new WebViewClient() {
+                        public void onPageFinished(WebView view, String url) {
+                            String jsString = "javascript:localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');" +
+                                    "var x = document.getElementsByClassName('dropdown-menu animated fadeInRight m-t-xs');" +
+                                    "var c1=x[0].childNodes;" +
+                                    "var c2=c1[5];" +
+                                    "c2.addEventListener('touchstart',function() { WebSocketFactory.Logout(); } );";
+                            webView.loadUrl(jsString);
+                        }
+                    });
                     webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
                 }
             }
