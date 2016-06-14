@@ -124,6 +124,17 @@
             android:id="@+id/ibBusket">
         </ImageButton>
 
+        <TextView
+            android:id="@+id/badge_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/ibBusket"
+            android:layout_alignRight="@id/ibBusket"
+            android:text="0"
+            android:textColor="#FFF"
+            android:textSize="11sp"
+            android:background="@drawable/badge_circle"/>
+
         <ImageButton
             android:src="@drawable/nfc_search"
             android:background="@drawable/gradient"
