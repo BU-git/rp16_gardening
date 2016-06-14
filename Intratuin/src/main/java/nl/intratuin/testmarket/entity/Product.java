@@ -9,19 +9,28 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PRODUCT_ID")
-    Integer productId;
+    private int productId;
 
-    @Column(name = "PRODUCT_NAМE")
-    String productName;
+    @Column(name = "CATEGORY_ID")
+    private int categoryId;
+
+    @Column(name = "BARCODE")
+    private long barcode;
+
+    @Column(name = "PRODUCT_NAME")
+    private String productName;
 
     @Column(name = "PRODUCT_PRICE")
-    int productPrice;
+    private int productPrice;
+
+    @Column(name = "PRODUCT_IMAGE_SMALL")
+    private String productImage;
 
     public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(Integer productId) {
+    public void setProductId(int productId) {
         this.productId = productId;
     }
 
@@ -39,5 +48,29 @@ public class Product {
 
     public void setProductPrice(int productPrice) {
         this.productPrice = productPrice;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
+
+    public long getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(long barcode) {
+        this.barcode = barcode;
     }
 }

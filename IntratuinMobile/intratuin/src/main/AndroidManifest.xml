@@ -1,34 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="nl.intratuin">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.NFC" />
+
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".LoginActivity"
+        <activity
+            android:name=".LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity"
+        <activity
+            android:name=".RegisterActivity"
+            android:label="@string/register"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RecoverActivity"
+            android:label="@string/recover"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ProductDetailsPageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ProductListByCategoryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".WebActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"/>
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <!--
+             ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="54232ea986b4a1d538079a1a020243c78d572f7d" />
+
+        <activity
+            android:name=".ScannerActivity"
+            android:label="@string/scanning"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PersonalInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FingerprintActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EmailEditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PasswordEditActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".NFCActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".NotificationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CachedProductListActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

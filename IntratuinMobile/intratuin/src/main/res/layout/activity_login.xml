@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
+    android:fillViewport="true">
+
+<RelativeLayout
+    android:id="@+id/rlLogin"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@drawable/gradient"
     android:orientation="vertical"
     tools:context="nl.intratuin.LoginActivity">
@@ -13,125 +18,163 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="#FFF8DC"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/logo"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Log-in //fb"
-        android:id="@+id/bFacebook"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@id/ivIntratuin"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true" />
+        android:background="#FFFFFF"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/logo"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+        <requestFocus/>
+    </ImageView>
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/bLoginFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/login_facebook"
+        android:layout_below="@+id/ivIntratuin"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/facebook_login"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp" />
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Log-in //TW"
+        android:layout_height="30dp"
         android:id="@+id/bTwitter"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/bFacebook"
-        android:layout_marginTop="10dp"
-        android:layout_alignLeft="@+id/bFacebook"
-        android:layout_alignStart="@+id/bFacebook" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/bLoginFacebook"
+        android:layout_marginTop="15dp"
+        android:layout_alignRight="@+id/bLoginFacebook"
+        android:layout_alignEnd="@+id/bTwitterHidden"
+        android:layout_alignLeft="@+id/bLoginFacebook"
+        android:layout_alignStart="@+id/bTwitterHidden"
+        android:background="@drawable/twitter_login_action"
+        android:drawableLeft="@drawable/twitter_logo_action"
+        android:visibility="visible"
+        android:textColor="#ffffff"
+        android:text="@string/tw__login_btn_txt"
+        android:textAllCaps="false"/>
+
+    <!--Invisible button! Visible is bTwitter - for customization-->
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:id="@+id/bTwitterHidden"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/bLoginFacebook"
+        android:layout_marginTop="15dp"
+        android:visibility="invisible"
+        android:enabled="false"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp" />
 
     <EditText
         android:id="@+id/etEmailAddress"
         android:layout_width="match_parent"
         android:inputType="textEmailAddress"
-        android:layout_marginBottom="20dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:hint="Email"
+        android:layout_marginTop="37dp"
+        android:hint="@string/email"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_below="@id/bTwitter"
-        android:background="#FFF8DC"
-        android:password="false" />
+        android:background="@drawable/textedit"
+        android:drawableLeft="@drawable/ic_action_name"
+        android:password="false"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/textColorHint"
+        android:textSize="16dp"
+        android:textIsSelectable="false"
+        android:paddingRight="10dp" />
 
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:inputType="textPassword|text"
-        android:layout_marginBottom="20dp"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:background="#FFF8DC"
+        android:hint="@string/pass"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:background="@drawable/textedit"
         android:layout_below="@id/etEmailAddress"
-        android:maxLength="15" />
+        android:drawableLeft="@drawable/ic_action_name2"
+        android:maxLength="15"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/textColorHint"
+        android:textSize="16dp"
+        android:layout_marginTop="11dp"
+        android:paddingRight="10dp" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Remember me"
-        android:background="#FFF8DC"
-        android:layout_below="@id/etPassword"
-        android:id="@+id/cbRemember" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show password"
-        android:layout_marginBottom="10dp"
+        android:text="@string/showpass"
         android:id="@+id/cbShow"
-        android:background="#FFF8DC"
-        android:layout_gravity="right"
-        android:layout_alignTop="@+id/cbRemember"
-        android:layout_alignRight="@+id/bLogin"
-        android:layout_alignEnd="@+id/bLogin" />
+        android:layout_marginLeft="50dp"
+        android:layout_below="@id/etPassword"
+        android:textColor="#ffffff"
+        android:buttonTint="#ffffff"
+        android:layout_marginTop="22dp" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/remember"
+        android:layout_marginLeft="50dp"
+        android:layout_below="@id/cbShow"
+        android:id="@+id/cbRemember"
+        android:backgroundTint="#ffffff"
+        android:textColor="#ffffff"
+        android:buttonTint="#ffffff"/>
 
     <Button
         android:id="@+id/bLogin"
+        android:background="@drawable/button_action"
         android:layout_width="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_height="wrap_content"
-        android:text="Sign-in"
+        android:text="@string/logbut"
         android:layout_below="@id/cbRemember"
-        android:background="#FFF8DC"
-        android:clickable="false" />
-
-<!--
-     <com.facebook.login.widget.LoginButton
-        android:id="@+id/bLoginFacebook"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_height="wrap_content" /> -->
+        android:clickable="true"
+        android:textColor="@color/textColor"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/bRegister"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Register"
-        android:background="#FFF8DC"
+        android:layout_height="30dp"
+        android:text="@string/register"
+        android:layout_marginLeft="50dp"
+        android:textSize="10sp"
+        android:background="@drawable/button_minor_action"
         android:clickable="false"
-        android:layout_marginTop="40dp"
         android:layout_below="@+id/bLogin"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="@color/colorAccent"
+        android:layout_toLeftOf="@+id/bForgot"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10dp" />
 
     <Button
         android:id="@+id/bForgot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
         android:textSize="10sp"
-        android:text="Forgot password"
-        android:background="#FFF8DC"
+        android:layout_marginRight="50dp"
+        android:text="@string/forgotpass"
+        android:background="@drawable/button_minor_action"
         android:clickable="false"
-        android:layout_gravity="right"
-        android:maxLength="60"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:id="@+id/tvResult"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textColor="#000000"
-        android:textSize="25dp"
-        android:background="#FFF8DC"
-        android:layout_below="@id/bForgot"
-        android:textAlignment="center" />
+        android:layout_below="@+id/bLogin"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/colorAccent"
+        android:layout_marginTop="15dp" />
 
 </RelativeLayout>
 
+</ScrollView>

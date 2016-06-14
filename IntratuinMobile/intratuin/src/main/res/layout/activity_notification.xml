@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/gradient"
+    android:orientation="vertical"
+    tools:context="nl.intratuin.NotificationActivity">
+
+    <ImageView
+        android:id="@+id/ivIntratuin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#FFFFFF"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/intratuin_logo"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+        <requestFocus/>
+    </ImageView>
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/notification_register_title"
+        android:layout_below="@+id/ivIntratuin"
+        android:textColor="@color/colorAccent"
+        android:textSize="32dp"/>
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/notification_register_message"
+        android:layout_below="@+id/tvTitle"
+        android:textColor="@color/colorAccent"
+        android:textSize="16dp"/>
+
+    <Button
+        android:id="@+id/bToApp"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="@string/notification_button_to_app"
+        android:layout_marginLeft="50dp"
+        android:textSize="14sp"
+        android:background="@drawable/button_action"
+        android:clickable="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="@color/textColor"
+        android:layout_toLeftOf="@+id/bOk"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentBottom="true"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/bOk"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:textSize="14sp"
+        android:layout_marginRight="50dp"
+        android:text="@string/notification_button_ok"
+        android:background="@drawable/button_action"
+        android:clickable="false"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/textColor"
+        android:layout_marginBottom="15dp"
+        android:layout_alignParentBottom="true"
+        android:textStyle="bold" />
+
+</RelativeLayout>

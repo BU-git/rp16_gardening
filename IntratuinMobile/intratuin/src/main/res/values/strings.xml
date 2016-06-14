@@ -1,6 +1,143 @@
 <resources>
     <string name="app_name">Intratuin</string>
-    <string name="facebook_app_id">Facebook</string>
+    <string name="company_id">99</string>
+    <string name="company_website">"https://www.intratuin.nl/"</string>
+
+    #manageable settings
+    #Default state of "Remember me" checkbox: checked/unchecked
+    <string name="remember_me_default_value">checked</string>
+    #Login caching time (in milliseconds)
+    <string name="login_caching_time">2592000000</string>
+    #Visibility of social login buttons: both/twitter/facebook/none
+    <string name="social_login_visibility">both</string>
+    #Caching API screens: on/off
+    <string name="screen_caching">on</string>
+    #Show NFC: on/off
+    <string name="nfc">on</string>
+    #Show Scandit: on/off
+    <string name="scandit">on</string>
+    #Show fingerprint login: on/off
+    <string name="fingerprint_login">on</string>
+
+    #facebook
+    <string name="facebook_app_id">1720162671574425</string>
+    <string name="login_facebook">Log in with Facebook</string>
+
+    #twitter
+    <string name="twitter_customer_key">CpdWZOr27su9Vduhipt3XVUgD</string>
+    <string name="twitter_customer_secret">pcOrskD4hWcUGxi5n3nMvtL3bArhIuyj2pmiMCQ7E9jj71wH5w</string>
+
+    #build types: LOCAL, DEPLOYED, API, DEMOAPI; mainscreens: WEB, SEARCH. If build_type=API/DEMOAPI
+    mainscreen is always WEB
+
+    <string name="build_type">DEMOAPI</string>
+    <string name="mainscreen">WEB</string>
+
+    <string name="connection_timeout">10000</string>
+
+    #hosts
+    <string name="host_local">192.168.1.210</string>
+    <string name="host_deployed">128.0.169.5</string>
+    <string name="host_api">api.weorder.at</string>
+    <string name="host_demoapi">demo.weorder.at</string>
+
+    #ports
+    <string name="port_local">8080</string>
+    <string name="port_deployed">8888</string>
+
+    #addresses
+    #login
+    <string name="login_server">/customer/login</string>
+    <string name="login_api">/api/oauth/token</string>
+    #registration
+    <string name="registration_server">/customer/add</string>
+    <string name="registration_host">dualdev.com</string>
+    <string name="registration_relative">/lab/signup.php?company_id=</string>
+    #social login
+    <string name="twitter_login">/customer/loginTwitter</string>
+    <string name="facebook_login">/customer/loginFacebook</string>
+    #get user by access token
+    <string name="info_server">/customer/info/</string>
+    <string name="info_api">/api/v1/companies/</string>
+    <string name="info_api_end">/debtors</string>
+    #barcode
+    <string name="barcode_server">/product/barcode/</string>
+    <string name="barcode_api">/api/v1/companies/</string>
+    <string name="barcode_api_ending">/products/code/</string>
+    #other
+    <string name="products_in_category">/product/list/byCategory/</string>
+    <string name="category_list">/category/all</string>
+    <string name="product_search">/product/search/</string>
+    <string name="product_by_barcode">/product/barcode/{code}</string>
+    <string name="customer_by_token">/customer/access_token/</string>
+    <string name="update_customer_data">/customer/update/personal</string>
+    <string name="category_name">/category/</string>
+
+    #labels
+    <string name="recover">Recover password</string>
+    <string name="logout">Logout</string>
+    <string name="viewed_product">Viewed products</string>
+    <string name="profile">Profile</string>
+    <string name="register">Register</string>
     <string name="choose_date">Select date</string>
-    <string name="ready">Ok</string>
+    <string name="ready">OK</string>
+    <string name="email"> Email</string>
+    <string name="pass"> Password</string>
+    <string name="remember">Remember me  </string>
+    <string name="showpass">Show password  </string>
+    <string name="register_finger">Register fingerprint</string>
+    <string name="logbut">Sign in</string>
+    <string name="forgotpass">Forgot password</string>
+    <string name="firstname">First name</string>
+    <string name="lastname">Last name</string>
+    <string name="tuss">Tussenvoegsel</string>
+    <string name="signup">Sign-up</string>
+    <string name="save">Save</string>
+    <string name="birthbut">  Day of birth  </string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="city">City</string>
+    <string name="street">Street name</string>
+    <string name="house">House</string>
+    <string name="post">Postcode</string>
+    <string name="repass">Re-enter password</string>
+    <string name="show">Show  </string>
+    <string name="cancel">Cancel</string>
+    <string name="phone">Cellphone number</string>
+    <string name="phone_hint">+31(99)111 11 11</string>
+    <string name="recoverbut">Recover password</string>
+    <string name="birthday">Date of birth</string>
+    <string name="birthday_hint">Date of birth...</string>
+    <string name="categories">Categories</string>
+    <string name="current_email">Current email</string>
+    <string name="new_email">New email</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="repeat_new_password">Repeat new password</string>
+    <string name="notification_register_ticker">Registration successful</string>
+    <string name="notification_register_title">Registration successful</string>
+    <string name="notification_register_message">Your registration ended successfully</string>
+
+    <string name="notification_button_ok">OK</string>
+    <string name="notification_button_to_app">To application</string>
+
+    <string name="search_hint">Product search</string>
+    <string name="search">Search...</string>
+    <string name="loading">Loading</string>
+    <string name="scanning">Scanning</string>
+
+    <string name="edit_title">Edit</string>
+    <string name="fingerprint">register fingerprint</string>
+
+    <string-array name="edit_item">
+        <item>Personal information</item>
+        <item>Email</item>
+        <item>Password</item>
+    </string-array>
+
+    <string-array name="size">
+        <item>Size1</item>
+        <item>Size2</item>
+        <item>Size3</item>
+    </string-array>
 </resources>

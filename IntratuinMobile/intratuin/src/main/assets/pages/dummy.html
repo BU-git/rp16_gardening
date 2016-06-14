@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8"/>
+        </head>
+        <body>
+Dummy page.
+        <input type="button" value="Scanner" onClick="showAndroidScanner()" />
+        <br/>
+        <input type="button" value="Logout" onClick="logout()" />
+        <br/>
+        <input type="button" value="Fingerprint" onClick="fingerprint()"/>
+        <br/>
+        <script type="text/javascript">
+            function showAndroidScanner() {
+                WebSocketFactory.ShowScanner();
+            }
+            function logout() {
+                WebSocketFactory.Logout();
+            }
+            function fingerprint(){
+                WebSocketFactory.Fingerprint();
+            }
+        </script>
+    </body>
+</html>
