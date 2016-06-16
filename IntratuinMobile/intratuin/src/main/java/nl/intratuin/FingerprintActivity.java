@@ -3,8 +3,10 @@ package nl.intratuin;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.KeyguardManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.security.keystore.KeyGenParameterSpec;
@@ -13,21 +15,34 @@ import android.security.keystore.KeyProperties;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.URI;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.Signature;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.security.spec.ECGenParameterSpec;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.concurrent.ExecutionException;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -37,9 +52,11 @@ import javax.crypto.SecretKey;
 import nl.intratuin.handlers.FingerprintAuthenticationDialog;
 import nl.intratuin.handlers.FingerprintHandler;
 import nl.intratuin.manager.contract.IAccessProvider;
+import nl.intratuin.net.RequestResponse;
+import nl.intratuin.settings.Settings;
 
 @TargetApi(Build.VERSION_CODES.M)
-public class FingerprintActivity extends AppCompatActivity implements IAccessProvider{
+public class FingerprintActivity extends AppCompatActivity implements IAccessProvider {
     public static final String KEY_NAME = "fingerprint_key";
     public static final String CREDENTIALS = "credentials to cache";
     public static String secretKey;

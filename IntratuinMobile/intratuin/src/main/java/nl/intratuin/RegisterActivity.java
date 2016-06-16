@@ -33,7 +33,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import nl.intratuin.manager.contract.IAccessProvider;
 import nl.intratuin.net.RequestResponse;
 import nl.intratuin.settings.Mainscreen;
 import nl.intratuin.settings.Settings;

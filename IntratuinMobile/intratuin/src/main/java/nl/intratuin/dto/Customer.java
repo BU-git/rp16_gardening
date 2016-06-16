@@ -43,7 +43,8 @@ public class Customer implements Parcelable {
 
 //    private byte[] fingerprint;
 
-    public Customer(){}
+    public Customer() {
+    }
 
     private Customer(Parcel in) {
         id = in.readInt();
@@ -57,7 +58,8 @@ public class Customer implements Parcelable {
         streetName = in.readString();
         houseNumber = in.readString();
         postalCode = in.readString();
-        birthday = (java.sql.Date)in.readSerializable();
+//        in.readByteArray(fingerprint);
+        birthday = (java.sql.Date) in.readSerializable();
     }
 
     @Override
@@ -79,6 +81,7 @@ public class Customer implements Parcelable {
         out.writeString(houseNumber);
         out.writeString(postalCode);
         out.writeSerializable(birthday);
+//        out.writeByteArray(fingerprint);
     }
 
     /**
@@ -94,15 +97,8 @@ public class Customer implements Parcelable {
 
         public Customer[] newArray(int size) {
             return new Customer[size];
-        }};
-
-//    public byte[] getFingerprint() {
-//        return fingerprint;
-//    }
-//
-//    public void setFingerprint(byte[] fingerprint) {
-//        this.fingerprint = fingerprint;
-//    }
+        }
+    };
 
     /**
      * Gets id.
@@ -338,30 +334,30 @@ public class Customer implements Parcelable {
         this.gender = gender;
     }
 
-    public static Customer parseFromJsonStr(String jsonStr){
+    public static Customer parseFromJsonStr(String jsonStr) {
         try {
-            JSONObject json=new JSONObject(jsonStr);
+            JSONObject json = new JSONObject(jsonStr);
 
-            Customer c=new Customer();
-            String fullName=json.getString("name");
-            String[] names=fullName.split(" ");
-            if(names.length==2){
-                c.firstName=names[0];
-                c.tussen="";
-                c.lastName=names[1];
+            Customer c = new Customer();
+            String fullName = json.getString("name");
+            String[] names = fullName.split(" ");
+            if (names.length == 2) {
+                c.firstName = names[0];
+                c.tussen = "";
+                c.lastName = names[1];
             } else {
-                c.firstName=names[0];
-                c.tussen=names[1];
-                c.lastName=names[2];
+                c.firstName = names[0];
+                c.tussen = names[1];
+                c.lastName = names[2];
             }
-            c.email=json.getString("email");
-            c.birthday=java.sql.Date.valueOf(json.getString("birthday"));
-            c.gender=json.getInt("gender");
-            c.phoneNumber=json.getString("phoneNumber");
-            c.city=json.getString("city");
-            c.postalCode=json.getString("postalCode");
-            c.streetName=json.getString("streetName");
-            c.houseNumber=json.getString("houseNumber");
+            c.email = json.getString("email");
+            c.birthday = java.sql.Date.valueOf(json.getString("birthday"));
+            c.gender = json.getInt("gender");
+            c.phoneNumber = json.getString("phoneNumber");
+            c.city = json.getString("city");
+            c.postalCode = json.getString("postalCode");
+            c.streetName = json.getString("streetName");
+            c.houseNumber = json.getString("houseNumber");
             return c;
         } catch (JSONException e) {
             return null;

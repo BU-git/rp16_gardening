@@ -57,9 +57,7 @@
         android:text="@string/categories"
         android:clickable="false"
         android:textColor="@color/textColor"
-        android:textStyle="bold"
-        >
-    </Button>
+        android:textStyle="bold"/>
 
     <ListView
         android:id="@+id/categoryListView"
@@ -123,6 +121,17 @@
             android:layout_marginBottom="10dp"
             android:id="@+id/ibBusket">
         </ImageButton>
+
+        <TextView
+            android:id="@+id/tvBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/ibBusket"
+            android:layout_alignRight="@id/ibBusket"
+            android:text="0"
+            android:textColor="#FFF"
+            android:textSize="11sp"
+            android:background="@drawable/badge_circle"/>
 
         <ImageButton
             android:src="@drawable/nfc_search"

@@ -1,6 +1,7 @@
 package nl.intratuin.testmarket.controller;
 
 import nl.intratuin.testmarket.dto.DTOEmail;
+import nl.intratuin.testmarket.dto.DTOFingerprint;
 import nl.intratuin.testmarket.dto.DTOPassword;
 import nl.intratuin.testmarket.entity.Customer;
 import nl.intratuin.testmarket.entity.Product;
@@ -194,6 +195,14 @@ public class CustomerController {
     @ResponseBody
     Boolean updateCustomer(@RequestBody DTOPassword dtoNewPassword) {
         return customerService.updatePassword(dtoNewPassword);
+    }
+
+
+    @RequestMapping(value = "save/fingerprint", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Boolean saveFingerprint(@RequestBody DTOFingerprint dtoFingerprint) {
+        return customerService.saveFingerprint(dtoFingerprint);
     }
 }
 

@@ -3,7 +3,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/productByCategory"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
+    android:paddingLeft="15dp"
         android:background="@drawable/gradient">
 
     <ImageView android:id="@+id/productImage_byCategory"
@@ -24,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="300dp"
+            android:layout_marginLeft="270dp"
             android:textColor="@color/colorAccent"
             android:text="€"
             android:textStyle="bold"

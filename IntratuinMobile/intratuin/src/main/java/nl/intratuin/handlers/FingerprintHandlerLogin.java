@@ -4,13 +4,11 @@ package nl.intratuin.handlers;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.CancellationSignal;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -19,14 +17,12 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.util.Map;
 
 import javax.crypto.SecretKey;
 
 import nl.intratuin.App;
 import nl.intratuin.FingerprintActivity;
 import nl.intratuin.LoginActivity;
-import nl.intratuin.manager.AuthManager;
 
 @TargetApi(Build.VERSION_CODES.M)
 public class FingerprintHandlerLogin extends FingerprintManager.AuthenticationCallback {

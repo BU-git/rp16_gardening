@@ -17,7 +17,6 @@ import android.widget.Toast;
 import java.text.ParseException;
 
 import nl.intratuin.dto.Customer;
-import nl.intratuin.manager.contract.IAccessProvider;
 
 public class ProfileActivity extends ToolBarActivity implements View.OnClickListener {
     public static String credentials;

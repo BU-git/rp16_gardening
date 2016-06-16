@@ -6,7 +6,11 @@ import android.support.annotation.NonNull;
 
 import java.util.Map;
 
+import nl.intratuin.App;
+import nl.intratuin.SearchActivity;
+import nl.intratuin.dto.Customer;
 import nl.intratuin.manager.contract.IAccessProvider;
+import nl.intratuin.settings.Settings;
 
 /**
  * Class {@code AuthManager} is used for login with user chosen credentials.
@@ -45,6 +49,7 @@ public class AuthManager {
     public static final String PREF_SECRET_KEY = "secret key: twitter";
 
     private final SharedPreferences pref;
+    public static String access_token;
 
     /**
      * Instantiates a new Auth manager.
@@ -137,5 +142,11 @@ public class AuthManager {
 
     public Map<String, ?> getAll() {
         return pref.getAll();
+    }
+
+    public static Customer getCustomer(Context context) {
+        String userInfoUri = Settings.getUriConfig().getCustomerByToken().toString() + ("{token}");
+        RequestResponseManager<Customer> managerLoader = new RequestResponseManager<>(context, App.getShowManager(), Customer.class);
+        return managerLoader.loaderFromWebService(userInfoUri, access_token);
     }
 }

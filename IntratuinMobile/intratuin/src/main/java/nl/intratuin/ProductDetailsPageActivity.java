@@ -1,11 +1,14 @@
 package nl.intratuin;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -15,10 +18,12 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import nl.intratuin.db.DBHelper;
 import nl.intratuin.db.contract.ProductContract;
 import nl.intratuin.dto.Product;
+import nl.intratuin.handlers.ShoppingCartHelper;
 
 /**
  * The class {@code ProductDetailsPageActivity} is used to provide logic on Product Detail Page Activity
@@ -30,11 +35,13 @@ public class ProductDetailsPageActivity extends ToolBarActivity {
 
     private TextView tvProductName, tvProductPrice;
     private ImageView ivProductImage;
+    private ImageButton bCart;
 
     private DBHelper dbHelper;
     private SQLiteDatabase sqLiteDatabase;
     private ContentValues values;
     private String currentDate;
+    private List<Product> cart;
 
     /**
      * Provide logic when activity created. Mapping field, setting and resizing images.
@@ -47,14 +54,14 @@ public class ProductDetailsPageActivity extends ToolBarActivity {
         setContentView(R.layout.activity_product_page);
         super.onCreate(savedInstanceState);
 
-        initComponents();
-
         final Bundle extra = getIntent().getExtras();
         if (extra != null) {
             productBySearch = extra.getParcelable(SearchActivity.PRODUCT);
         }
 
-        if(productBySearch != null) {
+        initComponents();
+
+        if (productBySearch != null) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
             currentDate = simpleDateFormat.format(new Date()).toString();
             Cursor cursor = sqLiteDatabase.query(ProductContract.ProductEntity.TABLE_NAME,
@@ -110,6 +117,16 @@ public class ProductDetailsPageActivity extends ToolBarActivity {
         dbHelper = new DBHelper(this);
         sqLiteDatabase = dbHelper.getWritableDatabase();
         values = new ContentValues();
+        cart = ShoppingCartHelper.getCart();
+        bCart = (ImageButton) findViewById(R.id.bCart);
+        bCart.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                cart.add(productBySearch);
+                startActivity(new Intent(ProductDetailsPageActivity.this, SearchActivity.class));
+            }
+        });
     }
 
     private void updateInTable(int id) {

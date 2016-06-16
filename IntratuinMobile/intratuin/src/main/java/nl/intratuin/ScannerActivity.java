@@ -123,7 +123,10 @@ public class ScannerActivity extends AppCompatActivity implements ScanditSDKOnSc
         for (final ScanditSDKCode code : scanSession.getNewlyDecodedCodes()) {
             if (Settings.getMainscreen(ScannerActivity.this) == Mainscreen.SEARCH) {
                 try{
-                    getProductByBarcode(code.getData(),this);
+                    Product productByBarcode  = getProductByBarcode(code.getData(),this);
+                    Intent productPageIntent = new Intent(this, ProductDetailsPageActivity.class);
+                    productPageIntent.putExtra(SearchActivity.PRODUCT, productByBarcode);
+                    startActivity(productPageIntent);
                 } catch(JSONException e){
                     App.getShowManager().showMessage("Error! No response.", this);
                 } catch(RuntimeException e){

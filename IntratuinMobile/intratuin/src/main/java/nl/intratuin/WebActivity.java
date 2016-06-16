@@ -46,7 +46,6 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
     private WebView webView;
     private ImageButton ibNfc;
     private ImageButton ibBarcode;
-    private String access_token;
     private String credentials;
 
     private String barcode_format;
@@ -71,11 +70,11 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
 
         final Bundle extra = getIntent().getExtras();
         if (extra != null) {
-            access_token = extra.getString(LoginActivity.ACCESS_TOKEN);
+            AuthManager.access_token = extra.getString(LoginActivity.ACCESS_TOKEN);
             barcode_format = extra.getString(ScannerActivity.FORMAT);
             barcode_content = extra.getString(ScannerActivity.CONTENT);
         }
-        if (access_token != null) {
+        if (AuthManager.access_token != null) {
             setContentView(R.layout.activity_web);
 
             webView = (WebView) findViewById(R.id.webView);
@@ -101,7 +100,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 } else {
                     webView.setWebViewClient(new WebViewClient() {
                         public void onPageFinished(WebView view, String url) {
-                            String jsString = "javascript:localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');" +
+                            String jsString = "javascript:localStorage.setItem('wehandcraft.accessToken', '" + AuthManager.access_token + "');" +
                                     "var x = document.getElementsByClassName('dropdown-menu animated fadeInRight m-t-xs');" +
                                     "var c1=x[0].childNodes;" +
                                     "var c2=c1[5];" +
@@ -119,7 +118,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                     userInfoUri += "?access_token={access_token}";
                     if (userInfoUri != null) {
                         RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);
-                        String jsonRespond = managerLoader.loaderFromWebService(userInfoUri, access_token);
+                        String jsonRespond = managerLoader.loaderFromWebService(userInfoUri, AuthManager.access_token);
                         jsonRespond = jsonRespond.substring(1, jsonRespond.length() - 1);
                         response = new JSONObject(jsonRespond);
                         if (response != null && response.has("id")) {
@@ -167,7 +166,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 } else {
                     webView.setWebViewClient(new WebViewClient() {
                         public void onPageFinished(WebView view, String url) {
-                            String jsString = "javascript:localStorage.setItem('wehandcraft.accessToken', '" + access_token + "');" +
+                            String jsString = "javascript:localStorage.setItem('wehandcraft.accessToken', '" + AuthManager.access_token + "');" +
                                     "var x = document.getElementsByClassName('dropdown-menu animated fadeInRight m-t-xs');" +
                                     "var c1=x[0].childNodes;" +
                                     "var c2=c1[5];" +
@@ -218,12 +217,12 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.ibNFC:
                 Intent nfcIntent = new Intent(WebActivity.this, NFCActivity.class);
-                nfcIntent.putExtra(LoginActivity.ACCESS_TOKEN, access_token);
+                nfcIntent.putExtra(LoginActivity.ACCESS_TOKEN, AuthManager.access_token);
                 startActivity(nfcIntent);
                 break;
             case R.id.ibBarcode:
                 Intent scannerIntent = new Intent(WebActivity.this, ScannerActivity.class);
-                scannerIntent.putExtra(LoginActivity.ACCESS_TOKEN, access_token);
+                scannerIntent.putExtra(LoginActivity.ACCESS_TOKEN, AuthManager.access_token);
                 startActivity(scannerIntent);
                 break;
         }
@@ -302,7 +301,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         @JavascriptInterface
         public void ShowScanner() {
             Intent scannerIntent = new Intent(WebActivity.this, ScannerActivity.class);
-            scannerIntent.putExtra(LoginActivity.ACCESS_TOKEN, access_token);
+            scannerIntent.putExtra(LoginActivity.ACCESS_TOKEN, AuthManager.access_token);
             startActivity(scannerIntent);
         }
 

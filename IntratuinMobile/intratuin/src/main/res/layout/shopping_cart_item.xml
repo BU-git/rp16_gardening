@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/productByCategory"
+    android:layout_width="fill_parent"
+    android:layout_height="100dp"
+    android:background="@drawable/gradient">
+
+    <ImageView
+        android:id="@+id/productImage_byCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:paddingLeft="10dp"/>
+
+    <RelativeLayout
+        android:id="@+id/layoutNamePrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/productImage_byCategory">
+
+        <TextView
+            android:id="@+id/productName__byCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/productPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Price:"
+            android:layout_below="@+id/productName__byCategory"
+            android:textColor="@color/colorAccent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/currency_eur_byCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="€"
+            android:layout_marginLeft="60dp"
+            android:layout_below="@+id/productName__byCategory"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/productPrice_byCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@id/currency_eur_byCategory"
+            android:layout_alignBottom="@+id/currency_eur_byCategory"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+   <Button
+       android:id="@+id/bRemove"
+       android:layout_width="70dp"
+       android:layout_height="25dp"
+       android:layout_alignParentRight="true"
+       android:layout_marginRight="15dp"
+       android:text="remove"
+       android:textSize="10dp"
+       android:layout_centerVertical="true"
+       android:background="@color/remove"/>
+</RelativeLayout>
