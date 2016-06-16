@@ -1,7 +1,9 @@
 package nl.intratuin;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +27,8 @@ import nl.intratuin.dto.TreeNode;
 import nl.intratuin.handlers.ErrorFragment;
 import nl.intratuin.handlers.HierarchyCategoryAdapter;
 import nl.intratuin.handlers.ProductAutoCompleteAdapter;
+import nl.intratuin.handlers.ShoppingCartHelper;
+import nl.intratuin.manager.AuthManager;
 import nl.intratuin.manager.RequestResponseManager;
 import nl.intratuin.settings.Settings;
 
@@ -44,16 +49,16 @@ public class SearchActivity extends ToolBarActivity implements OnClickListener {
      */
     public static final String TREENODE = "TreeNode";
 
-    public static String access_token;
-
     private HierarchyCategoryAdapter categoryAdapter;
     private ListView categoryListView;
     private List<TreeNode> treeCategory;
+    private List<Product> cartList;
 
     private ImageButton ibBarcode;
     private ImageButton ibMan;
     private ImageButton ibBusket;
     private ImageButton ibNFC;
+    private TextView tvBadge;
 
     /**
      * Provide logic when activity created. Mapping field, configuring AutoCompleteTextView, showing user info.
@@ -67,14 +72,20 @@ public class SearchActivity extends ToolBarActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         final Bundle extra = getIntent().getExtras();
         if (extra != null) {
-            access_token = extra.getString(LoginActivity.ACCESS_TOKEN);
+            AuthManager.access_token = extra.getString(LoginActivity.ACCESS_TOKEN);
         }
-        if (access_token != null) {
+        if (AuthManager.access_token != null) {
             ibBarcode = (ImageButton) findViewById(R.id.ibBarcode);
             ibMan = (ImageButton) findViewById(R.id.ibMan);
             ibBusket = (ImageButton) findViewById(R.id.ibBusket);
             ibNFC = (ImageButton) findViewById(R.id.ibNFC);
             categoryListView = (ListView) findViewById(R.id.categoryListView);
+            tvBadge = (TextView) findViewById(R.id.tvBadge);
+            cartList = ShoppingCartHelper.getCart();
+            if (cartList.size() == 0)
+                tvBadge.setVisibility(View.INVISIBLE);
+            else
+                tvBadge.setText("" + cartList.size());
 
             ibBarcode.setOnClickListener(this);
             ibMan.setOnClickListener(this);
@@ -114,8 +125,8 @@ public class SearchActivity extends ToolBarActivity implements OnClickListener {
                 userInfoUri += "?access_token={access_token}";
                 if (userInfoUri != null) {
                     RequestResponseManager<String> managerLoader = new RequestResponseManager(this, App.getShowManager(), String.class);
-                    String jsonRespond = managerLoader.loaderFromWebService(userInfoUri, access_token);
-                    jsonRespond=jsonRespond.substring(1,jsonRespond.length()-1);
+                    String jsonRespond = managerLoader.loaderFromWebService(userInfoUri, AuthManager.access_token);
+                    jsonRespond = jsonRespond.substring(1, jsonRespond.length() - 1);
                     JSONObject response = new JSONObject(jsonRespond);
                     if (response != null && response.has("id")) {
                         if (response.has("name") && response.getString("name").length() > 0)
@@ -196,10 +207,23 @@ public class SearchActivity extends ToolBarActivity implements OnClickListener {
                 break;
 
             case R.id.ibBusket:
+                if (cartList.size() == 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage("Shopping list is empty")
+                            .setNegativeButton("ОК",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } else
+                startActivity(new Intent(getBaseContext(), ShoppingCartActivity.class));
                 break;
 
             case R.id.ibNFC:
-                startActivity(new Intent(this, NFCActivity.class));
+                    startActivity(new Intent(this, NFCActivity.class));
                 break;
         }
     }

@@ -57,9 +57,7 @@
         android:text="@string/categories"
         android:clickable="false"
         android:textColor="@color/textColor"
-        android:textStyle="bold"
-        >
-    </Button>
+        android:textStyle="bold"/>
 
     <ListView
         android:id="@+id/categoryListView"
@@ -125,7 +123,7 @@
         </ImageButton>
 
         <TextView
-            android:id="@+id/badge_textView"
+            android:id="@+id/tvBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/ibBusket"

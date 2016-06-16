@@ -2,6 +2,7 @@ package nl.intratuin.testmarket.dao.implementation;
 
 import nl.intratuin.testmarket.dao.contract.CustomerDao;
 import nl.intratuin.testmarket.dto.DTOEmail;
+import nl.intratuin.testmarket.dto.DTOFingerprint;
 import nl.intratuin.testmarket.dto.DTOPassword;
 import nl.intratuin.testmarket.entity.Customer;
 import org.springframework.stereotype.Repository;
@@ -83,5 +84,16 @@ public class CustomerDaoImpl implements CustomerDao {
                 : false;
     }
 
+    public boolean saveFingerprint(DTOFingerprint dtoFingerprint) {
+        TypedQuery<Customer> querySaveFingerprint = em.createQuery("UPDATE Customer c SET c.fingerprint = :fingerprint WHERE c.id = :id", Customer.class);
+        querySaveFingerprint.setParameter("fingerprint", dtoFingerprint.getFingerprint());
+        querySaveFingerprint.setParameter("id", dtoFingerprint.getIdCustomer());
+
+        return querySaveFingerprint.executeUpdate() > 0
+                ? true
+                : false;
+    }
+
 }
+
 

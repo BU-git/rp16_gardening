@@ -72,6 +72,7 @@
     <string name="customer_by_token">/customer/access_token/</string>
     <string name="update_customer_data">/customer/update/personal</string>
     <string name="category_name">/category/</string>
+    <string name="save_fingerprint">/customer/save/fingerprint</string>
 
     #labels
     <string name="recover">Recover password</string>
@@ -93,6 +94,8 @@
     <string name="tuss">Tussenvoegsel</string>
     <string name="signup">Sign-up</string>
     <string name="save">Save</string>
+    <string name="to_confirm">proceed to confirm</string>
+    <string name="confirm">confirm</string>
     <string name="birthbut">  Day of birth  </string>
     <string name="male">Male</string>
     <string name="female">Female</string>

@@ -1,6 +1,7 @@
 package nl.intratuin.testmarket.service.contract;
 
 import nl.intratuin.testmarket.dto.DTOEmail;
+import nl.intratuin.testmarket.dto.DTOFingerprint;
 import nl.intratuin.testmarket.dto.DTOPassword;
 import nl.intratuin.testmarket.entity.Customer;
 import org.json.simple.JSONObject;
@@ -31,4 +32,6 @@ public interface CustomerService {
     JSONObject updateEmail(DTOEmail dtoNewEmail);
 
     boolean updatePassword(DTOPassword dtoNewPassword);
+
+    boolean saveFingerprint(DTOFingerprint dtoFingerprint);
 }
