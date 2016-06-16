@@ -98,7 +98,17 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                 if (Settings.getBuildType(WebActivity.this) == BuildType.DEPLOYED || Settings.getBuildType(WebActivity.this) == BuildType.LOCAL) {
                     webView.loadUrl("file:///android_asset/pages/dummy.html");
                 } else {
-                    loadDummyPage();
+                    webView.setWebViewClient(new WebViewClient() {
+                        public void onPageFinished(WebView view, String url) {
+                            String jsString = "javascript:localStorage.setItem('wehandcraft.accessToken', '" + AuthManager.access_token + "');" +
+                                    "var x = document.getElementsByClassName('dropdown-menu animated fadeInRight m-t-xs');" +
+                                    "var c1=x[0].childNodes;" +
+                                    "var c2=c1[5];" +
+                                    "c2.addEventListener('touchstart',function() { WebSocketFactory.Logout(); } );";
+                            webView.loadUrl(jsString);
+                        }
+                    });
+                    webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
                 }
 
                 //show user login
@@ -145,15 +155,25 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
                                 webView.loadUrl(jsString);
                             } catch(JSONException e){
                                 App.getShowManager().showMessage("Error! No response.", WebActivity.this);
-                                loadDummyPage();
+                                webView.loadUrl("file:///android_asset/pages/dummy.html");
                             } catch(RuntimeException e){
                                 App.getShowManager().showMessage(e.getMessage(), WebActivity.this);
-                                loadDummyPage();
+                                webView.loadUrl("file:///android_asset/pages/dummy.html");
                             }
                         }
                     });
                     webView.loadUrl("file:///android_asset/pages/product.html");
                 } else {
+                    webView.setWebViewClient(new WebViewClient() {
+                        public void onPageFinished(WebView view, String url) {
+                            String jsString = "javascript:localStorage.setItem('wehandcraft.accessToken', '" + AuthManager.access_token + "');" +
+                                    "var x = document.getElementsByClassName('dropdown-menu animated fadeInRight m-t-xs');" +
+                                    "var c1=x[0].childNodes;" +
+                                    "var c2=c1[5];" +
+                                    "c2.addEventListener('touchstart',function() { WebSocketFactory.Logout(); } );";
+                            webView.loadUrl(jsString);
+                        }
+                    });
                     webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
                 }
             }
@@ -164,20 +184,6 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
-
-    private void loadDummyPage() {
-        webView.setWebViewClient(new WebViewClient() {
-            public void onPageFinished(WebView view, String url) {
-                String jsString = "javascript:localStorage.setItem('wehandcraft.accessToken', '" + AuthManager.access_token + "');" +
-                        "var x = document.getElementsByClassName('dropdown-menu animated fadeInRight m-t-xs');" +
-                        "var c1=x[0].childNodes;" +
-                        "var c2=c1[5];" +
-                        "c2.addEventListener('touchstart',function() { WebSocketFactory.Logout(); } );";
-                webView.loadUrl(jsString);
-            }
-        });
-        webView.loadUrl("https://" + Settings.getHost(this) + "/#page:debtor_order");
     }
 
     private String getCategoryName(int id, Context context){
