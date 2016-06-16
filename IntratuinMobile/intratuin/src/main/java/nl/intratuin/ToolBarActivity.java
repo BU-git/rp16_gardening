@@ -134,10 +134,11 @@ public class ToolBarActivity extends AppCompatActivity {
     public static void toCustomerProfile(Context context) {
         String userInfoUri = Settings.getUriConfig().getCustomerByToken().toString() + ("{token}");
         RequestResponseManager<Customer> managerLoader = new RequestResponseManager<>(context, App.getShowManager(), Customer.class);
-        Customer customerByAccessToken = managerLoader.loaderFromWebService(userInfoUri, SearchActivity.access_token);
+        Customer customerByAccessToken = managerLoader.loaderFromWebService(userInfoUri, AuthManager.access_token);
 
         Intent profilePageIntent = new Intent(context, ProfileActivity.class);
         profilePageIntent.putExtra(CUSTOMER, customerByAccessToken);
         context.startActivity(profilePageIntent);
     }
+
 }

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/gradient"
+        android:focusableInTouchMode="true"
+        tools:context="nl.intratuin.PersonalInfoActivity">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:layout_marginTop="30dp"
+            android:text="Fill all fields, please"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/textColorLight"
+            android:textSize="17dp" />
+
+        <TextView
+            android:id="@+id/tvFirstName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text"
+            android:layout_marginLeft="50dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/firstname"
+            android:textColor="@color/textColorLight"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/firstName"
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_alignLeft="@+id/tvFirstName"
+            android:layout_below="@+id/tvFirstName"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/textedit"
+            android:hint="@string/firstname"
+            android:inputType="textNoSuggestions|textCapWords"
+            android:maxLength="100"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@color/textColor"
+            android:textColorHint="@color/textColorHint"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tvLastName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tvFirstName"
+            android:layout_below="@+id/firstName"
+            android:layout_marginTop="30dp"
+            android:text="@string/lastname"
+            android:textColor="@color/textColorLight"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/lastName"
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_alignLeft="@+id/tvFirstName"
+            android:layout_below="@+id/tvLastName"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/textedit"
+            android:hint="@string/lastname"
+            android:inputType="textNoSuggestions|textCapWords"
+            android:maxLength="100"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@color/textColor"
+            android:textColorHint="@color/textColorHint"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lastName"
+            android:layout_marginLeft="50dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/email"
+            android:textColor="@color/textColorLight"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_alignLeft="@+id/tvEmail"
+            android:layout_below="@+id/tvEmail"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/textedit"
+            android:hint="@string/current_email"
+            android:inputType="textEmailAddress"
+            android:maxLength="100"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@color/textColor"
+            android:textColorHint="@color/textColorHint"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tvPhoneNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tvFirstName"
+            android:layout_below="@+id/etEmail"
+            android:layout_marginTop="30dp"
+            android:text="@string/phone"
+            android:textColor="@color/textColorLight"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/phoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_alignLeft="@+id/tvFirstName"
+            android:layout_below="@+id/tvPhoneNumber"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/textedit"
+            android:hint="@string/phone_hint"
+            android:inputType="phone"
+            android:maxLength="17"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@color/textColor"
+            android:textColorHint="@color/textColorHint"
+            android:textSize="16dp" />
+
+        <Button
+            android:id="@+id/bToConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="35dp"
+            android:layout_below="@+id/phoneNumber"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/button_action"
+            android:text="@string/to_confirm"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+</ScrollView>

@@ -47,7 +47,18 @@ public class Customer{
     @Column(name = "GENDER")
     private int gender;
 
+    @Column(name = "FINGERPRINT")
+    private byte[] fingerprint;
+
     public Customer() {
+    }
+
+    public byte[] getFingerprint() {
+        return fingerprint;
+    }
+
+    public void setFingerprint(byte[] fingerprint) {
+        this.fingerprint = fingerprint;
     }
 
     public int getId() {

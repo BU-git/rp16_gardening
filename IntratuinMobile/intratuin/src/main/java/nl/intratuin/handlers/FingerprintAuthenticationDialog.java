@@ -83,9 +83,9 @@ public class FingerprintAuthenticationDialog {
                     public void onClick(DialogInterface dialog, int id) {
                         App.getAuthManagerOfFingerprint().cacheFingerprint(AuthManager.PREF_SECRET_KEY, (IAccessProvider) context);
                         if (Settings.getMainscreen(context) == Mainscreen.WEB)
-                                context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
-                         else
-                                context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
+                            context.startActivity(new Intent(context, WebActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
+                        else
+                            context.startActivity(new Intent(context, SearchActivity.class).putExtra(LoginActivity.ACCESS_TOKEN, RegisterActivity.responseAccessToken));
 
                         Toast.makeText(context, "login with fingerprint is activated", Toast.LENGTH_LONG).show();
                     }

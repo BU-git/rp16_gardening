@@ -86,7 +86,7 @@ public class EmailEditActivity extends ToolBarActivity implements View.OnClickLi
             return false;
         }
         if (!currentEmail.getText().toString().equals(customerEmail)) {
-            currentEmail.setError("wrong current password");
+            currentEmail.setError("wrong current email");
             return false;
         }
         return true;

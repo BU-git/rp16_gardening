@@ -3,6 +3,7 @@ package nl.intratuin.testmarket.service.implementation;
 import nl.intratuin.testmarket.dao.contract.AccessKeyDao;
 import nl.intratuin.testmarket.dao.contract.CustomerDao;
 import nl.intratuin.testmarket.dto.DTOEmail;
+import nl.intratuin.testmarket.dto.DTOFingerprint;
 import nl.intratuin.testmarket.dto.DTOPassword;
 import nl.intratuin.testmarket.entity.AccessKey;
 import nl.intratuin.testmarket.entity.Customer;
@@ -323,6 +324,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public boolean updatePassword(DTOPassword dtoNewPassword) {
         return customerDao.updatePassword(dtoNewPassword);
+    }
+
+    @Transactional
+    public boolean saveFingerprint(DTOFingerprint dtoFingerprint){
+        return customerDao.saveFingerprint(dtoFingerprint);
     }
 
 }

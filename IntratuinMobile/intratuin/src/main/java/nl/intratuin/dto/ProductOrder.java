@@ -1,14 +1,17 @@
 package nl.intratuin.dto;
 
+import java.util.List;
 import java.util.UUID;
 
-public class LoginData {
+public class ProductOrder {
     private UUID valueRandom;
     private byte[] publicKey;
+    private List<Product> productList;
 
-    public LoginData(byte[] publicKey) {
+    public ProductOrder(byte[] publicKey, List<Product> productList) {
         valueRandom = UUID.randomUUID();
         this.publicKey = publicKey;
+        this.productList = productList;
     }
 
     public UUID getValueRandom() {
@@ -25,5 +28,13 @@ public class LoginData {
 
     public void setPublicKey(byte[] publicKey) {
         this.publicKey = publicKey;
+    }
+
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
     }
 }

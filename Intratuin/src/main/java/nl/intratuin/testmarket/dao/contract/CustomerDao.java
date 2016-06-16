@@ -1,6 +1,7 @@
 package nl.intratuin.testmarket.dao.contract;
 
 import nl.intratuin.testmarket.dto.DTOEmail;
+import nl.intratuin.testmarket.dto.DTOFingerprint;
 import nl.intratuin.testmarket.dto.DTOPassword;
 import nl.intratuin.testmarket.entity.Customer;
 
@@ -20,4 +21,6 @@ public interface CustomerDao {
     boolean updateEmail(DTOEmail dtoNewEmail);
 
     boolean updatePassword(DTOPassword dtoNewPassword);
+
+    boolean saveFingerprint(DTOFingerprint dtoFingerprint);
 }

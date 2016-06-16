@@ -53,6 +53,8 @@ public class UriConfigParserLocalImpl extends AbstractUriConfigParser {
                     , context.getString(R.string.update_customer_data)).toURI());
             uriConfig.setCategoryName(new URL("http", Settings.getHost(context), Integer.parseInt(context.getString(R.string.port_local))
                     , context.getString(R.string.category_name)).toURI());
+            uriConfig.setRegisterFingerprint(new URL("http", Settings.getHost(context), Integer.parseInt(context.getString(R.string.port_local))
+                    , context.getString(R.string.save_fingerprint)).toURI());
             Settings.setUriConfig(uriConfig);
         } catch (URISyntaxException e) {
             e.printStackTrace();

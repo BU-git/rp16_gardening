@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ACC351</color>
     <color name="textColor">#005A36</color>
+    <color name="remove">#F00</color>
     <color name="textColorHint">#75333333</color>
     <color name="twitter_pressed">#687781</color>
     <color name="product_background">#e7eae7</color>
